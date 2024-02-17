@@ -1,0 +1,18 @@
+<nz-sider
+  class="ant-layout-sider ant-layout-sider-light"
+  nzWidth="256px"
+  nzTheme="light"
+>
+  <div class="title-sidebar">
+    <span class="line"></span>
+    <span class="title-text">Danh sách chức năng</span>
+    <span class="line"></span>
+  </div>
+
+  <ul nz-menu nzMode="inline">
+    <li nz-menu-item (click)="navigateOt()" [nzSelected]="isActiveOt">
+      <span nz-icon nzType="mail" nzTheme="outline"></span>
+      <span>Setting Post</span>
+    </li>
+  </ul>
+</nz-sider>

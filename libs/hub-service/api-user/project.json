@@ -1,0 +1,50 @@
+{
+  "name": "hub-service-api-user",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/hub-service/api-user/src",
+  "prefix": "hub-center",
+  "tags": [],
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/hub-service/api-user/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/hub-service/api-user/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/hub-service/api-user/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/hub-service/api-user/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/hub-service/api-user/**/*.ts",
+          "libs/hub-service/api-user/**/*.html"
+        ]
+      }
+    }
+  }
+}

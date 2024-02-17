@@ -1,0 +1,54 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@hub-center/breadcrumb": [
+        "libs/hub-feature/breadcrumb/src/index.ts"
+      ],
+      "@hub-center/guard": ["libs/hub-service/guard/src/index.ts"],
+      "@hub-center/loading": ["libs/hub-feature/loading/src/index.ts"],
+      "@hub-center/hub-core": ["libs/hub-core/src/index.ts"],
+      "@hub-center/hub-feature": ["libs/hub-feature/src/index.ts"],
+      "@hub-center/hub-feature/navbar": [
+        "libs/hub-feature/navbar/src/index.ts"
+      ],
+      "@hub-center/hub-feature/sidebar": [
+        "libs/hub-feature/sidebar/src/index.ts"
+      ],
+      "@hub-center/hub-model": ["libs/hub-model/src/index.ts"],
+      "@hub-center/hub-service/api-team": [
+        "libs/hub-service/api-team/src/index.ts"
+      ],
+      "@hub-center/hub-service/api-user": [
+        "libs/hub-service/api-user/src/index.ts"
+      ],
+      "@hub-center/hub-service/interceptor": [
+        "libs/hub-service/interceptor/src/index.ts"
+      ],
+      "@hub-center/hub-service/storage": [
+        "libs/hub-service/storage/src/index.ts"
+      ],
+      "@hub-center/hub-ui": ["libs/hub-ui/src/index.ts"],
+      "@hub-center/hub-utilities": [
+        "libs/hub-utilities/src/index.ts"
+      ],
+      "@hub-center/hub-utils": [
+        "libs/hub-service/hub-utils/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

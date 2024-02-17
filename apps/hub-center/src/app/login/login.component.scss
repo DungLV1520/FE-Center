@@ -1,0 +1,30 @@
+.login-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  background-image: url('../../assets/images/lunar1.jpg');
+  background-size: cover;
+  .login-form {
+    width: 350px;
+  }
+  .login-form-margin {
+    margin-bottom: 16px;
+    .remember-text {
+      white-space: nowrap;
+    }
+  }
+  .login-form-forgot {
+    float: right;
+  }
+  .login-form-button {
+    width: 100%;
+    background: #ed1c24;
+    border-color: #ed1c24;
+    border: none;
+  }
+}
+
