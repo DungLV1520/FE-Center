@@ -44,9 +44,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
   templateUrl: './list-post.component.html',
   styleUrls: ['./list-post.component.scss'],
 })
-export class ListTeamComponent {
+export class ListPostComponent {
   size: NzSelectSizeType = 'large';
-
 
   validateForm = this.fb.group({
     teamName: ['', [Validators.required]],

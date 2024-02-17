@@ -8,10 +8,10 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       {
-        path: 'post',
+        path: 'create-post',
         loadComponent: () =>
-          import('./setting-post/list-post/list-post.component').then(
-            (m) => m.ListTeamComponent
+          import('./setting-post/create-post/create-post.component').then(
+            (m) => m.CreatePostComponent
           ),
         canActivate: [authGuard],
       },

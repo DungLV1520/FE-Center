@@ -33,7 +33,7 @@ export class LoginComponent {
   ) {
     const user = this.localStorageService.getItem(LocalStoreEnum.CUSTOMER_KEY);
     if (user) {
-      this.router.navigate(['hub/post']);
+      this.router.navigate(['hub/create-post']);
     }
   }
 
@@ -64,7 +64,7 @@ export class LoginComponent {
                 nzDuration: 2000,
               }
             );
-            this.router.navigate(['hub/post']);
+            this.router.navigate(['hub/create-post']);
           },
         });
     } else {

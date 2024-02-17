@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -19,6 +19,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { HubFeatureLoadingModule } from '@hub-center/loading';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 @Component({
   selector: 'hub-create-post',
@@ -39,14 +40,17 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     NzCheckboxModule,
     NzEmptyModule,
     HubFeatureLoadingModule,
+    NzDatePickerModule
   ],
   providers: [NzNotificationService],
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
 })
-export class ListTeamComponent {
+export class CreatePostComponent implements OnInit{
   size: NzSelectSizeType = 'large';
-
+  listOfOption: Array<{ label: string; value: string }> = [];
+  multipleValue = ['a10', 'c12'];
+  startValue: Date | null = null;
 
   validateForm = this.fb.group({
     officeName: [''],
@@ -56,5 +60,12 @@ export class ListTeamComponent {
 
   constructor(private fb: FormBuilder) {}
 
+  ngOnInit(): void {
+    const children: Array<{ label: string; value: string }> = [];
+    for (let i = 10; i < 36; i++) {
+      children.push({ label: i.toString(36) + i, value: i.toString(36) + i });
+    }
+    this.listOfOption = children;
 
+  }
 }

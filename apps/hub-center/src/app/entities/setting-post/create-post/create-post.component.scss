@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  height: 100%;
+  .log-ot-list-wrapper {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    .filter-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      .search-box {
+        min-width: 432px;
+      }
+      .btn-action-group {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+      }
+    }
+    .team-container {
+      flex: 1;
+      overflow-y: hidden;
+      overflow-y: scroll;
+    }
+  }
+
+  .user {
+    align-items: center;
+    display: flex;
+    gap: 9px;
+  }
+  .create-team {
+    display: flex;
+    align-items: center;
+  }
+}
