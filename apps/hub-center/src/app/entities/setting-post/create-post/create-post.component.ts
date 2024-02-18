@@ -66,6 +66,5 @@ export class CreatePostComponent implements OnInit{
       children.push({ label: i.toString(36) + i, value: i.toString(36) + i });
     }
     this.listOfOption = children;
-
   }
 }
