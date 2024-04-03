@@ -2,10 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map } from 'rxjs';
-import {
-  ILoginReq,
-  Environment,
-} from '@hub-center/hub-model';
+import { ILoginReq, Environment } from '@hub-center/hub-model';
 import {
   LocalStorageService,
   LocalStoreEnum,
@@ -36,26 +33,29 @@ export class ApiUserService {
   }
 
   login(user: ILoginReq) {
-    return this.http
-      .post(this.hubBackendApiEndpoint + `auth/signin`, user)
-      .pipe(
-        map((user:any) => {
-          if (user) {
-            localStorage.setItem(
-              LocalStoreEnum.CUSTOMER_KEY,
-              JSON.stringify(user)
-            );
+    return this.http.post(this.hubBackendApiEndpoint + `auth/login`, user).pipe(
+      map((res: any) => {
+        if (res) {
+          localStorage.setItem(
+            LocalStoreEnum.CUSTOMER_KEY,
+            JSON.stringify(res.data.user)
+          );
 
-            localStorage.setItem(
-              LocalStoreEnum.ACCESS_TOKEN,
-              user?.token
-            );
-          }
+          localStorage.setItem(
+            LocalStoreEnum.ACCESS_TOKEN,
+            res.data.accessToken
+          );
+        }
 
-          this.currentUserSubject.next(user);
+        this.currentUserSubject.next(user);
 
-          return user;
-        })
-      );
+        return user;
+      })
+    );
   }
+
+  getListDevice() {
+    return this.http.get(this.hubBackendApiEndpoint + `device/get-list`);
+  }
+
 }

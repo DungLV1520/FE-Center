@@ -9,16 +9,21 @@ import {
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const localStorageService = inject(LocalStorageService);
+  const accessToken = localStorageService.getItem(LocalStoreEnum.ACCESS_TOKEN);
   const currentUser = JSON.parse(
     localStorageService.getItem(LocalStoreEnum.CUSTOMER_KEY)
   );
-  const roleAdmin = [Role.ROLE_ADMIN, Role.ROLE_USER];
+  // const roleAdmin = [Role.ROLE_ADMIN, Role.ROLE_USER];
 
-  const isAdmin = currentUser?.roles?.every((role: string) =>
-    roleAdmin.includes(role as Role)
-  );
+  // const isAdmin = currentUser?.roles?.every((role: string) =>
+  //   roleAdmin.includes(role as Role)
+  // );
 
-  if (currentUser && isAdmin) {
+  // if (currentUser && isAdmin) {
+  //   return true;
+  // }
+
+  if (currentUser && accessToken) {
     return true;
   }
 

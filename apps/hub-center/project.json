@@ -31,12 +31,19 @@
             "glob": "**/*",
             "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
             "output": "/assets/"
+          },
+          {
+            "glob": "**/*",
+            "input": "node_modules/@taiga-ui/icons/src",
+            "output": "assets/taiga-ui/icons"
           }
         ],
         "styles": [
           "apps/hub-center/src/styles.scss",
           "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
-          "node_modules/bootstrap/scss/bootstrap.scss"
+          "node_modules/bootstrap/scss/bootstrap.scss",
+          "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+          "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less"
         ],
         "scripts": []
       },

@@ -1,0 +1,31 @@
+{
+  "name": "@hub-center/hub-service/api-user",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^16.1.0",
+    "@angular/core": "^16.1.0",
+    "rxjs": "7.8.1",
+    "@hub-center/hub-model": "0.0.1",
+    "@hub-center/hub-service/storage": "0.0.1"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "module": "fesm2022/hub-center-hub-service-api-user.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "esm2022": "./esm2022/hub-center-hub-service-api-user.mjs",
+      "esm": "./esm2022/hub-center-hub-service-api-user.mjs",
+      "default": "./fesm2022/hub-center-hub-service-api-user.mjs"
+    }
+  },
+  "scripts": {
+    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by Ivy in full compilation mode. This is not allowed.\\nPlease delete and rebuild the package with Ivy partial compilation mode, before attempting to publish.\\n')\" && exit 1"
+  }
+}

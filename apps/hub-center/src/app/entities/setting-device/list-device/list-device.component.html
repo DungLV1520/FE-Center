@@ -1,0 +1,68 @@
+<div class="user-list-wrapper">
+  <div class="filter-header">
+    <div class="search-box">
+      <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
+        <input type="text" nz-input placeholder="Enter device" />
+      </nz-input-group>
+      <ng-template #suffixIconSearch>
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+    </div>
+    <div class="btn-action-group">
+      <button nz-button nzType="primary" class="create-team" nzSize="large">
+        <span nz-icon nzType="filter" nzTheme="outline"></span> Filter
+      </button>
+    </div>
+  </div>
+  <div class="table-body" style="overflow: auto">
+    <nz-table
+      #filterTable
+      [nzFrontPagination]="false"
+      [nzShowPagination]="false"
+      [nzData]="devices"
+      nzTableLayout="fixed"
+    >
+      <thead>
+        <tr>
+          <th
+            *ngFor="let column of listOfColumn"
+            [ngStyle]="{
+              width: column.priority === 0 ? '68px' : ''
+            }"
+          >
+            {{ column.title }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of devices; let i = index">
+          <td nz>{{ i + 1 }}</td>
+          <td>
+            <nz-tag>{{ data.name }}</nz-tag>
+          </td>
+          <td>
+            <a>{{ data.location }}</a>
+          </td>
+          <td>
+            <nz-tag [nzColor]="data.status === 'ACTIVE' ? 'green' : 'red'">{{
+              data.status
+            }}</nz-tag>
+          </td>
+          <td>
+            <nz-tag [nzColor]="data.available ? 'green' : 'red'">{{
+              data.available?'Online':'Offline'
+            }}</nz-tag>
+          </td>
+          <td>{{ data.description }}</td>
+          <td>{{ data.identityDevice }}</td>
+          <td>
+            <nz-tag [nzColor]="'geekblue'">{{ data.timeOffAgo }}</nz-tag>
+          </td>
+          <td>{{ data.insDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ data.updDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+<hub-loading></hub-loading>

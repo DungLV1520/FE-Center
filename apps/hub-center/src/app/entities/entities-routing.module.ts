@@ -4,14 +4,19 @@ import { authGuard } from '@hub-center/guard';
 
 const routes: Routes = [
   {
-    path: 'hub',
+    path: '',
+    redirectTo: 'adv/device',
+    pathMatch: 'full'
+  },
+  {
+    path: 'adv',
     canActivate: [authGuard],
     children: [
       {
-        path: 'create-post',
+        path: 'device',
         loadComponent: () =>
-          import('./setting-post/create-post/create-post.component').then(
-            (m) => m.CreatePostComponent
+          import('./setting-device/list-device/list-device.component').then(
+            (m) => m.ListPostComponent
           ),
         canActivate: [authGuard],
       },

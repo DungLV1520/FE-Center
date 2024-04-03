@@ -24,6 +24,7 @@ import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { TuiRootModule } from '@taiga-ui/core';
 registerLocaleData(en);
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -42,6 +43,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
     HttpClientJsonpModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    TuiRootModule
   ],
   providers: [
     { provide: NZ_ICONS, useValue: icons },

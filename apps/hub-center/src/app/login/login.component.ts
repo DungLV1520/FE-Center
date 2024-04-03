@@ -10,7 +10,7 @@ import {
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
-  selector: 'hub-login',
+  selector: 'adv-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
@@ -31,9 +31,9 @@ export class LoginComponent {
     private localStorageService: LocalStorageService,
     private notification: NzNotificationService
   ) {
-    const user = this.localStorageService.getItem(LocalStoreEnum.CUSTOMER_KEY);
-    if (user) {
-      this.router.navigate(['hub/create-post']);
+    const accessToken = this.localStorageService.getItem(LocalStoreEnum.ACCESS_TOKEN);
+    if (accessToken) {
+      this.router.navigate(['/adv/device']);
     }
   }
 
@@ -44,7 +44,6 @@ export class LoginComponent {
       const obj = {
         username: formValue.userName,
         password: formValue.password,
-        rememberMe: true
       };
 
       this.apiUserService
@@ -64,7 +63,14 @@ export class LoginComponent {
                 nzDuration: 2000,
               }
             );
-            this.router.navigate(['hub/create-post']);
+            this.router.navigate(['adv/device']);
+          },
+          error: (err) => {
+            console.log(err);
+
+            this.notification.create('error', 'Thông báo', err, {
+              nzDuration: 2000,
+            });
           },
         });
     } else {

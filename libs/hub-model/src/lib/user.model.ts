@@ -3,7 +3,6 @@
 export interface ILoginReq {
   username: string;
   password: string;
-  rememberMe: boolean;
 }
 
 export enum Role {
