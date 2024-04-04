@@ -31,7 +31,9 @@ export class LoginComponent {
     private localStorageService: LocalStorageService,
     private notification: NzNotificationService
   ) {
-    const accessToken = this.localStorageService.getItem(LocalStoreEnum.ACCESS_TOKEN);
+    const accessToken = this.localStorageService.getItem(
+      LocalStoreEnum.ACCESS_TOKEN
+    );
     if (accessToken) {
       this.router.navigate(['/adv/device']);
     }

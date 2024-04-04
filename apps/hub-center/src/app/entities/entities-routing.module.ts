@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'adv/device',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'adv',

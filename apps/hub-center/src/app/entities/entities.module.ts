@@ -4,10 +4,6 @@ import { EntitiesRoutingModule } from './entities-routing.module';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    EntitiesRoutingModule
-  ]
+  imports: [CommonModule, EntitiesRoutingModule],
 })
-export class EntitiesModule {
-}
+export class EntitiesModule {}

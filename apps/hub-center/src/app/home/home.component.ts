@@ -9,7 +9,7 @@ import {
 } from '@angular/router';
 
 @Component({
-  selector: 'hub-home',
+  selector: 'adv-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
