@@ -20,6 +20,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CONFIG_TABLE_COLUMN } from './config-table.config';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 
 @Component({
   selector: 'adv-list-device',
@@ -44,6 +45,7 @@ import { ApiUserService } from '@hub-center/hub-service/api-user';
     NzTableModule,
     NzTagModule,
     NzDatePickerModule,
+    NzPopoverModule
   ],
   providers: [NzNotificationService],
   templateUrl: './list-device.component.html',
@@ -53,6 +55,8 @@ export class ListPostComponent implements OnInit {
   size: NzSelectSizeType = 'large';
   listOfColumn = CONFIG_TABLE_COLUMN;
   devices: any;
+
+  isModeViewTable = true;
 
   constructor(private apiUserService: ApiUserService) {}
 
@@ -68,5 +72,9 @@ export class ListPostComponent implements OnInit {
       console.log(res);
       this.devices = res.data;
     });
+  }
+
+  onShowModeTable() {
+    this.isModeViewTable = !this.isModeViewTable;
   }
 }

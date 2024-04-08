@@ -3,16 +3,28 @@
   nzWidth="256px"
   nzTheme="light"
 >
-  <div class="title-sidebar">
+  <!-- <div class="title-sidebar">
     <span class="line"></span>
     <span class="title-text">Function List </span>
     <span class="line"></span>
-  </div>
+  </div> -->
 
   <ul nz-menu nzMode="inline">
     <li nz-menu-item (click)="navigateOt()" [nzSelected]="isActiveOt">
-      <span nz-icon nzType="mail" nzTheme="outline"></span>
-      <span>Setting Device</span>
+      <span nz-icon nzType="mobile" nzTheme="outline"></span>
+      <span>Danh sách thiết bị</span>
+    </li>
+  </ul>
+  <ul nz-menu nzMode="inline">
+    <li nz-menu-item>
+      <span nz-icon nzType="folder-open" nzTheme="outline"></span>
+      <span>Tệp</span>
+    </li>
+  </ul>
+  <ul nz-menu nzMode="inline">
+    <li nz-menu-item (click)="navigateOt()" [nzSelected]="isActiveOt">
+      <span nz-icon nzType="play-square" nzTheme="outline"></span>
+      <span>Trình chiếu</span>
     </li>
   </ul>
 </nz-sider>
