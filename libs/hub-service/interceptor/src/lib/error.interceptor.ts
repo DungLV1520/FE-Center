@@ -36,7 +36,7 @@ export class JwtInterceptor implements HttpInterceptor {
         localStorage.removeItem(LocalStoreEnum.CUSTOMER_KEY);
         localStorage.removeItem(LocalStoreEnum.ACCESS_TOKEN);
 
-        return throwError(err.error.result.message);
+        return throwError(err?.error?.result?.message);
       })
     );
   }

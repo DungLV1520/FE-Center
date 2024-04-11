@@ -107,9 +107,9 @@ export class ListFileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getListDevices();
-    setInterval(() => {
-      this.getListDevices();
-    }, 10000);
+    // setInterval(() => {
+    //   this.getListDevices();
+    // }, 10000);
   }
 
   getListDevices() {
@@ -158,6 +158,8 @@ export class ListFileComponent implements OnInit {
   }
 
   handleChange(info: any): void {
+    console.log(info);
+
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }

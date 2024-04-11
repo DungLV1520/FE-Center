@@ -67,6 +67,14 @@
     display: flex;
     align-items: center;
   }
+  .file-image {
+    border-radius: 4px;
+  }
+  .file-action{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .content {
@@ -83,7 +91,14 @@
 }
 
 :host :ng-deep {
-  .ant-upload-list-item-info  {
+  .ant-upload-list-item-info {
     display: none !important;
   }
+  iframe {
+    pointer-events: unset !important;
+  }
+}
+
+iframe {
+  pointer-events: unset !important;
 }

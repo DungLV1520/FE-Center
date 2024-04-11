@@ -3,11 +3,7 @@
     <div class="filter-header">
       <div class="search-box">
         <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
-          <input
-            type="text"
-            nz-input
-            placeholder="Tìm kiếm theo tên, series thiết bị"
-          />
+          <input type="text" nz-input placeholder="Tìm kiếm theo tên" />
         </nz-input-group>
         <ng-template #suffixIconSearch>
           <span nz-icon nzType="search"></span>
@@ -24,7 +20,6 @@
             <span nz-icon nzType="upload"></span>
             Thêm tệp
           </button>
-
         </nz-upload>
         <button
           nz-button
@@ -42,7 +37,6 @@
             <span>Chế độ xem: lưới</span>
           </ng-container>
         </button>
-
       </div>
     </div>
     <div class="device-info">
@@ -55,7 +49,7 @@
         #filterTable
         [nzFrontPagination]="false"
         [nzShowPagination]="false"
-        [nzData]="devices"
+        [nzData]="[0]"
       >
         <thead>
           <tr>
@@ -70,7 +64,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of [1,2,3,4]; let i = index">
+          <tr
+            *ngFor="let data of [1, 2, 3, 4, 1, 2, 3, 4, 1, 2]; let i = index"
+          >
             <td nz>{{ i + 1 }}</td>
             <td>
               <nz-tag>hfjdhf</nz-tag>
@@ -78,16 +74,19 @@
             <td>
               <a>hfjdhf</a>
             </td>
-            <td>
-              hfjdhf
-            </td>
-            <td>
-              hfjdhf
-            </td>
             <td>hfjdhf</td>
             <td>hfjdhf</td>
-            <td>
-                <span nz-icon nzType="ellipsis" nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomRight"></span>
+            <td>hfjdhf</td>
+            <td>hfjdhf</td>
+            <td class="text-center">
+              <span
+                nz-icon
+                nzType="ellipsis"
+                nz-dropdown
+                [nzDropdownMenu]="menu2"
+                nzPlacement="bottomRight"
+                style="transform: rotate(90deg)"
+              ></span>
               <nz-dropdown-menu #menu2="nzDropdownMenu">
                 <ul nz-menu>
                   <li nz-menu-item>Di chuyển</li>
@@ -101,19 +100,36 @@
       </nz-table>
     </div>
     <div *ngIf="!isModeViewTable" class="grid-body">
-      <div class="grid-item" *ngFor="let item of [1, 2, 3, 4]">
-        <div class="device-name"><label nz-checkbox >Màn hình 1</label></div>
+      <div class="grid-item" *ngFor="let item of [1, 2, 3, 4, 1, 2, 3, 4]">
+        <div class="device-name"><label nz-checkbox>Màn hình 1</label></div>
         <div class="device-status">
           <div class="w-100 h-100" (click)="show()">
             <img
-              class="w-100 h-100"
+              class="w-100 h-100 file-image"
               src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
               alt=""
             />
           </div>
         </div>
-        <div class="device-play-desc">
+        <div class="file-action">
           <span nz-icon nzType="file-image" nzTheme="outline"></span>
+          <div>
+            <span
+              nz-icon
+              nzType="ellipsis"
+              nz-dropdown
+              [nzDropdownMenu]="menu2"
+              nzPlacement="bottomRight"
+              style="transform: rotate(90deg)"
+            ></span>
+            <nz-dropdown-menu #menu2="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>Di chuyển</li>
+                <li nz-menu-item>Đổi tệp</li>
+                <li nz-menu-item>Xoá tệp</li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
         </div>
       </div>
 
@@ -124,7 +140,7 @@
         </div>
       </ng-template>
     </div>
-    <div class="pagination-footer">
+    <div class="pagination-footer mt-4">
       <nz-pagination
         [nzPageIndex]="0"
         [nzTotal]="10"
@@ -132,7 +148,9 @@
         [nzPageSize]="1"
         [nzShowTotal]="totalTemplate"
       ></nz-pagination>
-      <ng-template #totalTemplate let-total>Tổng: {{ total }} items</ng-template>
+      <ng-template #totalTemplate let-total
+        >Tổng: {{ total }} items</ng-template
+      >
     </div>
   </div>
   <hub-loading></hub-loading>

@@ -49,7 +49,7 @@ export const CONFIG_TABLE_COLUMN = [
     filterMultiple: true,
   },
   {
-    title: "Tác vụ",
+    title: "",
     priority: 7,
     listOfFilter: [],
     filterFn: null,
