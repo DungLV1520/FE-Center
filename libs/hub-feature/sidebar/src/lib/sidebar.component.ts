@@ -31,10 +31,14 @@ export class SidebarComponent {
   constructor(private router: Router) {}
 
   navigateOt(): void {
-    this.router.navigate(['log/ot']);
+    this.router.navigate(['adv/device']);
+    this.isActiveOt = true;
+    this.isActiveAbs = false;
   }
 
   navigateAbs(): void {
-    this.router.navigate(['log/abs']);
+    this.router.navigate(['adv/file']);
+    this.isActiveAbs = true;
+    this.isActiveOt = false;
   }
 }

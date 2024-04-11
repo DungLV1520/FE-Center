@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  NO_ERRORS_SCHEMA,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -21,9 +28,22 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CONFIG_TABLE_COLUMN } from './config-table.config';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import {
+  TuiPreviewDialogService,
+  TuiPreviewModule,
+} from '@taiga-ui/addon-preview';
+import { tuiClamp } from '@taiga-ui/cdk';
+import {
+  TuiDialogContext,
+  TuiAlertService,
+  TuiButtonModule,
+} from '@taiga-ui/core';
+import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
+import { TuiRootModule } from '@taiga-ui/core';
+import {TuiTooltipModule, TuiHintModule} from '@taiga-ui/core'
 
 @Component({
-  selector: 'adv-list-device',
+  selector: 'adv-list-file',
   standalone: true,
   imports: [
     CommonModule,
@@ -45,20 +65,40 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
     NzTableModule,
     NzTagModule,
     NzDatePickerModule,
-    NzPopoverModule
+    NzPopoverModule,
+    TuiRootModule,
+    TuiPreviewModule,
+    TuiButtonModule,
+    TuiTooltipModule,
+    TuiHintModule,
   ],
   providers: [NzNotificationService],
-  templateUrl: './list-device.component.html',
-  styleUrls: ['./list-device.component.scss'],
+  templateUrl: './list-file.component.html',
+  styleUrls: ['./list-file.component.scss'],
+  schemas: [NO_ERRORS_SCHEMA],
 })
-export class ListDeviceComponent implements OnInit {
+export class ListFileComponent implements OnInit {
   size: NzSelectSizeType = 'large';
   listOfColumn = CONFIG_TABLE_COLUMN;
   devices: any;
 
   isModeViewTable = true;
+  @ViewChild('preview')
+  readonly preview?: TemplateRef<TuiDialogContext>;
 
-  constructor(private apiUserService: ApiUserService) {}
+  @ViewChild('contentSample')
+  readonly contentSample?: TemplateRef<Record<string, unknown>>;
+
+  index = 0;
+  length = 2;
+
+  constructor(
+    private apiUserService: ApiUserService,
+    @Inject(TuiPreviewDialogService)
+    private readonly previewService: TuiPreviewDialogService,
+    @Inject(TuiAlertService)
+    private readonly alerts: TuiAlertService,
+  ) {}
 
   ngOnInit(): void {
     this.getListDevices();
@@ -76,5 +116,39 @@ export class ListDeviceComponent implements OnInit {
 
   onShowModeTable() {
     this.isModeViewTable = !this.isModeViewTable;
+  }
+
+  get title(): string {
+    return this.index === 0 ? 'Transaction cert.jpg' : 'My face.jpg';
+  }
+
+  get previewContent(): PolymorpheusContent {
+    return this.index === 0 && this.contentSample
+      ? this.contentSample
+      : 'https://avatars.githubusercontent.com/u/10106368';
+  }
+
+  show(): void {
+    this.previewService.open(this.preview || '').subscribe({
+      complete: () => console.info('complete'),
+    });
+  }
+
+  download(): void {
+    this.alerts.open('Downloading...').subscribe();
+  }
+
+  delete(): void {
+    this.alerts.open('Deleting...').subscribe();
+  }
+
+  onSwipe(swipe: any): void {
+    if (swipe.direction === 'left') {
+      this.index = tuiClamp(this.index + 1, 0, this.length - 1);
+    }
+
+    if (swipe.direction === 'right') {
+      this.index = tuiClamp(this.index - 1, 0, this.length - 1);
+    }
   }
 }

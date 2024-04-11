@@ -8,6 +8,7 @@ import {
 } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { LocalStoreEnum } from '@hub-center/hub-service/storage';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -26,9 +27,14 @@ export class JwtInterceptor implements HttpInterceptor {
         }
       }),
       catchError((err) => {
+        console.log(err);
+
         if (err.status === 401) {
           this.router.navigate(['/login']);
         }
+
+        localStorage.removeItem(LocalStoreEnum.CUSTOMER_KEY);
+        localStorage.removeItem(LocalStoreEnum.ACCESS_TOKEN);
 
         return throwError(err.error.result.message);
       })
