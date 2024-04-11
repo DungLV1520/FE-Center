@@ -90,4 +90,11 @@ export const CONFIG_TABLE_COLUMN = [
     filterFn: null,
     filterMultiple: true,
   },
+  {
+    title: '',
+    priority: 11,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
 ];

@@ -24,47 +24,76 @@
       margin-top: 24px;
       margin-bottom: 16px;
     }
-    .table-body {
+    .content-wrapper {
       flex: 1;
-      background: white;
-    }
-    .grid-body {
-      // flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 16px 24px;
-      .grid-item {
-        cursor: pointer;
-        padding: 16px;
+      overflow: hidden;
+      .table-body {
+        height: 100%;
         background: white;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        border: 1px solid #0000000f;
-        border-radius: 8px;
-        .device-name {
-          font-size: 16px;
-          font-weight: 400;
-          line-height: 24px;
-          text-align: left;
-        }
-        .device-status {
+      }
+      .grid-body {
+        max-height: 100%;
+        overflow: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 16px 24px;
+        .grid-item {
+          cursor: pointer;
+          padding: 16px;
+          background: white;
           display: flex;
-          flex-direction: row;
-          align-items: center;
-          gap: 10px;
-          .time-desc {
-            font-size: 14px;
+          flex-direction: column;
+          gap: 16px;
+          border: 1px solid #0000000f;
+          border-radius: 8px;
+          .device-name {
+            font-size: 16px;
             font-weight: 400;
-            line-height: 22px;
+            line-height: 24px;
             text-align: left;
+          }
+          .device-status {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            .time-desc {
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 22px;
+              text-align: left;
+            }
+          }
+          .device-play-desc {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            .icon-more-action {
+              display: none;
+            }
+          }
+          &:hover {
+            .device-play-desc .icon-more-action {
+              display: flex;
+              align-items: center;
+            }
           }
         }
       }
+    }
+    .pagination-footer {
+      margin-top: 24px;
     }
   }
   .create-team {
     display: flex;
     align-items: center;
+  }
+
+  ::ng-deep {
+    .ant-table-cell {
+      white-space: nowrap;
+    }
   }
 }

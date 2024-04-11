@@ -12,7 +12,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { HubFeatureLoadingModule } from '@hub-center/loading';
+import { HubFeatureLoadingModule, LoadingService } from '@hub-center/loading';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -21,6 +21,22 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CONFIG_TABLE_COLUMN } from './config-table.config';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
+import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
+import { switchMap, map, tap } from 'rxjs/operators';
+
+interface IDevice {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+  available: boolean;
+  timeOffAgo: string;
+  location: string;
+  identityDevice: string;
+  userId: string;
+  insDatetime: string;
+  updDatetime: string;
+}
 
 @Component({
   selector: 'adv-list-device',
@@ -45,7 +61,7 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
     NzTableModule,
     NzTagModule,
     NzDatePickerModule,
-    NzPopoverModule
+    NzPopoverModule,
   ],
   providers: [NzNotificationService],
   templateUrl: './list-device.component.html',
@@ -54,27 +70,58 @@ import { NzPopoverModule } from 'ng-zorro-antd/popover';
 export class ListDeviceComponent implements OnInit {
   size: NzSelectSizeType = 'large';
   listOfColumn = CONFIG_TABLE_COLUMN;
-  devices: any;
-
+  totalDevicesCount = 0;
+  totalDevicesOnlineCount = 0;
+  totalDevicesOfflineCount = 0;
   isModeViewTable = true;
 
-  constructor(private apiUserService: ApiUserService) {}
+  devices$: Observable<IDevice[]> | null = null;
+  currentPage$ = new BehaviorSubject<number>(1);
+  pageSize = 15;
+  allDevices: IDevice[] = []; // Lưu trữ toàn bộ dữ liệu
+
+  constructor(private apiUserService: ApiUserService, private loadingService: LoadingService) {}
 
   ngOnInit(): void {
-    this.getListDevices();
+    this.loadingService.showLoading();
+    this.loadDevices();
     setInterval(() => {
-      this.getListDevices();
+      this.loadDevices();
     }, 10000);
   }
 
-  getListDevices() {
-    this.apiUserService.getListDevice().subscribe((res: any) => {
-      console.log(res);
-      this.devices = res.data;
+  loadDevices() {
+    this.apiUserService.getListDevice().subscribe((res) => {
+      this.allDevices = ((res as any)?.data as IDevice[]) ?? [];
+      this.totalDevicesCount = this.allDevices.length; // Tính tổng số lượng thiết bị
+      this.totalDevicesOnlineCount = this.allDevices.filter(
+        (item: any) => item.status === 'ACTIVE'
+      ).length;
+      this.totalDevicesOfflineCount =
+        this.totalDevicesCount - this.totalDevicesOnlineCount;
+      this.updateDisplayedDevices();
     });
+    this.loadingService.hideLoading();
+  }
+
+  updateDisplayedDevices() {
+    const startIndex = (this.currentPage$.value - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.devices$ = of(this.allDevices.slice(startIndex, endIndex));
+  }
+
+  handlePageChange(pageIndex: number) {
+    this.currentPage$.next(pageIndex);
+    this.updateDisplayedDevices();
   }
 
   onShowModeTable() {
     this.isModeViewTable = !this.isModeViewTable;
+  }
+
+  reloadPage() {
+    this.loadingService.showLoading();
+    this.currentPage$.next(1);
+    this.loadDevices();
   }
 }

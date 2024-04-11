@@ -29,194 +29,176 @@
           <span>Chế độ xem: lưới</span>
         </ng-container>
       </button>
-      <button nz-button nzType="default" class="create-team" nzSize="large">
+      <button (click)="reloadPage()" nz-button nzType="default" class="create-team" nzSize="large">
         <span nz-icon nzType="reload" nzTheme="outline"></span>
         <span>Cập nhật danh sách</span>
       </button>
     </div>
   </div>
   <div class="device-info">
-    <nz-tag>Tổng: 130</nz-tag>
-    <nz-tag [nzColor]="'green'">Đang hoạt động: 100</nz-tag>
-    <nz-tag [nzColor]="'red'">Mất kết nối: 30</nz-tag>
-  </div>
-  <div *ngIf="isModeViewTable" class="table-body" style="overflow: auto">
-    <nz-table
-      #filterTable
-      [nzFrontPagination]="false"
-      [nzShowPagination]="false"
-      [nzData]="devices"
+    <nz-tag>Tổng: {{ totalDevicesCount }}</nz-tag>
+    <nz-tag [nzColor]="'green'"
+      >Đang hoạt động: {{ totalDevicesOnlineCount }}</nz-tag
     >
-      <thead>
-        <tr>
-          <th
-            *ngFor="let column of listOfColumn"
-            [ngStyle]="{
-              width: column.priority === 0 ? '68px' : '100%',
-              whiteSpace: 'nowrap'
-            }"
-          >
-            {{ column.title }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of devices; let i = index">
-          <td nz>{{ i + 1 }}</td>
-          <td>
-            <nz-tag>{{ data.name }}</nz-tag>
-          </td>
-          <td>
-            <a>{{ data.location }}</a>
-          </td>
-          <td>
-            <nz-tag [nzColor]="data.status === 'ACTIVE' ? 'green' : 'red'">{{
-              data.status
-            }}</nz-tag>
-          </td>
-          <td>
-            <nz-tag [nzColor]="data.available ? 'green' : 'red'">{{
-              data.available ? 'Online' : 'Offline'
-            }}</nz-tag>
-          </td>
-          <td>{{ data.description }}</td>
-          <td>{{ data.identityDevice }}</td>
-          <td>
-            <nz-tag [nzColor]="'geekblue'">{{ data.timeOffAgo }}</nz-tag>
-          </td>
-          <td>{{ data.insDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>
-          <td>{{ data.updDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>
-        </tr>
-      </tbody>
-    </nz-table>
+    <nz-tag [nzColor]="'red'"
+      >Mất kết nối: {{ totalDevicesOfflineCount }}</nz-tag
+    >
   </div>
-  <div *ngIf="!isModeViewTable" class="grid-body">
-    <div class="grid-item" nz-popover nzPopoverTitle="Title" [nzPopoverContent]="contentTemplate" nzPopoverTrigger="hover" [nzPopoverMouseEnterDelay]="1.5">
-      <div class="device-name">Màn hình thang máy 1</div>
-      <div class="device-status">
-        <span nz-icon>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8" r="8" fill="#52C41A" />
-          </svg>
-        </span>
-        <span class="time-desc">10:10 20/03/2022</span>
-      </div>
-      <div class="device-play-desc">
-        <nz-tag [nzColor]="'#5F7EEB'">Đang trình chiếu</nz-tag>
+  <div class="content-wrapper">
+    <div *ngIf="isModeViewTable" class="table-body" style="overflow: auto">
+      <nz-table
+        *ngIf="devices$ | async as devices"
+        #filterTable
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+        [nzData]="devices || []"
+      >
+        <thead>
+          <tr>
+            <th
+              *ngFor="let column of listOfColumn"
+              [ngStyle]="{
+                width: column.priority === 0 ? '68px' : '100%',
+                whiteSpace: 'nowrap'
+              }"
+            >
+              {{ column.title }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of devices; let i = index">
+            <td nz>{{ i + 1 }}</td>
+            <td>
+              {{ data.name }}
+            </td>
+            <td>
+              <nz-tag [nzColor]="data.status === 'ACTIVE' ? 'green' : 'red'">{{
+                data.status === 'ACTIVE' ? 'Đang hoạt động' : 'Mất kết nối'
+              }}</nz-tag>
+            </td>
+            <td>
+              <nz-tag [nzColor]="data.available ? 'green' : 'red'">{{
+                data.available ? 'Đang trình chiếu' : 'Không trình chiếu'
+              }}</nz-tag>
+            </td>
+            <td>-</td>
+
+            <td>-</td>
+            <td>
+              <nz-tag [nzColor]="'geekblue'">{{ data.timeOffAgo }}</nz-tag>
+            </td>
+            <td>
+              {{ data.location }}
+            </td>
+            <td>{{ data.identityDevice }}</td>
+
+            <td>-</td>
+            <td>{{ data.description }}</td>
+            <td>-</td>
+            <td>-</td>
+            <td style="cursor: pointer">
+              <span
+                nz-icon
+                nzType="more"
+                nzTheme="outline"
+                nz-dropdown
+                nzTrigger="click"
+                [nzDropdownMenu]="moreAction"
+              ></span>
+              <nz-dropdown-menu #moreAction="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item>Thiết lập lịch trình chiếu</li>
+                  <li nz-menu-item>Kiểm tra kết nối</li>
+                  <li nz-menu-item>Di chuyển</li>
+                  <li nz-menu-item>Đổi tên</li>
+                  <li style="color: #a00705" nz-menu-item>Xoá thiết bị</li>
+                </ul>
+              </nz-dropdown-menu>
+            </td>
+
+            <!--          <td>{{ data.insDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>-->
+            <!--          <td>{{ data.updDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>-->
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div *ngIf="!isModeViewTable" class="grid-body">
+      <div
+        *ngFor="let device of devices$ | async"
+        class="grid-item"
+        nz-popover
+        nzPopoverTitle="{{ device.name }}"
+        [nzPopoverContent]="contentTemplate"
+        nzPopoverTrigger="hover"
+        [nzPopoverMouseEnterDelay]="1.5"
+      >
+        <div class="device-name">{{ device.name }}</div>
+        <div class="device-status">
+          <span *ngIf="device.status === 'ACTIVE'" nz-icon>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="8" cy="8" r="8" fill="#52C41A" />
+            </svg>
+          </span>
+          <span *ngIf="device.status !== 'ACTIVE'" nz-icon>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="8" cy="8" r="8" fill="#F5222D" />
+            </svg>
+          </span>
+          <span class="time-desc"></span>
+        </div>
+        <div class="device-play-desc">
+          <nz-tag [nzColor]="device.available ? '#5F7EEB' : '#D9D9D9'">{{
+            device.available ? 'Đang trình chiếu' : 'Không trình chiếu'
+          }}</nz-tag>
+          <div class="icon-more-action" (click)="$event.stopPropagation()">
+            <span
+              nz-icon
+              nzType="more"
+              nzTheme="outline"
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="moreAction"
+            ></span>
+            <nz-dropdown-menu #moreAction="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>Thiết lập lịch trình chiếu</li>
+                <li nz-menu-item>Kiểm tra kết nối</li>
+                <li nz-menu-item>Di chuyển</li>
+                <li nz-menu-item>Đổi tên</li>
+                <li style="color: #a00705" nz-menu-item>Xoá thiết bị</li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
+        </div>
+        <ng-template #contentTemplate>
+          <div>
+            <div>Vị trí: {{ device.location }}</div>
+            <!-- Thêm các thông tin khác về thiết bị ở đây -->
+          </div>
+        </ng-template>
       </div>
     </div>
-    <div class="grid-item">
-      <div class="device-name">Màn hình thang máy 1</div>
-      <div class="device-status">
-        <span nz-icon>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8" r="8" fill="#52C41A" />
-          </svg>
-        </span>
-        <span class="time-desc">10:10 20/03/2022</span>
-      </div>
-      <div class="device-play-desc">
-        <nz-tag [nzColor]="'#5F7EEB'">Đang trình chiếu</nz-tag>
-      </div>
-    </div>
-    <div class="grid-item">
-      <div class="device-name">Màn hình thang máy 1</div>
-      <div class="device-status">
-        <span nz-icon>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8" r="8" fill="#52C41A" />
-          </svg>
-        </span>
-        <span class="time-desc">10:10 20/03/2022</span>
-      </div>
-      <div class="device-play-desc">
-        <nz-tag [nzColor]="'#5F7EEB'">Đang trình chiếu</nz-tag>
-      </div>
-    </div>
-    <div class="grid-item">
-      <div class="device-name">Màn hình thang máy 1</div>
-      <div class="device-status">
-        <span nz-icon>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8" r="8" fill="#52C41A" />
-          </svg>
-        </span>
-        <span class="time-desc">10:10 20/03/2022</span>
-      </div>
-      <div class="device-play-desc">
-        <nz-tag [nzColor]="'#5F7EEB'">Đang trình chiếu</nz-tag>
-      </div>
-    </div>
-    <div class="grid-item">
-      <div class="device-name">Màn hình thang máy 1</div>
-      <div class="device-status">
-        <span nz-icon>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8" r="8" fill="#52C41A" />
-          </svg>
-        </span>
-        <span class="time-desc">10:10 20/03/2022</span>
-      </div>
-      <div class="device-play-desc">
-        <nz-tag [nzColor]="'#5F7EEB'">Đang trình chiếu</nz-tag>
-      </div>
-    </div>
-    <div class="grid-item">
-      <div class="device-name">Màn hình thang máy 1</div>
-      <div class="device-status">
-        <span nz-icon>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="8" cy="8" r="8" fill="#F5222D" />
-          </svg>
-        </span>
-        <span class="time-desc">10:10 20/03/2022</span>
-      </div>
-      <div class="device-play-desc">
-        <nz-tag [nzColor]="'#D9D9D9'">Không trình chiếu</nz-tag>
-      </div>
-    </div>
-    <ng-template #contentTemplate>
-      <div>
-        <p>Content</p>
-        <p>Content</p>
-      </div>
-    </ng-template>
+  </div>
+  <div class="pagination-footer">
+    <nz-pagination
+      [nzPageIndex]="currentPage$ | async"
+      [nzTotal]="totalDevicesCount"
+      [nzPageSize]="pageSize"
+      (nzPageIndexChange)="handlePageChange($event)"
+    ></nz-pagination>
   </div>
 </div>
 <hub-loading></hub-loading>
