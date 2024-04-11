@@ -41,6 +41,7 @@ import {
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiRootModule } from '@taiga-ui/core';
 import {TuiTooltipModule, TuiHintModule} from '@taiga-ui/core'
+import { NzUploadModule } from 'ng-zorro-antd/upload';
 
 @Component({
   selector: 'adv-list-file',
@@ -71,6 +72,7 @@ import {TuiTooltipModule, TuiHintModule} from '@taiga-ui/core'
     TuiButtonModule,
     TuiTooltipModule,
     TuiHintModule,
+    NzUploadModule
   ],
   providers: [NzNotificationService],
   templateUrl: './list-file.component.html',
@@ -81,6 +83,9 @@ export class ListFileComponent implements OnInit {
   size: NzSelectSizeType = 'large';
   listOfColumn = CONFIG_TABLE_COLUMN;
   devices: any;
+  totalItems = 0;
+  pageIndex = 1;
+  pageSize = 10;
 
   isModeViewTable = true;
   @ViewChild('preview')
@@ -150,5 +155,12 @@ export class ListFileComponent implements OnInit {
     if (swipe.direction === 'right') {
       this.index = tuiClamp(this.index - 1, 0, this.length - 1);
     }
+  }
+
+  handleChange(info: any): void {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+
   }
 }

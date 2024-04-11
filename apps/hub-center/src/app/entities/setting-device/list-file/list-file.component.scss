@@ -67,7 +67,6 @@
     display: flex;
     align-items: center;
   }
-
 }
 
 .content {
@@ -81,4 +80,10 @@
 
 .polymorpheus {
   padding: 2.5rem 10.375rem;
+}
+
+:host :ng-deep {
+  .ant-upload-list-item-info  {
+    display: none !important;
+  }
 }
