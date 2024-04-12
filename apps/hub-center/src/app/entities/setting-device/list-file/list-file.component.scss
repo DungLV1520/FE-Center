@@ -70,10 +70,13 @@
   .file-image {
     border-radius: 4px;
   }
-  .file-action{
+  .file-action {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .bg-active {
+    background: #bae7ff !important;
   }
 }
 
@@ -98,7 +101,6 @@
     pointer-events: unset !important;
   }
 }
-
 iframe {
   pointer-events: unset !important;
 }

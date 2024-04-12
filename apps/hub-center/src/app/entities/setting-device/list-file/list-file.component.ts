@@ -40,7 +40,7 @@ import {
 } from '@taiga-ui/core';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiRootModule } from '@taiga-ui/core';
-import {TuiTooltipModule, TuiHintModule} from '@taiga-ui/core'
+import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 
 @Component({
@@ -72,7 +72,7 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
     TuiButtonModule,
     TuiTooltipModule,
     TuiHintModule,
-    NzUploadModule
+    NzUploadModule,
   ],
   providers: [NzNotificationService],
   templateUrl: './list-file.component.html',
@@ -86,14 +86,11 @@ export class ListFileComponent implements OnInit {
   totalItems = 0;
   pageIndex = 1;
   pageSize = 10;
-
   isModeViewTable = true;
   @ViewChild('preview')
   readonly preview?: TemplateRef<TuiDialogContext>;
-
   @ViewChild('contentSample')
   readonly contentSample?: TemplateRef<Record<string, unknown>>;
-
   index = 0;
   length = 2;
 
@@ -102,14 +99,11 @@ export class ListFileComponent implements OnInit {
     @Inject(TuiPreviewDialogService)
     private readonly previewService: TuiPreviewDialogService,
     @Inject(TuiAlertService)
-    private readonly alerts: TuiAlertService,
+    private readonly alerts: TuiAlertService
   ) {}
 
   ngOnInit(): void {
     this.getListDevices();
-    // setInterval(() => {
-    //   this.getListDevices();
-    // }, 10000);
   }
 
   getListDevices() {
@@ -163,6 +157,11 @@ export class ListFileComponent implements OnInit {
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
+  }
 
+  checked?: boolean[] = new Array(8).fill(false);
+
+  showChecked(index: number): void {
+    console.log(index);
   }
 }

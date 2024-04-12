@@ -100,8 +100,16 @@
       </nz-table>
     </div>
     <div *ngIf="!isModeViewTable" class="grid-body">
-      <div class="grid-item" *ngFor="let item of [1, 2, 3, 4, 1, 2, 3, 4]">
-        <div class="device-name"><label nz-checkbox>Màn hình 1</label></div>
+      <div
+        class="grid-item"
+        *ngFor="let item of [1, 2, 3, 4, 1, 2, 3, 4]; let i = index"
+        [ngClass]="{ 'bg-active': checked![i] }"
+      >
+        <div class="device-name">
+          <label nz-checkbox [(ngModel)]="checked![i]"
+            >Màn hình {{ i + 1 }}</label
+          >
+        </div>
         <div class="device-status">
           <div class="w-100 h-100" (click)="show()">
             <img
