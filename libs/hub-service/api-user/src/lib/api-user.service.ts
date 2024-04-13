@@ -58,4 +58,11 @@ export class ApiUserService {
     return this.http.get(this.hubBackendApiEndpoint + `device/get-list`);
   }
 
+  getListFolder() {
+    return this.http.get(this.hubBackendApiEndpoint + `folder/list`);
+  }
+
+  getListFile(obj: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `document/search`, obj);
+  }
 }

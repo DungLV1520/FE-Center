@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { Router, RouterModule } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { ApiUserService } from '@hub-center/hub-service/api-user';
 
 @Component({
   selector: 'hub-sidebar',
@@ -18,7 +19,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   office: any;
   ROUTE_TEAM = '/personnel/team';
   ROUTE_USER = '/personnel/user';
@@ -27,8 +28,13 @@ export class SidebarComponent {
   isActiveAbs = false;
   indexPer?: number;
   officeId?: number;
+  folder:any
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiUserService: ApiUserService) {}
+
+  ngOnInit(): void {
+    this.getListFolder();
+  }
 
   navigateOt(): void {
     this.router.navigate(['adv/device']);
@@ -36,9 +42,15 @@ export class SidebarComponent {
     this.isActiveAbs = false;
   }
 
-  navigateAbs(): void {
-    this.router.navigate(['adv/file']);
+  navigateAbs(data:any): void {
+    this.router.navigate(['adv/file'], { queryParams: { folderId: data.id } });
     this.isActiveAbs = true;
     this.isActiveOt = false;
+  }
+
+  getListFolder(): void {
+    this.apiUserService.getListFolder().subscribe((res: any) => {
+      this.folder = res.data
+    });
   }
 }

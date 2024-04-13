@@ -42,6 +42,7 @@ import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'adv-list-file',
@@ -93,23 +94,30 @@ export class ListFileComponent implements OnInit {
   readonly contentSample?: TemplateRef<Record<string, unknown>>;
   index = 0;
   length = 2;
+  file: any;
+  totalElements:any
+  totalImage:any
+  totalVideo:any
 
   constructor(
     private apiUserService: ApiUserService,
     @Inject(TuiPreviewDialogService)
     private readonly previewService: TuiPreviewDialogService,
     @Inject(TuiAlertService)
-    private readonly alerts: TuiAlertService
+    private readonly alerts: TuiAlertService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.getListDevices();
-  }
-
-  getListDevices() {
-    this.apiUserService.getListDevice().subscribe((res: any) => {
-      console.log(res);
-      this.devices = res.data;
+    this.route.queryParams.subscribe((params) => {
+      if (params['folderId']) {
+        const obj = {
+          folderId: params['folderId'],
+          page: 0,
+          size: 100,
+        };
+        this.getListFile(obj);
+      }
     });
   }
 
@@ -163,5 +171,15 @@ export class ListFileComponent implements OnInit {
 
   showChecked(index: number): void {
     console.log(index);
+  }
+
+  getListFile(obj: any): void {
+    this.apiUserService.getListFile(obj).subscribe((res: any) => {
+      this.file = res.data;
+      this.totalElements = res.data.totalElements;
+      this.totalImage = res.data.totalImage;
+      this.totalVideo = res.data.totalVideo;
+
+    });
   }
 }

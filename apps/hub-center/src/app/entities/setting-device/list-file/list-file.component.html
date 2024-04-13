@@ -40,16 +40,16 @@
       </div>
     </div>
     <div class="device-info">
-      <nz-tag>Tổng: 130 tệp</nz-tag>
-      <nz-tag>Ảnh: 100 tệp</nz-tag>
-      <nz-tag>Video: 30 tệp</nz-tag>
+      <nz-tag>Tổng: {{totalElements}} tệp</nz-tag>
+      <nz-tag>Ảnh: {{totalImage}} tệp</nz-tag>
+      <nz-tag>Video: {{totalVideo}} tệp</nz-tag>
     </div>
     <div *ngIf="isModeViewTable" class="table-body" style="overflow: auto">
       <nz-table
         #filterTable
         [nzFrontPagination]="false"
         [nzShowPagination]="false"
-        [nzData]="[0]"
+        [nzData]="file"
       >
         <thead>
           <tr>
@@ -65,19 +65,19 @@
         </thead>
         <tbody>
           <tr
-            *ngFor="let data of [1, 2, 3, 4, 1, 2, 3, 4, 1, 2]; let i = index"
+            *ngFor="let data of file; let i = index"
           >
             <td nz>{{ i + 1 }}</td>
             <td>
-              <nz-tag>hfjdhf</nz-tag>
+              {{data.name}}
             </td>
             <td>
-              <a>hfjdhf</a>
+              <a> {{data.size}} KB</a>
             </td>
-            <td>hfjdhf</td>
-            <td>hfjdhf</td>
-            <td>hfjdhf</td>
-            <td>hfjdhf</td>
+            <td>{{data.type}}</td>
+            <td>{{data.status}}</td>
+            <td>{{data.uploadedTime}}</td>
+            <td>{{data.location}}</td>
             <td class="text-center">
               <span
                 nz-icon

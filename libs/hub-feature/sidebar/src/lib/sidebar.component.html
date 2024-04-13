@@ -3,24 +3,30 @@
   nzWidth="256px"
   nzTheme="light"
 >
-
-  <ul
-    nz-menu
-    nzMode="inline"
-  >
+  <ul nz-menu nzMode="inline">
     <li nz-menu-item (click)="navigateOt()" [nzSelected]="isActiveOt">
       <span nz-icon nzType="mobile" nzTheme="outline"></span>
       <span>Danh sách thiết bị</span>
     </li>
   </ul>
-
-  <ul
-    nz-menu
-    nzMode="inline"
-  >
-    <li nz-menu-item (click)="navigateAbs()" [nzSelected]="isActiveAbs">
-      <span nz-icon nzType="play-square" nzTheme="outline"></span>
-      <span>Tệp</span>
+  <ul nz-menu nzMode="inline" class="sider-menu">
+    <li nz-submenu nzIcon="user" nzTitle="Tệp">
+      <ul>
+        <li
+          nz-menu-item
+          *ngFor="let data of folder; let i = index"
+          (click)="navigateAbs(data)"
+          [nzSelected]="indexPer === i"
+        >
+          {{ data.name }}
+        </li>
+      </ul>
     </li>
   </ul>
 </nz-sider>
+<ul nz-menu nzMode="inline">
+  <li nz-menu-item>
+    <span nz-icon nzType="mobile" nzTheme="outline"></span>
+    <span>Trình chiếu</span>
+  </li>
+</ul>

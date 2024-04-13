@@ -21,8 +21,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { CONFIG_TABLE_COLUMN } from './config-table.config';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
-import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 
 interface IDevice {
   id: string;
@@ -80,7 +79,10 @@ export class ListDeviceComponent implements OnInit {
   pageSize = 15;
   allDevices: IDevice[] = []; // Lưu trữ toàn bộ dữ liệu
 
-  constructor(private apiUserService: ApiUserService, private loadingService: LoadingService) {}
+  constructor(
+    private apiUserService: ApiUserService,
+    private loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.loadingService.showLoading();
