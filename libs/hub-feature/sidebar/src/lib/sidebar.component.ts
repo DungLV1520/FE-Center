@@ -28,21 +28,25 @@ export class SidebarComponent implements OnInit {
   isActiveAbs = false;
   indexPer?: number;
   officeId?: number;
-  folder:any
+  folder: any;
+  regions: any;
 
   constructor(private router: Router, private apiUserService: ApiUserService) {}
 
   ngOnInit(): void {
+    this.getListRegion();
     this.getListFolder();
   }
 
-  navigateOt(): void {
-    this.router.navigate(['adv/device']);
+  navigateOt(data: any): void {
+    this.router.navigate(['adv/device'], {
+      queryParams: { regionId: data.id },
+    });
     this.isActiveOt = true;
     this.isActiveAbs = false;
   }
 
-  navigateAbs(data:any): void {
+  navigateAbs(data: any): void {
     this.router.navigate(['adv/file'], { queryParams: { folderId: data.id } });
     this.isActiveAbs = true;
     this.isActiveOt = false;
@@ -50,7 +54,14 @@ export class SidebarComponent implements OnInit {
 
   getListFolder(): void {
     this.apiUserService.getListFolder().subscribe((res: any) => {
-      this.folder = res.data
+      this.folder = res.data;
+    });
+  }
+
+  getListRegion(): void {
+    this.apiUserService.getListRegion().subscribe((res: any) => {
+      this.regions = res.data;
+      if (this.regions.length > 0) this.navigateOt(this.regions[0]);
     });
   }
 }

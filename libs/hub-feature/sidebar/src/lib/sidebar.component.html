@@ -4,9 +4,17 @@
   nzTheme="light"
 >
   <ul nz-menu nzMode="inline">
-    <li nz-menu-item (click)="navigateOt()" [nzSelected]="isActiveOt">
-      <span nz-icon nzType="mobile" nzTheme="outline"></span>
-      <span>Danh sách thiết bị</span>
+    <li nz-submenu nzIcon="mobile" nzOpen nzTitle="Danh sách thiết bị">
+      <ul>
+        <li
+          nz-menu-item
+          *ngFor="let data of regions; let i = index"
+          (click)="navigateOt(data)"
+          [nzSelected]="i === 0"
+        >
+          {{ data.name }}
+        </li>
+      </ul>
     </li>
   </ul>
   <ul nz-menu nzMode="inline" class="sider-menu">

@@ -29,7 +29,13 @@
           <span>Chế độ xem: lưới</span>
         </ng-container>
       </button>
-      <button (click)="reloadPage()" nz-button nzType="default" class="create-team" nzSize="large">
+      <button
+        (click)="reloadPage()"
+        nz-button
+        nzType="default"
+        class="create-team"
+        nzSize="large"
+      >
         <span nz-icon nzType="reload" nzTheme="outline"></span>
         <span>Cập nhật danh sách</span>
       </button>
@@ -86,17 +92,19 @@
 
             <td>-</td>
             <td>
-              <nz-tag [nzColor]="'geekblue'">{{ data.timeOffAgo }}</nz-tag>
+              {{
+                Date.now() - Number(data.timeOffAgo) | date : 'hh:mm dd/MM/yyyy'
+              }}
             </td>
             <td>
               {{ data.location }}
             </td>
-            <td>{{ data.identityDevice }}</td>
+            <td>{{ data.model }}</td>
 
-            <td>-</td>
-            <td>{{ data.description }}</td>
-            <td>-</td>
-            <td>-</td>
+            <td>{{ data.serialNumber }}</td>
+            <td>{{ data.manufacturer }}</td>
+            <td>{{ data.appVersion }}</td>
+            <td>{{ data.osVersion }}</td>
             <td style="cursor: pointer">
               <span
                 nz-icon
@@ -111,8 +119,16 @@
                   <li nz-menu-item>Thiết lập lịch trình chiếu</li>
                   <li nz-menu-item>Kiểm tra kết nối</li>
                   <li nz-menu-item>Di chuyển</li>
-                  <li nz-menu-item>Đổi tên</li>
-                  <li style="color: #a00705" nz-menu-item>Xoá thiết bị</li>
+                  <li nz-menu-item (click)="renameDevice(data.id, data.name)">
+                    Đổi tên
+                  </li>
+                  <li
+                    style="color: #a00705"
+                    nz-menu-item
+                    (click)="onConfirmDeleteDevice(data.id, data.name)"
+                  >
+                    Xoá thiết bị
+                  </li>
                 </ul>
               </nz-dropdown-menu>
             </td>
@@ -177,16 +193,28 @@
                 <li nz-menu-item>Thiết lập lịch trình chiếu</li>
                 <li nz-menu-item>Kiểm tra kết nối</li>
                 <li nz-menu-item>Di chuyển</li>
-                <li nz-menu-item>Đổi tên</li>
-                <li style="color: #a00705" nz-menu-item>Xoá thiết bị</li>
+                <li nz-menu-item (click)="renameDevice(device.id, device.name)">
+                  Đổi tên
+                </li>
+                <li
+                  style="color: #a00705"
+                  nz-menu-item
+                  (click)="onConfirmDeleteDevice(device.id, device.name)"
+                >
+                  Xoá thiết bị
+                </li>
               </ul>
             </nz-dropdown-menu>
           </div>
         </div>
         <ng-template #contentTemplate>
           <div>
+            <div>Model máy: {{ device.model }}</div>
+            <div>Số seri: {{ device.serialNumber }}</div>
+            <div>Hãng sản xuất: {{ device.manufacturer }}</div>
+            <div>Phiên bản app: {{ device.appVersion }}</div>
+            <div>Phiên bản hệ điều hành: {{ device.osVersion }}</div>
             <div>Vị trí: {{ device.location }}</div>
-            <!-- Thêm các thông tin khác về thiết bị ở đây -->
           </div>
         </ng-template>
       </div>

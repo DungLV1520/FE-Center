@@ -58,11 +58,29 @@ export class ApiUserService {
     return this.http.get(this.hubBackendApiEndpoint + `device/get-list`);
   }
 
+  getDeviceByRegionID(params: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `device/search`, params);
+  }
+
+  getListRegion() {
+    return this.http.get(this.hubBackendApiEndpoint + `region/list`);
+  }
+
   getListFolder() {
     return this.http.get(this.hubBackendApiEndpoint + `folder/list`);
   }
 
   getListFile(obj: any) {
     return this.http.post(this.hubBackendApiEndpoint + `document/search`, obj);
+  }
+
+  deleteDevice(id: string) {
+    return this.http.delete(this.hubBackendApiEndpoint + `device/delete`, {
+      params: { ids: [id] },
+    });
+  }
+
+  renameDevice(params: any) {
+    return this.http.put(this.hubBackendApiEndpoint + `device/rename`, params);
   }
 }
