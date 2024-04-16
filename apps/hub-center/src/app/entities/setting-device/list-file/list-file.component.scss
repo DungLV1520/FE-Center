@@ -78,6 +78,12 @@
   .bg-active {
     background: #bae7ff !important;
   }
+  .empty{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .content {

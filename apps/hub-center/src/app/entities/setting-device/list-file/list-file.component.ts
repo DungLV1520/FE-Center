@@ -175,11 +175,10 @@ export class ListFileComponent implements OnInit {
 
   getListFile(obj: any): void {
     this.apiUserService.getListFile(obj).subscribe((res: any) => {
-      this.file = res.data;
+      this.file = res.data.content;
       this.totalElements = res.data.totalElements;
       this.totalImage = res.data.totalImage;
       this.totalVideo = res.data.totalVideo;
-
     });
   }
 }

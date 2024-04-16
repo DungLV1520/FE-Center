@@ -40,9 +40,9 @@
       </div>
     </div>
     <div class="device-info">
-      <nz-tag>Tổng: {{totalElements}} tệp</nz-tag>
-      <nz-tag>Ảnh: {{totalImage}} tệp</nz-tag>
-      <nz-tag>Video: {{totalVideo}} tệp</nz-tag>
+      <nz-tag>Tổng: {{ totalElements }} tệp</nz-tag>
+      <nz-tag>Ảnh: {{ totalImage }} tệp</nz-tag>
+      <nz-tag>Video: {{ totalVideo }} tệp</nz-tag>
     </div>
     <div *ngIf="isModeViewTable" class="table-body" style="overflow: auto">
       <nz-table
@@ -64,20 +64,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let data of file; let i = index"
-          >
+          <tr *ngFor="let data of file; let i = index">
             <td nz>{{ i + 1 }}</td>
             <td>
-              {{data.name}}
+              {{ data.name }}
             </td>
             <td>
-              <a> {{data.size}} KB</a>
+              <a> {{ data.size }} KB</a>
             </td>
-            <td>{{data.type}}</td>
-            <td>{{data.status}}</td>
-            <td>{{data.uploadedTime}}</td>
-            <td>{{data.location}}</td>
+            <td>{{ data.type }}</td>
+            <td>{{ data.status }}</td>
+            <td>{{ data.uploadedTime }}</td>
+            <td>{{ data.location }}</td>
             <td class="text-center">
               <span
                 nz-icon
@@ -99,70 +97,105 @@
         </tbody>
       </nz-table>
     </div>
-    <div *ngIf="!isModeViewTable" class="grid-body">
-      <div
-        class="grid-item"
-        *ngFor="let item of [1, 2, 3, 4, 1, 2, 3, 4]; let i = index"
-        [ngClass]="{ 'bg-active': checked![i] }"
-      >
-        <div class="device-name">
-          <label nz-checkbox [(ngModel)]="checked![i]"
-            >Màn hình {{ i + 1 }}</label
+    <ng-container *ngIf="!isModeViewTable">
+      <ng-container *ngIf="file.length < 0; else notFile">
+        <div class="grid-body">
+          <div
+            class="grid-item"
+            *ngFor="let item of file; let i = index"
+            [ngClass]="{ 'bg-active': checked![i] }"
           >
-        </div>
-        <div class="device-status">
-          <div class="w-100 h-100" (click)="show()">
-            <img
-              class="w-100 h-100 file-image"
-              src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
-              alt=""
-            />
+            <div class="device-name">
+              <label nz-checkbox [(ngModel)]="checked![i]"
+                >Màn hình {{ i + 1 }}</label
+              >
+            </div>
+            <div class="device-status">
+              <div class="w-100 h-100" (click)="show()">
+                <img
+                  class="w-100 h-100 file-image"
+                  src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div class="file-action">
+              <span nz-icon nzType="file-image" nzTheme="outline"></span>
+              <div>
+                <span
+                  nz-icon
+                  nzType="ellipsis"
+                  nz-dropdown
+                  [nzDropdownMenu]="menu2"
+                  nzPlacement="bottomRight"
+                  style="transform: rotate(90deg)"
+                ></span>
+                <nz-dropdown-menu #menu2="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item>Di chuyển</li>
+                    <li nz-menu-item>Đổi tệp</li>
+                    <li nz-menu-item>Xoá tệp</li>
+                  </ul>
+                </nz-dropdown-menu>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="file-action">
-          <span nz-icon nzType="file-image" nzTheme="outline"></span>
-          <div>
-            <span
-              nz-icon
-              nzType="ellipsis"
-              nz-dropdown
-              [nzDropdownMenu]="menu2"
-              nzPlacement="bottomRight"
-              style="transform: rotate(90deg)"
-            ></span>
-            <nz-dropdown-menu #menu2="nzDropdownMenu">
-              <ul nz-menu>
-                <li nz-menu-item>Di chuyển</li>
-                <li nz-menu-item>Đổi tệp</li>
-                <li nz-menu-item>Xoá tệp</li>
-              </ul>
-            </nz-dropdown-menu>
-          </div>
-        </div>
-      </div>
-
-      <ng-template #contentTemplate>
-        <div>
-          <p>Content</p>
-          <p>Content</p>
+      </ng-container>
+      <ng-template #notFile>
+        <div class="empty">
+          <p>
+            <svg
+              width="64"
+              height="41"
+              viewBox="0 0 64 41"
+              xmlns="http://www.w3.org/2000/svg"
+              class="ant-empty-img-simple"
+            >
+              <g transform="translate(0 1)" fill="none" fill-rule="evenodd">
+                <ellipse
+                  cx="32"
+                  cy="33"
+                  rx="32"
+                  ry="7"
+                  class="ant-empty-img-simple-ellipse"
+                ></ellipse>
+                <g fill-rule="nonzero" class="ant-empty-img-simple-g">
+                  <path
+                    d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"
+                  ></path>
+                  <path
+                    d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z"
+                    class="ant-empty-img-simple-path"
+                  ></path>
+                </g>
+              </g>
+            </svg>
+          </p>
+          <span>No data</span>
         </div>
       </ng-template>
-    </div>
+    </ng-container>
+    <ng-template #contentTemplate>
+      <div>
+        <p>Content</p>
+        <p>Content</p>
+      </div>
+    </ng-template>
     <div class="pagination-footer mt-4">
       <nz-pagination
-        [nzPageIndex]="0"
-        [nzTotal]="10"
+        [nzPageIndex]="pageIndex"
+        [nzTotal]="totalElements"
         nzShowSizeChanger
-        [nzPageSize]="1"
+        [nzPageSize]="pageSize"
         [nzShowTotal]="totalTemplate"
       ></nz-pagination>
       <ng-template #totalTemplate let-total
-        >Tổng: {{ total }} items</ng-template
+        >Tổng: {{ totalElements }} items</ng-template
       >
     </div>
   </div>
   <hub-loading></hub-loading>
-
   <ng-template #preview let-preview>
     <tui-preview [rotatable]="true" (tuiSwipe)="onSwipe($event)">
       <tui-preview-title>{{ title }}</tui-preview-title>
@@ -170,7 +203,6 @@
         [length]="length"
         [(index)]="index"
       ></tui-preview-pagination>
-
       <button
         icon="tuiIconTrash"
         title="Delete"
@@ -211,7 +243,6 @@
         type="button"
         (click)="preview.complete()"
       ></button>
-
       <iframe
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
