@@ -1,7 +1,7 @@
 <div class="login-container">
   <div class="login-logo">
     <img src="assets/images/logo.svg" alt="" />
-    <h4 class="mx-2 mt-2">ADV CMS</h4>
+    <h4 class="mt-2">ADV CMS</h4>
   </div>
   <form
     nz-form
@@ -10,8 +10,8 @@
     (ngSubmit)="submitForm()"
   >
     <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your username!" >
-        <nz-input-group nzPrefixIcon="user"  nzSize="large">
+      <nz-form-control nzErrorTip="Please input your username!">
+        <nz-input-group nzPrefixIcon="user" nzSize="large">
           <input
             type="text"
             nz-input
@@ -23,7 +23,11 @@
     </nz-form-item>
     <nz-form-item class="py-2">
       <nz-form-control nzErrorTip="Please input your Password!">
-        <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate"  nzSize="large">
+        <nz-input-group
+          nzPrefixIcon="lock"
+          [nzSuffix]="suffixTemplate"
+          nzSize="large"
+        >
           <input
             [type]="passwordVisible ? 'text' : 'password'"
             nz-input
