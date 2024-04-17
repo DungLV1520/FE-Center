@@ -3,7 +3,7 @@
     <img src="assets/images/logo.svg" alt="" />
   </div>
   <a nz-dropdown [nzDropdownMenu]="menu" class="profile">
-    <span class="mx-2">{{ user?.username | uppercase }}</span>
+    <span class="mx-2">{{ user?.username | titlecase }}</span>
     <span nz-icon nzType="user" nzTheme="outline"></span>
   </a>
   <nz-dropdown-menu #menu="nzDropdownMenu">
