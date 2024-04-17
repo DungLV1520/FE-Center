@@ -9,8 +9,8 @@
         <li
           nz-menu-item
           *ngFor="let data of regions; let i = index"
-          (click)="navigateOt(data)"
-          [nzSelected]="i === 0"
+          (click)="navigateDevice(data, i)"
+          [nzSelected]="indexRegion === i"
         >
           {{ data.name }}
         </li>
@@ -18,23 +18,23 @@
     </li>
   </ul>
   <ul nz-menu nzMode="inline" class="sider-menu">
-    <li nz-submenu nzIcon="user" nzTitle="Tệp">
+    <li nz-submenu nzIcon="folder" nzTitle="Tệp">
       <ul>
         <li
           nz-menu-item
-          *ngFor="let data of folder; let i = index"
-          (click)="navigateAbs(data)"
-          [nzSelected]="indexPer === i"
+          *ngFor="let data of folder; let index = index"
+          (click)="navigateFolder(data, index)"
+          [nzSelected]="indexPer === index"
         >
           {{ data.name }}
         </li>
       </ul>
     </li>
   </ul>
+  <ul nz-menu nzMode="inline">
+    <li nz-menu-item [nzSelected]="indexSlideShow" (click)="activeSlideShow()">
+      <span nz-icon nzType="video-camera-add" nzTheme="outline"></span>
+      <span>Trình chiếu</span>
+    </li>
+  </ul>
 </nz-sider>
-<ul nz-menu nzMode="inline">
-  <li nz-menu-item>
-    <span nz-icon nzType="mobile" nzTheme="outline"></span>
-    <span>Trình chiếu</span>
-  </li>
-</ul>

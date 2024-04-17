@@ -7,7 +7,7 @@ import { ReplaySubject } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss']
+  styleUrls: ['./base.component.scss'],
 })
 export class BaseComponent implements OnInit, OnDestroy {
   protected ngUnsubscribe = new ReplaySubject<boolean>();

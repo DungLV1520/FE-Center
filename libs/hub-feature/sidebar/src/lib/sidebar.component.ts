@@ -23,10 +23,9 @@ export class SidebarComponent implements OnInit {
   office: any;
   ROUTE_TEAM = '/personnel/team';
   ROUTE_USER = '/personnel/user';
-  isActivePerson = false;
-  isActiveOt = false;
-  isActiveAbs = false;
-  indexPer?: number;
+  indexSlideShow = false;
+  indexPer = 0;
+  indexRegion = 0;
   officeId?: number;
   folder: any;
   regions: any;
@@ -38,18 +37,20 @@ export class SidebarComponent implements OnInit {
     this.getListFolder();
   }
 
-  navigateOt(data: any): void {
+  navigateDevice(data: any, i?: number): void {
+    this.indexRegion = i ?? 0;
+    this.indexPer = -1;
+    this.indexSlideShow = false;
     this.router.navigate(['adv/device'], {
       queryParams: { regionId: data.id },
     });
-    this.isActiveOt = true;
-    this.isActiveAbs = false;
   }
 
-  navigateAbs(data: any): void {
+  navigateFolder(data: any, i?: number): void {
+    this.indexPer = i ?? 0;
+    this.indexSlideShow = false;
+    this.indexRegion = -1;
     this.router.navigate(['adv/file'], { queryParams: { folderId: data.id } });
-    this.isActiveAbs = true;
-    this.isActiveOt = false;
   }
 
   getListFolder(): void {
@@ -61,7 +62,13 @@ export class SidebarComponent implements OnInit {
   getListRegion(): void {
     this.apiUserService.getListRegion().subscribe((res: any) => {
       this.regions = res.data;
-      if (this.regions.length > 0) this.navigateOt(this.regions[0]);
+      if (this.regions.length > 0) this.navigateDevice(this.regions[0]);
     });
+  }
+
+  activeSlideShow(): void {
+    this.indexSlideShow = true;
+    this.indexPer = -1;
+    this.indexRegion = -1;
   }
 }
