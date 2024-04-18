@@ -99,7 +99,7 @@
       </nz-table>
     </div>
     <ng-container *ngIf="!isModeViewTable">
-      <ng-container *ngIf="file.length > 0; else notFile">
+      <ng-container *ngIf="file?.length > 0; else notFile">
         <div class="grid-body">
           <div
             class="grid-item"
@@ -210,7 +210,7 @@
     <tui-preview [rotatable]="true" (tuiSwipe)="onSwipe($event)">
       <tui-preview-title>{{ itemPreview.name }}</tui-preview-title>
       <tui-preview-pagination
-        [length]="file.length"
+        [length]="file?.length"
         [(index)]="index"
       ></tui-preview-pagination>
       <button
