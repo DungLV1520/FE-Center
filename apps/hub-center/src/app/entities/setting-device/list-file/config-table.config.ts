@@ -35,13 +35,6 @@ export const CONFIG_TABLE_COLUMN = [
     filterMultiple: true,
   },
   {
-    title: 'Độ dài',
-    priority: 5,
-    listOfFilter: [],
-    filterFn: null,
-    filterMultiple: true,
-  },
-  {
     title: 'Vị trí',
     priority: 6,
     listOfFilter: [],
@@ -55,5 +48,4 @@ export const CONFIG_TABLE_COLUMN = [
     filterFn: null,
     filterMultiple: true,
   },
-
 ];

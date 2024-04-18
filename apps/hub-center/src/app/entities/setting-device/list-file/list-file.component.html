@@ -70,12 +70,11 @@
               {{ data.name }}
             </td>
             <td>
-              <a> {{ data.size }} KB</a>
+              <a> {{ data.capacity }}</a>
             </td>
             <td>{{ data.type }}</td>
-            <td>{{ data.status }}</td>
-            <td>{{ data.uploadedTime }}</td>
-            <td>{{ data.location }}</td>
+            <td>{{ checkDisPlay(data.displayType) }}</td>
+            <td>{{ data.path }}</td>
             <td class="text-center">
               <span
                 nz-icon
@@ -87,9 +86,11 @@
               ></span>
               <nz-dropdown-menu #menu2="nzDropdownMenu">
                 <ul nz-menu>
-                  <li nz-menu-item>Di chuyển</li>
-                  <li nz-menu-item>Đổi tệp</li>
-                  <li nz-menu-item>Xoá tệp</li>
+                  <li nz-menu-item (click)="moveFile(data)">Di chuyển</li>
+                  <li nz-menu-item (click)="renameFile(data)">Đổi tệp</li>
+                  <li nz-menu-item (click)="onConfirmDeleteFile(data)">
+                    Xoá tệp
+                  </li>
                 </ul>
               </nz-dropdown-menu>
             </td>
@@ -98,11 +99,11 @@
       </nz-table>
     </div>
     <ng-container *ngIf="!isModeViewTable">
-      <ng-container *ngIf="file.length < 0; else notFile">
+      <ng-container *ngIf="file.length > 0; else notFile">
         <div class="grid-body">
           <div
             class="grid-item"
-            *ngFor="let item of file; let i = index"
+            *ngFor="let data of file; let i = index"
             [ngClass]="{ 'bg-active': checked![i] }"
           >
             <div class="device-name">
@@ -111,16 +112,28 @@
               >
             </div>
             <div class="device-status">
-              <div class="w-100 h-100" (click)="show()">
+              <div class="w-100 h-100" (click)="show(data)">
                 <img
                   class="w-100 h-100 file-image"
-                  src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                  src="http://167.71.198.237:8080/{{ data.path }}"
                   alt=""
                 />
               </div>
             </div>
             <div class="file-action">
-              <span nz-icon nzType="file-image" nzTheme="outline"></span>
+              <span
+                nz-icon
+                *ngIf="data.type === 'jpg' || data.type === 'pnj'; else check"
+                nzType="file-image"
+                nzTheme="outline"
+              ></span>
+              <ng-template #check>
+                <span
+                  nz-icon
+                  nzType="video-camera-add"
+                  nzTheme="outline"
+                ></span>
+              </ng-template>
               <div>
                 <span
                   nz-icon
@@ -132,9 +145,11 @@
                 ></span>
                 <nz-dropdown-menu #menu2="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item>Di chuyển</li>
-                    <li nz-menu-item>Đổi tệp</li>
-                    <li nz-menu-item>Xoá tệp</li>
+                    <li nz-menu-item (click)="moveFile(data)">Di chuyển</li>
+                    <li nz-menu-item (click)="renameFile(data)">Đổi tệp</li>
+                    <li nz-menu-item (click)="onConfirmDeleteFile(data)">
+                      Xoá tệp
+                    </li>
                   </ul>
                 </nz-dropdown-menu>
               </div>
@@ -176,12 +191,7 @@
         </div>
       </ng-template>
     </ng-container>
-    <ng-template #contentTemplate>
-      <div>
-        <p>Content</p>
-        <p>Content</p>
-      </div>
-    </ng-template>
+
     <div class="pagination-footer mt-4">
       <nz-pagination
         [nzPageIndex]="pageIndex"
@@ -198,9 +208,9 @@
   <hub-loading></hub-loading>
   <ng-template #preview let-preview>
     <tui-preview [rotatable]="true" (tuiSwipe)="onSwipe($event)">
-      <tui-preview-title>{{ title }}</tui-preview-title>
+      <tui-preview-title>{{ itemPreview.name }}</tui-preview-title>
       <tui-preview-pagination
-        [length]="length"
+        [length]="file.length"
         [(index)]="index"
       ></tui-preview-pagination>
       <button
@@ -227,13 +237,12 @@
       ></button>
       <ng-template #tooltip>
         <div>
-          <strong>tệp123.mp4</strong>
+          <strong>{{ itemPreview.name }}</strong>
         </div>
-        <div>Dung lượng: 4,416 KB</div>
-        <div>DĐịnh dạng: MP4</div>
-        <div>Kiểu hiển thị: Ngang</div>
-        <div>Độ dài: 05:00</div>
-        <div>Vị trí: ../Thư mục 1</div>
+        <div>Dung lượng: {{ itemPreview.size }}</div>
+        <div>DĐịnh dạng: {{ itemPreview.type }}</div>
+        <div>Kiểu hiển thị: {{ checkDisPlay(itemPreview.displayType) }}</div>
+        <div>Vị trí: {{ itemPreview.path }}</div>
       </ng-template>
       <button
         icon="tuiIconClose"
@@ -247,7 +256,7 @@
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
         frameborder="0"
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+        src="{{ path }}"
         title="Youtube"
         class="content"
       ></iframe>

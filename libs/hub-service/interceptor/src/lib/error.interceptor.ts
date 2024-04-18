@@ -22,20 +22,17 @@ export class JwtInterceptor implements HttpInterceptor {
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           if (event.body.result.ok === false) {
-            throw new Error(event?.body?.result?.message);
+             throwError(event?.body?.result?.message);
           }
         }
       }),
       catchError((err) => {
-        console.log(err);
-
         if (err.status === 401) {
           this.router.navigate(['/login']);
         }
 
         localStorage.removeItem(LocalStoreEnum.CUSTOMER_KEY);
         localStorage.removeItem(LocalStoreEnum.ACCESS_TOKEN);
-
         return throwError(err?.error?.result?.message);
       })
     );

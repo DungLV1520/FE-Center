@@ -83,4 +83,17 @@ export class ApiUserService {
   renameDevice(params: any) {
     return this.http.put(this.hubBackendApiEndpoint + `device/rename`, params);
   }
+
+  renameFile(id: any, data: any) {
+    return this.http.put(
+      this.hubBackendApiEndpoint + `document/update/${id}`,
+      data
+    );
+  }
+
+  deleteFile(id: any) {
+    return this.http.delete(this.hubBackendApiEndpoint + `document/delete`, {
+      params: { ids: [id] },
+    });
+  }
 }
