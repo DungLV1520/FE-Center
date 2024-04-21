@@ -41,6 +41,7 @@
         flex-direction: column;
         gap: 16px;
         border: 1px solid #0000000f;
+        justify-content: space-between;
         border-radius: 8px;
         .device-name {
           font-size: 16px;
@@ -78,12 +79,13 @@
   .bg-active {
     background: #bae7ff !important;
   }
-  .empty{
+  .empty {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+
 }
 
 .content {

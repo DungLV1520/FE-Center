@@ -41,7 +41,6 @@ import {
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
-import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, finalize, tap, throwError } from 'rxjs';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
@@ -77,7 +76,6 @@ import { UploadFileComponent } from './upload-file/upload-file.component';
     TuiButtonModule,
     TuiTooltipModule,
     TuiHintModule,
-    NzUploadModule,
     SafePipe,
   ],
   providers: [NzNotificationService],
@@ -106,6 +104,7 @@ export class ListFileComponent implements OnInit {
   folderId: any;
   itemPreview: any;
   path: any;
+  checked?: boolean[] = new Array(8).fill(false);
 
   constructor(
     private apiUserService: ApiUserService,
@@ -116,7 +115,7 @@ export class ListFileComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: NzNotificationService,
     private loadingService: LoadingService,
-    private modal: NzModalService
+    private modal: NzModalService,
   ) {}
 
   ngOnInit(): void {
@@ -137,10 +136,6 @@ export class ListFileComponent implements OnInit {
     this.isModeViewTable = !this.isModeViewTable;
   }
 
-  get title(): string {
-    return this.index === 0 ? 'Transaction cert.jpg' : 'My face.jpg';
-  }
-
   get previewContent(): PolymorpheusContent {
     return this.index === 0 && this.contentSample
       ? this.contentSample
@@ -150,8 +145,18 @@ export class ListFileComponent implements OnInit {
   show(data: any): void {
     this.itemPreview = data;
     this.path = 'http://167.71.198.237:8080' + data.path;
+
+   setTimeout(() => {
+    const a = document.querySelectorAll('body img');
+    console.log(a);
+   }, 2000);
+
     this.previewService.open(this.preview || '').subscribe({
-      complete: () => console.info('complete'),
+      complete: () => {
+        console.info('complete')
+
+
+      },
     });
   }
 
@@ -172,24 +177,6 @@ export class ListFileComponent implements OnInit {
       this.index = tuiClamp(this.index - 1, 0, this.length - 1);
     }
   }
-
-  handleChange(info: any): void {
-    console.log(info);
-    const a = document.querySelector(
-      '.ant-upload-list-text-container'
-    ) as HTMLElement;
-    a.style.display = 'none';
-
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-      const a = document.querySelector(
-        '.ant-upload-list-text-container'
-      ) as HTMLElement;
-      a.style.display = 'none';
-    }
-  }
-
-  checked?: boolean[] = new Array(8).fill(false);
 
   showChecked(index: number): void {
     console.log(index);
@@ -314,11 +301,12 @@ export class ListFileComponent implements OnInit {
   }
 
   showUploadFile() {
-    this.modal.success({
-      nzTitle: `Đổi tên tệp `,
+    this.modal.create({
+      nzTitle: `Tải tệp lên`,
       nzContent: UploadFileComponent,
       nzCancelText: 'Đóng',
-      nzOkText: 'Đổi tên',
+      nzOkText: 'OK',
+      nzWidth: 500,
       nzOnOk: () => {
         console.log('aaaaa');
       },

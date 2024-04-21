@@ -71,7 +71,7 @@
             <td>
               <a> {{ data.capacity }}</a>
             </td>
-            <td>{{ data.type }}</td>
+            <td>{{ data.type | uppercase }}</td>
             <td>{{ checkDisPlay(data.displayType) }}</td>
             <td>{{ data.path }}</td>
             <td class="text-center">
@@ -255,7 +255,7 @@
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
         frameborder="0"
-        src="{{ path | safe : 'url' }}"
+        [src]="path | safe : 'resourceUrl'"
         title="Youtube"
         class="content"
       ></iframe>
