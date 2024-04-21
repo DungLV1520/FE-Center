@@ -15,7 +15,7 @@ const routes: Routes = [
       {
         path: 'device',
         loadComponent: () =>
-          import('./setting-device/list-device/list-device.component').then(
+          import('./setting/list-device/list-device.component').then(
             (m) => m.ListDeviceComponent
           ),
         canActivate: [authGuard],
@@ -23,7 +23,7 @@ const routes: Routes = [
       {
         path: 'file',
         loadComponent: () =>
-          import('./setting-device/list-file/list-file.component').then(
+          import('./setting/list-file/list-file.component').then(
             (m) => m.ListFileComponent
           ),
         canActivate: [authGuard],
