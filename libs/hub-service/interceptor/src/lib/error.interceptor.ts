@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { LocalStoreEnum } from '@hub-center/hub-service/storage';
 
 @Injectable()
-export class JwtInterceptor implements HttpInterceptor {
+export class ErrorInterceptor implements HttpInterceptor {
   constructor(private router: Router) {}
 
   intercept(

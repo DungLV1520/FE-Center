@@ -13,7 +13,7 @@ import {
 } from '@hub-center/hub-service/storage';
 
 @Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
+export class JwtInterceptor implements HttpInterceptor {
   constructor(private localStorageService: LocalStorageService) {}
 
   intercept(

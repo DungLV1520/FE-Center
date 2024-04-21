@@ -46,6 +46,7 @@ import { ActivatedRoute } from '@angular/router';
 import { catchError, finalize, tap, throwError } from 'rxjs';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { SafePipe } from './safe.pipe';
+import { UploadFileComponent } from './upload-file/upload-file.component';
 
 @Component({
   selector: 'adv-list-file',
@@ -174,9 +175,17 @@ export class ListFileComponent implements OnInit {
 
   handleChange(info: any): void {
     console.log(info);
+    const a = document.querySelector(
+      '.ant-upload-list-text-container'
+    ) as HTMLElement;
+    a.style.display = 'none';
 
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
+      const a = document.querySelector(
+        '.ant-upload-list-text-container'
+      ) as HTMLElement;
+      a.style.display = 'none';
     }
   }
 
@@ -302,5 +311,17 @@ export class ListFileComponent implements OnInit {
       return 'Dọc';
     }
     return 'Ngang';
+  }
+
+  showUploadFile() {
+    this.modal.success({
+      nzTitle: `Đổi tên tệp `,
+      nzContent: UploadFileComponent,
+      nzCancelText: 'Đóng',
+      nzOkText: 'Đổi tên',
+      nzOnOk: () => {
+        console.log('aaaaa');
+      },
+    });
   }
 }
