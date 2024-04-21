@@ -115,7 +115,7 @@
               <div class="w-100 h-100" (click)="show(data)">
                 <img
                   class="w-100 h-100 file-image"
-                  src="http://167.71.198.237:8080/{{ data.path }}"
+                  src="http://167.71.198.237:8080{{ data.path }}"
                   alt=""
                 />
               </div>
@@ -256,7 +256,7 @@
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
         frameborder="0"
-        src="{{ path }}"
+        src="{{ path | safe:'url' }}"
         title="Youtube"
         class="content"
       ></iframe>

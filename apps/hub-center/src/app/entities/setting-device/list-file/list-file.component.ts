@@ -45,7 +45,7 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, finalize, tap, throwError } from 'rxjs';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
-// import { SafePipe } from './safe.pipe';
+import { SafePipe } from './safe.pipe';
 
 @Component({
   selector: 'adv-list-file',
@@ -77,7 +77,7 @@ import { RenameModalComponent } from './renameModal/rename-modal.component';
     TuiTooltipModule,
     TuiHintModule,
     NzUploadModule,
-    // SafePipe,
+    SafePipe,
   ],
   providers: [NzNotificationService],
   templateUrl: './list-file.component.html',
@@ -148,7 +148,7 @@ export class ListFileComponent implements OnInit {
 
   show(data: any): void {
     this.itemPreview = data;
-    this.path = 'http://167.71.198.237:8080/' + data.path;
+    this.path = 'http://167.71.198.237:8080' + data.path;
     this.previewService.open(this.preview || '').subscribe({
       complete: () => console.info('complete'),
     });
