@@ -21,10 +21,13 @@
     align-items: center;
     .logo {
       width: 176px;
-      height: 27px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
+      img{
+        height: 100%
+      }
     }
     .header-profile {
       display: flex;
