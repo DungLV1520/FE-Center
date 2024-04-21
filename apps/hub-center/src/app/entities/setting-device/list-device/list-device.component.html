@@ -79,17 +79,16 @@
               {{ data.name }}
             </td>
             <td>
-              <nz-tag [nzColor]="data.status === 'ACTIVE' ? 'green' : 'red'">{{
-                data.status === 'ACTIVE' ? 'Đang hoạt động' : 'Mất kết nối'
+              <nz-tag [nzColor]="data?.available? 'green' : 'red'">{{
+                data.available ? 'Đang hoạt động' : 'Mất kết nối'
               }}</nz-tag>
             </td>
             <td>
-              <nz-tag [nzColor]="data.available ? 'green' : 'red'">{{
-                data.available ? 'Đang trình chiếu' : 'Không trình chiếu'
+              <nz-tag [nzColor]="data.isPresenting ? 'green' : 'red'">{{
+                data?.isPresenting ? 'Đang trình chiếu' : 'Không trình chiếu'
               }}</nz-tag>
             </td>
             <td>-</td>
-
             <td>-</td>
             <td>
               {{

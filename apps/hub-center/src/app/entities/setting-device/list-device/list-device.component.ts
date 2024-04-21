@@ -51,6 +51,7 @@ interface IDevice {
   manufacturer?: string;
   serialNumber?: string;
   model?: string;
+  isPresenting?: boolean;
 }
 
 @Component({
