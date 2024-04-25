@@ -23,6 +23,8 @@
     .device-info {
       margin-top: 24px;
       margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
     }
     .table-body {
       flex: 1;
@@ -85,7 +87,6 @@
     justify-content: center;
     align-items: center;
   }
-
 }
 
 .content {

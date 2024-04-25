@@ -1,9 +1,15 @@
+<hub-loading></hub-loading>
 <tui-root>
   <div class="user-list-wrapper">
     <div class="filter-header">
       <div class="search-box">
         <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
-          <input type="text" nz-input placeholder="Tìm kiếm theo tên" />
+          <input
+            type="text"
+            nz-input
+            placeholder="Tìm kiếm theo tên"
+            [formControl]="searchForm"
+          />
         </nz-input-group>
         <ng-template #suffixIconSearch>
           <span nz-icon nzType="search"></span>
@@ -39,9 +45,51 @@
       </div>
     </div>
     <div class="device-info">
-      <nz-tag>Tổng: {{ totalElements }} tệp</nz-tag>
-      <nz-tag>Ảnh: {{ totalImage }} tệp</nz-tag>
-      <nz-tag>Video: {{ totalVideo }} tệp</nz-tag>
+      <div>
+        <nz-tag>Tổng: {{ totalElements }} tệp</nz-tag>
+        <nz-tag>Ảnh: {{ totalImage }} tệp</nz-tag>
+        <nz-tag>Video: {{ totalVideo }} tệp</nz-tag>
+      </div>
+      <div *ngIf="!isModeViewTable">
+        <nz-tag
+          ><span>Đã chọn {{ checkedId?.length! }}</span>
+          <div
+            style="display: inline-flex; margin-left: 5px; cursor: pointer"
+            (click)="resetCheck()"
+          >
+            <span class="anticon anticon-close"
+              ><svg
+                style="padding-bottom: 1px"
+                fill-rule="evenodd"
+                viewBox="64 64 896 896"
+                focusable="false"
+                fill="currentColor"
+                width="1em"
+                height="1em"
+                data-icon="close"
+                aria-hidden="true"
+                class=""
+              >
+                <path
+                  d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
+                ></path></svg
+            ></span>
+          </div>
+        </nz-tag>
+        <button
+          (click)="checkAll()"
+          nz-button
+          nzType="default"
+          nzSize="small"
+          class="mx-2"
+        >
+          <span>Chọn tất cả</span>
+        </button>
+
+        <button nz-button nzType="default" nzSize="small">
+          <span>Di chuyển</span>
+        </button>
+      </div>
     </div>
     <div *ngIf="isModeViewTable" class="table-body" style="overflow: auto">
       <nz-table
@@ -87,7 +135,11 @@
                 <ul nz-menu>
                   <li nz-menu-item (click)="moveFile(data)">Di chuyển</li>
                   <li nz-menu-item (click)="renameFile(data)">Đổi tệp</li>
-                  <li nz-menu-item (click)="onConfirmDeleteFile(data)">
+                  <li
+                    nz-menu-item
+                    (click)="onConfirmDeleteFile(data)"
+                    style="color: red"
+                  >
                     Xoá tệp
                   </li>
                 </ul>
@@ -106,17 +158,36 @@
             [ngClass]="{ 'bg-active': checked![i] }"
           >
             <div class="device-name">
-              <label nz-checkbox [(ngModel)]="checked![i]"
-                >Màn hình {{ i + 1 }}</label
+              <label
+                nz-checkbox
+                [(ngModel)]="checked![i]"
+                (click)="chooseFile(data)"
+                >{{ data?.name }}</label
               >
             </div>
             <div class="device-status">
               <div class="w-100 h-100" (click)="show(data)">
                 <img
+                  *ngIf="
+                    data.type === 'jpg' ||
+                    data.type === 'jpeg' ||
+                    data.type === 'png'
+                  "
                   class="w-100 h-100 file-image"
                   src="http://167.71.198.237:8080{{ data.path }}"
                   alt=""
                 />
+                <video
+                  class="w-100 h-100 file-image"
+                  controls
+                  *ngIf="data.type === 'mp4'"
+                >
+                  <source
+                    src="http://167.71.198.237:8080{{ data.path }}"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
               </div>
             </div>
             <div class="file-action">
@@ -146,7 +217,11 @@
                   <ul nz-menu>
                     <li nz-menu-item (click)="moveFile(data)">Di chuyển</li>
                     <li nz-menu-item (click)="renameFile(data)">Đổi tệp</li>
-                    <li nz-menu-item (click)="onConfirmDeleteFile(data)">
+                    <li
+                      nz-menu-item
+                      (click)="onConfirmDeleteFile(data)"
+                      style="color: red"
+                    >
                       Xoá tệp
                     </li>
                   </ul>
@@ -186,25 +261,26 @@
               </g>
             </svg>
           </p>
-          <span>No data</span>
+          <span>Không có dữ liệu</span>
         </div>
       </ng-template>
     </ng-container>
 
     <div class="pagination-footer mt-4">
       <nz-pagination
-        [nzPageIndex]="pageIndex"
+        [nzPageIndex]="pageIndex + 1"
         [nzTotal]="totalElements"
         nzShowSizeChanger
         [nzPageSize]="pageSize"
         [nzShowTotal]="totalTemplate"
+        (nzPageIndexChange)="onPageIndexChange($event)"
+        (nzPageSizeChange)="onPageSizeChange($event)"
       ></nz-pagination>
       <ng-template #totalTemplate let-total
-        >Tổng: {{ totalElements }} items</ng-template
+        >Tổng: {{ totalElements }} kết quả</ng-template
       >
     </div>
   </div>
-  <hub-loading></hub-loading>
   <ng-template #preview let-preview>
     <tui-preview [rotatable]="true" (tuiSwipe)="onSwipe($event)">
       <tui-preview-title>{{ itemPreview.name }}</tui-preview-title>

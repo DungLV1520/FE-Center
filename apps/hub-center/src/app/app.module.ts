@@ -22,10 +22,10 @@ import {
 } from '@hub-center/hub-service/interceptor';
 import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
-import en from '@angular/common/locales/en';
+import vi from '@angular/common/locales/vi';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { TuiRootModule } from '@taiga-ui/core';
-registerLocaleData(en);
+registerLocaleData(vi);
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
 };
@@ -65,6 +65,6 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
 
 export class AppModule {
   constructor(private i18n: NzI18nService) {
-    this.i18n.setLocale(en_US);
+    this.i18n.setLocale(vi_VN);
   }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { ILoginReq, Environment } from '@hub-center/hub-model';
 import {
@@ -91,9 +91,21 @@ export class ApiUserService {
     );
   }
 
+  moveFile(data: any) {
+    return this.http.put(this.hubBackendApiEndpoint + `document/move`, data);
+  }
+
   deleteFile(id: any) {
     return this.http.delete(this.hubBackendApiEndpoint + `document/delete`, {
       params: { ids: [id] },
+    });
+  }
+
+  uploadFile(data: any) {
+    return this.http.post<any>(this.hubBackendApiEndpoint + `document`, data, {
+      headers: new HttpHeaders({
+        Accept: 'application/json',
+      }),
     });
   }
 }

@@ -90,7 +90,6 @@ export class ListDeviceComponent implements OnInit {
   totalDevicesOnlineCount = 0;
   totalDevicesOfflineCount = 0;
   isModeViewTable = true;
-
   devices$: Observable<IDevice[]> | null = null;
   currentPage$ = new BehaviorSubject<number>(1);
   pageSize = 15;
@@ -106,14 +105,17 @@ export class ListDeviceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((param) => {
-      this.regionId =
-        param['regionId'] ?? '8de6fe3a-fcc7-41b6-8e3b-36aa1c0cdc3b';
-      this.loadDevices();
-      setInterval(() => {
+    this.route.queryParams.pipe().subscribe((param) => {
+      this.regionId = param['regionId'];
+      if (param['regionId']) {
+        this.loadingService.showLoading();
         this.loadDevices();
-      }, 60000);
+      }
     });
+
+    setInterval(() => {
+      this.loadDevices();
+    }, 60000);
   }
 
   loadDevices() {
@@ -123,17 +125,23 @@ export class ListDeviceComponent implements OnInit {
       size: 15,
       name: '',
     };
-    this.apiUserService.getDeviceByRegionID(params).subscribe((res) => {
-      this.allDevices = ((res as any)?.data?.content as IDevice[]) ?? [];
-      this.totalDevicesCount = this.allDevices.length; // Tính tổng số lượng thiết bị
-      this.totalDevicesOnlineCount = this.allDevices.filter(
-        (item: any) => item.status === 'ACTIVE'
-      ).length;
-      this.totalDevicesOfflineCount =
-        this.totalDevicesCount - this.totalDevicesOnlineCount;
-      this.updateDisplayedDevices();
-    });
-    this.loadingService.hideLoading();
+    this.apiUserService
+      .getDeviceByRegionID(params)
+      .pipe(
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
+      )
+      .subscribe((res) => {
+        this.allDevices = ((res as any)?.data?.content as IDevice[]) ?? [];
+        this.totalDevicesCount = this.allDevices.length; // Tính tổng số lượng thiết bị
+        this.totalDevicesOnlineCount = this.allDevices.filter(
+          (item: any) => item.status === 'ACTIVE'
+        ).length;
+        this.totalDevicesOfflineCount =
+          this.totalDevicesCount - this.totalDevicesOnlineCount;
+        this.updateDisplayedDevices();
+      });
   }
 
   updateDisplayedDevices() {

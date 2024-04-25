@@ -13,7 +13,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
 import { NzSelectModule, NzSelectSizeType } from 'ng-zorro-antd/select';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -42,10 +42,11 @@ import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, finalize, tap, throwError } from 'rxjs';
+import { catchError, debounceTime, finalize, tap, throwError } from 'rxjs';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { SafePipe } from './safe.pipe';
 import { UploadFileComponent } from './upload-file/upload-file.component';
+import { MoveFileComponent } from './moveFile/move-file.component';
 
 @Component({
   selector: 'adv-list-file',
@@ -88,7 +89,7 @@ export class ListFileComponent implements OnInit {
   listOfColumn = CONFIG_TABLE_COLUMN;
   devices: any;
   totalItems = 0;
-  pageIndex = 1;
+  pageIndex = 0;
   pageSize = 10;
   isModeViewTable = true;
   @ViewChild('preview')
@@ -104,7 +105,10 @@ export class ListFileComponent implements OnInit {
   folderId: any;
   itemPreview: any;
   path: any;
+  pageNumber: any;
   checked?: boolean[] = new Array(8).fill(false);
+  checkedId?: Array<string> = [];
+  readonly searchForm = new FormControl();
 
   constructor(
     private apiUserService: ApiUserService,
@@ -115,7 +119,7 @@ export class ListFileComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: NzNotificationService,
     private loadingService: LoadingService,
-    private modal: NzModalService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -125,11 +129,56 @@ export class ListFileComponent implements OnInit {
         const obj = {
           folderId: params['folderId'],
           page: 0,
-          size: 100,
+          size: this.pageSize,
         };
         this.getListFile(obj);
       }
     });
+
+    this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((data) => {
+      const obj = {
+        folderId: this.folderId,
+        page: 0,
+        size: this.pageSize,
+        docName: data,
+      };
+      this.getListFile(obj);
+    });
+  }
+
+  chooseFile(data: any): void {
+    if (this.isChecked(data)) {
+      this.uncheckItem(data);
+    } else {
+      this.checkItem(data);
+    }
+  }
+
+  isChecked(data: any): boolean {
+    return (this.checkedId && this.checkedId.includes(data.id)) as boolean;
+  }
+
+  checkItem(data: any): void {
+    if (!this.checkedId) {
+      this.checkedId = [data.id];
+    } else {
+      this.checkedId.push(data.id);
+    }
+    console.log(this.checkedId);
+  }
+
+  uncheckItem(data: any): void {
+    if (this.checkedId) {
+      this.checkedId = this.checkedId.filter((id: any) => {
+        return id !== data.id;
+      });
+      console.log(this.checkedId);
+    }
+  }
+
+  resetCheck(): void {
+    this.checkedId = [];
+    this.checked = new Array(this.totalElements).fill(false);
   }
 
   onShowModeTable() {
@@ -146,16 +195,9 @@ export class ListFileComponent implements OnInit {
     this.itemPreview = data;
     this.path = 'http://167.71.198.237:8080' + data.path;
 
-   setTimeout(() => {
-    const a = document.querySelectorAll('body img');
-    console.log(a);
-   }, 2000);
-
     this.previewService.open(this.preview || '').subscribe({
       complete: () => {
-        console.info('complete')
-
-
+        console.info('complete');
       },
     });
   }
@@ -183,30 +225,48 @@ export class ListFileComponent implements OnInit {
   }
 
   getListFile(obj: any): void {
-    this.apiUserService.getListFile(obj).subscribe((res: any) => {
-      this.file = res?.data?.content;
-      this.totalElements = res?.data?.totalElements;
-      this.totalImage = res?.data?.totalImage;
-      this.totalVideo = res?.data?.totalVideo;
-    });
+    this.loadingService.showLoading();
+    this.apiUserService
+      .getListFile(obj)
+      .pipe(
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
+      )
+      .subscribe((res: any) => {
+        this.file = res?.data?.content;
+        this.totalElements = res?.data?.totalElements;
+        this.totalImage = res?.data?.totalImage;
+        this.totalVideo = res?.data?.totalVideo;
+        this.pageIndex = res?.data?.pageable?.pageNumber;
+        this.checked = new Array(res?.data?.totalElements).fill(false);
+      });
   }
 
   renameFile(data: any) {
-    const modal = this.modal.success({
+    const modal = this.modal.confirm({
       nzTitle: `Đổi tên tệp ${data.name}`,
       nzContent: RenameModalComponent,
       nzCancelText: 'Đóng',
       nzOkText: 'Đổi tên',
       nzOnOk: () => {
+        const name = modal.getContentComponent().getData();
         const params = {
-          name: modal.getContentComponent().getData(),
+          name,
         };
+
+        if (!name || name === '') {
+          this.notification.error('Thông báo', 'Tên tệp không được bỏ trống', {
+            nzDuration: 2000,
+          });
+          return;
+        }
         this.apiUserService
           .renameFile(data.id, params)
           .pipe(
             tap((res: any) => {
               if (res?.result?.ok == false) {
-                this.notification.success(
+                this.notification.error(
                   'Thông báo',
                   res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
                   {
@@ -224,7 +284,7 @@ export class ListFileComponent implements OnInit {
               }
             }),
             catchError((err) => {
-              this.notification.success(
+              this.notification.error(
                 'Thông báo',
                 err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
                 {
@@ -237,7 +297,7 @@ export class ListFileComponent implements OnInit {
               const obj = {
                 folderId: this.folderId,
                 page: 0,
-                size: 100,
+                size: this.pageSize,
               };
               this.getListFile(obj);
             })
@@ -248,7 +308,47 @@ export class ListFileComponent implements OnInit {
   }
 
   moveFile(data: any): void {
-    // this.apiUserService.renameFile(data.id,).subscribe();
+    const modal = this.modal.create({
+      nzTitle: `Di chuyển tệp`,
+      nzContent: MoveFileComponent,
+      nzCancelText: 'Đóng',
+      nzOkText: 'OK',
+      nzWidth: 500,
+      nzOnOk: () => {
+        const idFolder = modal.getContentComponent().getData();
+        const obj = [
+          {
+            docId: data.id,
+            oldFolderId: this.folderId,
+            newFolderId: idFolder,
+          },
+        ];
+
+        this.apiUserService.moveFile(obj).subscribe({
+          next: (res: any) => {
+            if (res.result.ok) {
+              this.notification.success(
+                'Thông báo',
+                'Di chuyển tệp thành công!!!',
+                {
+                  nzDuration: 2000,
+                }
+              );
+              const obj = {
+                folderId: this.folderId,
+                page: 0,
+                size: this.pageSize,
+              };
+              this.getListFile(obj);
+            } else {
+              this.notification.error('Thông báo', res.result.message, {
+                nzDuration: 2000,
+              });
+            }
+          },
+        });
+      },
+    });
   }
 
   deleteFile(data: any) {
@@ -264,7 +364,6 @@ export class ListFileComponent implements OnInit {
           }
         }),
         catchError((err) => {
-          console.log(err);
           this.loadingService.hideLoading();
           return throwError(err?.error?.result?.message);
         }),
@@ -272,7 +371,7 @@ export class ListFileComponent implements OnInit {
           const obj = {
             folderId: this.folderId,
             page: 0,
-            size: 100,
+            size: this.pageSize,
           };
           this.getListFile(obj);
           this.loadingService.hideLoading();
@@ -301,15 +400,57 @@ export class ListFileComponent implements OnInit {
   }
 
   showUploadFile() {
-    this.modal.create({
+    const modal = this.modal.create({
       nzTitle: `Tải tệp lên`,
       nzContent: UploadFileComponent,
       nzCancelText: 'Đóng',
       nzOkText: 'OK',
       nzWidth: 500,
       nzOnOk: () => {
-        console.log('aaaaa');
+        const obj = {
+          folderId: this.folderId,
+        };
+        const file = modal.getContentComponent().getData();
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('data', JSON.stringify(obj));
+        this.apiUserService.uploadFile(formData).subscribe({
+          next: (res) => {
+            console.log(res);
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
       },
+    });
+  }
+
+  onPageIndexChange(pageIndex: number): void {
+    this.pageIndex = pageIndex - 1;
+    const obj = {
+      folderId: this.folderId,
+      page: this.pageIndex,
+      size: this.pageSize,
+    };
+    this.getListFile(obj);
+  }
+
+  onPageSizeChange(pageSize: number): void {
+    this.pageSize = pageSize;
+    const obj = {
+      folderId: this.folderId,
+      page: this.pageIndex,
+      size: this.pageSize,
+    };
+
+    this.getListFile(obj);
+  }
+
+  checkAll(): void {
+    this.checked = new Array(this.totalElements).fill(true);
+    this.checkedId = this.file.map((data: any) => {
+      return data.id;
     });
   }
 }

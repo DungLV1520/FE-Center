@@ -52,7 +52,6 @@ import { CommonModule } from '@angular/common';
 })
 export class UploadFileComponent {
   readonly control = new FormControl();
-
   readonly rejectedFiles$ = new Subject<TuiFileLike | null>();
   readonly loadingFiles$ = new Subject<TuiFileLike | null>();
   readonly loadedFiles$ = this.control.valueChanges.pipe(
@@ -82,5 +81,9 @@ export class UploadFileComponent {
       }),
       finalize(() => this.loadingFiles$.next(null))
     );
+  }
+
+  getData() {
+    return this.control.value;
   }
 }
