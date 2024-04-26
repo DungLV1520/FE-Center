@@ -82,6 +82,10 @@ export class ApiUserService {
     });
   }
 
+  moveDevice(data: any) {
+    return this.http.put(this.hubBackendApiEndpoint + `device/move`, data);
+  }
+
   renameDevice(params: any) {
     return this.http.put(this.hubBackendApiEndpoint + `device/rename`, params);
   }

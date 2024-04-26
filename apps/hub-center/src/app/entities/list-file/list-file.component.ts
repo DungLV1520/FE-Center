@@ -109,6 +109,7 @@ export class ListFileComponent implements OnInit {
   checked?: boolean[] = new Array(8).fill(false);
   checkedId?: Array<string> = [];
   readonly searchForm = new FormControl();
+  fileOriginal: any;
 
   constructor(
     private apiUserService: ApiUserService,
@@ -132,6 +133,7 @@ export class ListFileComponent implements OnInit {
           size: this.pageSize,
         };
         this.getListFile(obj);
+        this.checkedId = [];
       }
     });
 
@@ -172,7 +174,6 @@ export class ListFileComponent implements OnInit {
       this.checkedId = this.checkedId.filter((id: any) => {
         return id !== data.id;
       });
-      console.log(this.checkedId);
     }
   }
 
@@ -235,6 +236,7 @@ export class ListFileComponent implements OnInit {
       )
       .subscribe((res: any) => {
         this.file = res?.data?.content;
+        this.fileOriginal = res?.data?.content;
         this.totalElements = res?.data?.totalElements ?? 0;
         this.totalImage = res?.data?.totalImage ?? 0;
         this.totalVideo = res?.data?.totalVideo ?? 0;
@@ -399,7 +401,21 @@ export class ListFileComponent implements OnInit {
       nzCancelText: 'Không',
       nzOkText: 'Đồng ý',
       nzOnOk: () => {
-        this.deleteFile(data);
+        this.file = this.file.filter((file: any) => {
+          return file.id !== data.id;
+        });
+        this.modal.success({
+          nzTitle: `Xoá tệp ${data.name} thành công!!!`,
+          nzContent: 'Số lượng: 1',
+          nzCancelText: 'Khôi phục',
+          nzOkText: 'Đóng',
+          nzOnOk: () => {
+            this.deleteFile(data);
+          },
+          nzOnCancel: () => {
+            this.file = [...this.fileOriginal];
+          },
+        });
       },
     });
   }

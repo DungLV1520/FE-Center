@@ -34,6 +34,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { IDevice } from '@hub-center/hub-model';
+import { MoveDeviceComponent } from './moveDevice/move-device.component';
 
 @Component({
   selector: 'adv-list-device',
@@ -80,6 +81,8 @@ export class ListDeviceComponent implements OnInit {
   readonly searchForm = new FormControl();
   protected readonly Date = Date;
   protected readonly Number = Number;
+  checked?: boolean[] = new Array(8).fill(false);
+  checkedId?: Array<string> = [];
 
   constructor(
     private apiUserService: ApiUserService,
@@ -96,6 +99,7 @@ export class ListDeviceComponent implements OnInit {
       if (param['regionId']) {
         this.loadingService.showLoading();
         this.loadDevices();
+        this.checkedId = [];
       }
     });
 
@@ -136,6 +140,7 @@ export class ListDeviceComponent implements OnInit {
         this.totalDevicesOfflineCount =
           this.totalDevicesCount - this.totalDevicesOnlineCount;
         this.updateDisplayedDevices();
+        this.checked = new Array(this.allDevices.length).fill(false);
       });
   }
 
@@ -289,7 +294,6 @@ export class ListDeviceComponent implements OnInit {
               return throwError(err?.error?.result?.message);
             }),
             finalize(() => {
-
               this.loadDevices();
             })
           )
@@ -306,5 +310,98 @@ export class ListDeviceComponent implements OnInit {
       'HH:mm dd/MM/yyyy'
     );
     return formattedTimeAgo;
+  }
+
+  moveFile(data?: any): void {
+    const modal = this.modal.create({
+      nzTitle: `Di chuyển thiết bị`,
+      nzContent: MoveDeviceComponent,
+      nzCancelText: 'Đóng',
+      nzOkText: 'OK',
+      nzWidth: 500,
+      nzOnOk: () => {
+        const idRegion = modal.getContentComponent().getData();
+        let obj = [] as any;
+        if (this.isModeViewTable) {
+          obj = [
+            {
+              deviceId: data.id,
+              oldRegionId: this.regionId,
+              newRegionId: idRegion,
+            },
+          ];
+        } else {
+          // obj = [];
+          // this.checkedId?.forEach((id) => {
+          //   obj.push({
+          //     docId: id,
+          //     oldFolderId: this.folderId,
+          //     newFolderId: idFolder,
+          //   });
+          // });
+        }
+        this.apiUserService.moveDevice(obj).subscribe({
+          next: (res: any) => {
+            if (res.result.ok) {
+              this.notification.success(
+                'Thông báo',
+                'Di chuyển thiết bị thành công!!!',
+                {
+                  nzDuration: 2000,
+                }
+              );
+
+              this.loadingService.showLoading();
+              this.loadDevices();
+            } else {
+              this.notification.error('Thông báo', res.result.message, {
+                nzDuration: 2000,
+              });
+            }
+          },
+        });
+      },
+    });
+  }
+
+  chooseDevice(data: any): void {
+    if (this.isChecked(data)) {
+      this.uncheckItem(data);
+    } else {
+      this.checkItem(data);
+    }
+  }
+
+  isChecked(data: any): boolean {
+    return (this.checkedId && this.checkedId.includes(data.id)) as boolean;
+  }
+
+  checkItem(data: any): void {
+    if (!this.checkedId) {
+      this.checkedId = [data.id];
+    } else {
+      this.checkedId.push(data.id);
+    }
+    console.log(this.checkedId);
+  }
+
+  uncheckItem(data: any): void {
+    if (this.checkedId) {
+      this.checkedId = this.checkedId.filter((id: any) => {
+        return id !== data.id;
+      });
+    }
+  }
+
+  resetCheck(): void {
+    this.checkedId = [];
+    this.checked = new Array(this.allDevices.length).fill(false);
+  }
+
+  checkAll(): void {
+    this.checked = new Array(this.allDevices.length).fill(true);
+    this.checkedId = this.allDevices.map((data: any) => {
+      return data.id;
+    });
   }
 }

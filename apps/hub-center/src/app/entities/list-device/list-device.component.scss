@@ -23,6 +23,8 @@
     .device-info {
       margin-top: 24px;
       margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
     }
     .content-wrapper {
       flex: 1;
@@ -83,6 +85,9 @@
   .create-team {
     display: flex;
     align-items: center;
+  }
+  .bg-active {
+    background: #bae7ff !important;
   }
 
   ::ng-deep {
