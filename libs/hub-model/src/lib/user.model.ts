@@ -10,3 +10,25 @@ export enum Role {
   ROLE_USER = 'ROLE_USER',
 }
 
+export interface IDevice {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+  available: boolean;
+  timeOffAgo: string;
+  location: string;
+  identityDevice: string;
+  userId: string;
+  insDatetime: string;
+  updDatetime: string;
+  isDelete?: boolean;
+  osVersion?: string;
+  appVersion?: string;
+  manufacturer?: string;
+  serialNumber?: string;
+  model?: string;
+  isPresenting?: boolean;
+}
+
+

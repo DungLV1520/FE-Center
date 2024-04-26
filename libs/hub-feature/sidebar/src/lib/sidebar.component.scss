@@ -2,7 +2,6 @@
 
 :host {
   background: white;
-  // display: block;
   nz-sider {
     display: block;
     .title-sidebar {
@@ -33,5 +32,10 @@
         line-height: 24px;
       }
     }
+  }
+}
+::ng-deep {
+  .ant-menu-submenu-selected {
+    color: black !important;
   }
 }

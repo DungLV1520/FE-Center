@@ -7,6 +7,7 @@
           type="text"
           nz-input
           placeholder="Tìm kiếm theo tên, series thiết bị"
+          [formControl]="searchForm"
         />
       </nz-input-group>
       <ng-template #suffixIconSearch>
@@ -80,7 +81,7 @@
               {{ data.name }}
             </td>
             <td>
-              <nz-tag [nzColor]="data?.available? 'green' : 'red'">{{
+              <nz-tag [nzColor]="data?.available ? 'green' : 'red'">{{
                 data.available ? 'Đang hoạt động' : 'Mất kết nối'
               }}</nz-tag>
             </td>

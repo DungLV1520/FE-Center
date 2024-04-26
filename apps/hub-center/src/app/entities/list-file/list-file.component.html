@@ -86,7 +86,13 @@
           <span>Chọn tất cả</span>
         </button>
 
-        <button nz-button nzType="default" nzSize="small">
+        <button
+          nz-button
+          nzType="default"
+          nzSize="small"
+          [disabled]="checkedId!.length === 0"
+          (click)="moveFile()"
+        >
           <span>Di chuyển</span>
         </button>
       </div>
@@ -315,7 +321,7 @@
           <strong>{{ itemPreview.name }}</strong>
         </div>
         <div>Dung lượng: {{ itemPreview.size }}</div>
-        <div>DĐịnh dạng: {{ itemPreview.type }}</div>
+        <div>Định dạng: {{ itemPreview.type }}</div>
         <div>Kiểu hiển thị: {{ checkDisPlay(itemPreview.displayType) }}</div>
         <div>Vị trí: {{ itemPreview.path }}</div>
       </ng-template>

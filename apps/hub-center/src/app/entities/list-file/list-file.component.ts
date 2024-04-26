@@ -307,7 +307,7 @@ export class ListFileComponent implements OnInit {
     });
   }
 
-  moveFile(data: any): void {
+  moveFile(data?: any): void {
     const modal = this.modal.create({
       nzTitle: `Di chuyển tệp`,
       nzContent: MoveFileComponent,
@@ -316,13 +316,25 @@ export class ListFileComponent implements OnInit {
       nzWidth: 500,
       nzOnOk: () => {
         const idFolder = modal.getContentComponent().getData();
-        const obj = [
-          {
-            docId: data.id,
-            oldFolderId: this.folderId,
-            newFolderId: idFolder,
-          },
-        ];
+        let obj = [] as any;
+        if (this.isModeViewTable) {
+          obj = [
+            {
+              docId: data.id,
+              oldFolderId: this.folderId,
+              newFolderId: idFolder,
+            },
+          ];
+        } else {
+          obj = [];
+          this.checkedId?.forEach((id) => {
+            obj.push({
+              docId: id,
+              oldFolderId: this.folderId,
+              newFolderId: idFolder,
+            });
+          });
+        }
 
         this.apiUserService.moveFile(obj).subscribe({
           next: (res: any) => {

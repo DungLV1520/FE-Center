@@ -6,7 +6,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
 import { NzSelectModule, NzSelectSizeType } from 'ng-zorro-antd/select';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -29,30 +29,11 @@ import {
   finalize,
   catchError,
   throwError,
+  debounceTime,
 } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
-
-interface IDevice {
-  id: string;
-  name: string;
-  description: string;
-  status: string;
-  available: boolean;
-  timeOffAgo: string;
-  location: string;
-  identityDevice: string;
-  userId: string;
-  insDatetime: string;
-  updDatetime: string;
-  isDelete?: boolean;
-  osVersion?: string;
-  appVersion?: string;
-  manufacturer?: string;
-  serialNumber?: string;
-  model?: string;
-  isPresenting?: boolean;
-}
+import { IDevice } from '@hub-center/hub-model';
 
 @Component({
   selector: 'adv-list-device',
@@ -96,6 +77,10 @@ export class ListDeviceComponent implements OnInit {
   allDevices: IDevice[] = [];
   removedDevices: any[] = [];
   regionId?: string;
+  readonly searchForm = new FormControl();
+  protected readonly Date = Date;
+  protected readonly Number = Number;
+
   constructor(
     private apiUserService: ApiUserService,
     private loadingService: LoadingService,
@@ -116,15 +101,24 @@ export class ListDeviceComponent implements OnInit {
     setInterval(() => {
       this.loadDevices();
     }, 60000);
+
+    this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((data) => {
+      this.loadingService.showLoading();
+      this.loadDevices(data);
+    });
   }
 
-  loadDevices() {
+  loadDevices(data?: string) {
     const params = {
       regionId: this.regionId,
       page: 0,
       size: 15,
-      name: '',
-    };
+    } as any;
+
+    if (data) {
+      params['name'] = data;
+    }
+
     this.apiUserService
       .getDeviceByRegionID(params)
       .pipe(
@@ -299,6 +293,5 @@ export class ListDeviceComponent implements OnInit {
     });
   }
 
-  protected readonly Date = Date;
-  protected readonly Number = Number;
+
 }
