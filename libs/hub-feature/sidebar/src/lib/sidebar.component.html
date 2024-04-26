@@ -4,30 +4,71 @@
   nzTheme="light"
 >
   <ul nz-menu nzMode="inline">
-    <li nz-submenu nzIcon="mobile" nzOpen nzTitle="Danh sách thiết bị">
+    <li nz-submenu nzIcon="mobile" nzOpen nzTitle="Thiết bị">
       <ul>
-        <li
-          nz-menu-item
-          *ngFor="let data of regions; let i = index"
-          (click)="navigateDevice(data, i)"
-          [nzSelected]="indexRegion === i"
-        >
-          {{ data.name }}
-        </li>
+        <ng-container *ngFor="let data of regions; let i = index">
+          <ul
+            nz-menu
+            nzMode="inline"
+            class="sider-menu"
+            *ngIf="data?.subs?.length! > 0"
+          >
+            <li nz-submenu nzTitle="{{ data.name }}" [(nzOpen)]="data.show">
+              <ul>
+                <li
+                  nz-menu-item
+                  *ngFor="let item of data?.subs; let index = index"
+                  (click)="navigateDevice(data, i, item)"
+                  [nzSelected]="index === 0"
+                >
+                  {{ item.name }}
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <li
+            *ngIf="data?.subs === null"
+            nz-menu-item
+            (click)="navigateDevice(data, i)"
+            [nzSelected]="indexRegion === i"
+          >
+            {{ data.name }}
+          </li>
+        </ng-container>
       </ul>
     </li>
   </ul>
   <ul nz-menu nzMode="inline" class="sider-menu">
     <li nz-submenu nzIcon="folder" nzTitle="Tệp">
       <ul>
-        <li
-          nz-menu-item
-          *ngFor="let data of folder; let index = index"
-          (click)="navigateFolder(data, index)"
-          [nzSelected]="indexPer === index"
-        >
-          {{ data.name }}
-        </li>
+        <ng-container *ngFor="let data of folder; let index = index">
+          <ul
+            nz-menu
+            nzMode="inline"
+            class="sider-menu"
+            *ngIf="data?.subs?.length! > 0"
+          >
+            <li nz-submenu nzTitle="{{ data.name }}">
+              <ul>
+                <li
+                  nz-menu-item
+                  *ngFor="let item of data?.subs; let i = index"
+                  (click)="navigateFolder(data, index, item)"
+                >
+                  {{ item.name }}
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <li
+            *ngIf="data?.subs === null"
+            nz-menu-item
+            (click)="navigateFolder(data, index)"
+            [nzSelected]="indexPer === index"
+          >
+            {{ data.name }}
+          </li>
+        </ng-container>
       </ul>
     </li>
   </ul>

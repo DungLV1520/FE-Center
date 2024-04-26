@@ -37,20 +37,46 @@ export class SidebarComponent implements OnInit {
     this.getListFolder();
   }
 
-  navigateDevice(data: any, i?: number): void {
+  navigateDevice(data: any, i?: number, item?: any): void {
     this.indexRegion = i ?? 0;
     this.indexPer = -1;
     this.indexSlideShow = false;
-    this.router.navigate(['adv/device'], {
-      queryParams: { regionId: data.id },
-    });
+    if (data?.subs?.length > 0) {
+      const obj = [
+        'Thiết bị',
+        data.name,
+        item ? item.name : data?.subs[0]?.name,
+      ];
+      this.apiUserService.sendData(obj);
+      this.router.navigate(['adv/device'], {
+        queryParams: { regionId: item ? item.id : data?.subs[0]?.id },
+      });
+    } else {
+      const obj = ['Thiết bị', data.name];
+      this.apiUserService.sendData(obj);
+      this.router.navigate(['adv/device'], {
+        queryParams: { regionId: data.id },
+      });
+    }
   }
 
-  navigateFolder(data: any, i?: number): void {
+  navigateFolder(data: any, i?: number, item?: any): void {
     this.indexPer = i ?? 0;
     this.indexSlideShow = false;
     this.indexRegion = -1;
-    this.router.navigate(['adv/file'], { queryParams: { folderId: data.id } });
+    if (data?.subs?.length > 0) {
+      const obj = ['Tệp', data.name, item ? item.name : data?.subs[0]?.name];
+      this.apiUserService.sendData(obj);
+      this.router.navigate(['adv/file'], {
+        queryParams: { folderId: item ? item.id : data?.subs[0]?.id },
+      });
+    } else {
+      const obj = ['Tệp', data.name];
+      this.apiUserService.sendData(obj);
+      this.router.navigate(['adv/file'], {
+        queryParams: { folderId: data.id },
+      });
+    }
   }
 
   getListFolder(): void {
@@ -62,6 +88,11 @@ export class SidebarComponent implements OnInit {
   getListRegion(): void {
     this.apiUserService.getListRegion().subscribe((res: any) => {
       this.regions = res.data;
+      this.regions = res.data.map((item: any, index: number) => {
+        const showValue = index === 0 ? item.subs.length > 0 : false;
+        return { ...item, show: showValue };
+      });
+
       if (this.regions.length > 0) this.navigateDevice(this.regions[0]);
     });
   }

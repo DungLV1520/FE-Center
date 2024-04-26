@@ -235,10 +235,10 @@ export class ListFileComponent implements OnInit {
       )
       .subscribe((res: any) => {
         this.file = res?.data?.content;
-        this.totalElements = res?.data?.totalElements;
-        this.totalImage = res?.data?.totalImage;
-        this.totalVideo = res?.data?.totalVideo;
-        this.pageIndex = res?.data?.pageable?.pageNumber;
+        this.totalElements = res?.data?.totalElements ?? 0;
+        this.totalImage = res?.data?.totalImage ?? 0;
+        this.totalVideo = res?.data?.totalVideo ?? 0;
+        this.pageIndex = res?.data?.pageable?.pageNumber ?? 0;
         this.checked = new Array(res?.data?.totalElements).fill(false);
       });
   }

@@ -40,7 +40,14 @@ export class MoveFileComponent implements OnInit {
 
   getListFolder(): void {
     this.apiUserService.getListFolder().subscribe((res: any) => {
-      this.folder = res.data;
+      this.folder = res?.data?.reduce((acc: any, curr: any) => {
+        if (curr.subs) {
+          acc.push(...curr.subs);
+        } else {
+          acc.push(curr);
+        }
+        return acc;
+      }, []);
     });
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 import { ILoginReq, Environment } from '@hub-center/hub-model';
 import {
   LocalStorageService,
@@ -15,6 +15,8 @@ export class ApiUserService {
   public currentUserSubject: BehaviorSubject<unknown>;
   public currentUser: Observable<unknown>;
   hubBackendApiEndpoint: string;
+  breadCrumb = new Subject<any>();
+  breadCrumb$ = this.breadCrumb.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -107,5 +109,9 @@ export class ApiUserService {
         Accept: 'application/json',
       }),
     });
+  }
+
+  sendData(data: any): void {
+    this.breadCrumb.next(data);
   }
 }

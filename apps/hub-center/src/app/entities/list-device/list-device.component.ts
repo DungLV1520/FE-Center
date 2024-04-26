@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -60,7 +60,7 @@ import { IDevice } from '@hub-center/hub-model';
     NzDatePickerModule,
     NzPopoverModule,
   ],
-  providers: [NzNotificationService],
+  providers: [NzNotificationService, DatePipe],
   templateUrl: './list-device.component.html',
   styleUrls: ['./list-device.component.scss'],
 })
@@ -86,7 +86,8 @@ export class ListDeviceComponent implements OnInit {
     private loadingService: LoadingService,
     private modal: NzModalService,
     private route: ActivatedRoute,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -244,12 +245,13 @@ export class ListDeviceComponent implements OnInit {
   }
 
   renameDevice(id: string, deviceName: string) {
-    const modal = this.modal.success({
+    const modal = this.modal.confirm({
       nzTitle: `Đổi tên thiết bị ${deviceName}`,
       nzContent: RenameModalComponent,
       nzCancelText: 'Đóng',
-      nzOkText: 'Đổi tên',
+      nzOkText: 'OK',
       nzOnOk: () => {
+        this.loadingService.showLoading();
         const params = {
           deviceId: id,
           name: modal.getContentComponent().getData(),
@@ -286,12 +288,23 @@ export class ListDeviceComponent implements OnInit {
               );
               return throwError(err?.error?.result?.message);
             }),
-            finalize(() => this.loadDevices())
+            finalize(() => {
+
+              this.loadDevices();
+            })
           )
           .subscribe();
       },
     });
   }
 
-
+  calculateTimeAgo(timeOffAgo: string): string | null {
+    const currentTime = Date.now();
+    const timeDifference = currentTime - Number(timeOffAgo);
+    const formattedTimeAgo = this.datePipe.transform(
+      timeDifference,
+      'HH:mm dd/MM/yyyy'
+    );
+    return formattedTimeAgo;
+  }
 }

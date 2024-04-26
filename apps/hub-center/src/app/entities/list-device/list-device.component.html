@@ -93,9 +93,7 @@
             <td>-</td>
             <td>-</td>
             <td>
-              {{
-                Date.now() - Number(data.timeOffAgo) | date : 'HH:mm dd/MM/yyyy'
-              }}
+              {{ calculateTimeAgo(data.timeOffAgo) }}
             </td>
             <td>
               {{ data.location }}
@@ -112,7 +110,6 @@
                 nzType="more"
                 nzTheme="outline"
                 nz-dropdown
-                nzTrigger="click"
                 [nzDropdownMenu]="moreAction"
               ></span>
               <nz-dropdown-menu #moreAction="nzDropdownMenu">
@@ -133,9 +130,6 @@
                 </ul>
               </nz-dropdown-menu>
             </td>
-
-            <!--          <td>{{ data.insDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>-->
-            <!--          <td>{{ data.updDatetime | date : 'dd/MM/yyyy hh:mm' }}</td>-->
           </tr>
         </tbody>
       </nz-table>
@@ -148,11 +142,10 @@
         nzPopoverTitle="{{ device.name }}"
         [nzPopoverContent]="contentTemplate"
         nzPopoverTrigger="hover"
-        [nzPopoverMouseEnterDelay]="1.5"
       >
         <div class="device-name">{{ device.name }}</div>
         <div class="device-status">
-          <span *ngIf="device.status === 'ACTIVE'" nz-icon>
+          <span *ngIf="device.available" nz-icon>
             <svg
               width="16"
               height="16"
@@ -163,7 +156,7 @@
               <circle cx="8" cy="8" r="8" fill="#52C41A" />
             </svg>
           </span>
-          <span *ngIf="device.status !== 'ACTIVE'" nz-icon>
+          <span *ngIf="!device.available" nz-icon>
             <svg
               width="16"
               height="16"
@@ -174,11 +167,13 @@
               <circle cx="8" cy="8" r="8" fill="#F5222D" />
             </svg>
           </span>
-          <span class="time-desc"></span>
+          <span class="time-desc">
+            {{ calculateTimeAgo(device.timeOffAgo) }}</span
+          >
         </div>
         <div class="device-play-desc">
-          <nz-tag [nzColor]="device.available ? '#5F7EEB' : '#D9D9D9'">{{
-            device.available ? 'Đang trình chiếu' : 'Không trình chiếu'
+          <nz-tag [nzColor]="device.isPresenting ? '#5F7EEB' : '#D9D9D9'">{{
+            device.isPresenting ? 'Đang trình chiếu' : 'Không trình chiếu'
           }}</nz-tag>
           <div class="icon-more-action" (click)="$event.stopPropagation()">
             <span

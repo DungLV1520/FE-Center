@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import { Router } from '@angular/router';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { ApiUserService } from '@hub-center/hub-service/api-user';
 
 @Component({
   selector: 'hub-breadcrumb',
@@ -12,24 +11,13 @@ import { ReplaySubject, takeUntil } from 'rxjs';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
-  destroyed$ = new ReplaySubject<boolean>();
-  title = 'ADV CMS';
+  breadCrumbData:any
 
-  constructor(private router: Router) {}
+  constructor(private apiUserService: ApiUserService) {}
 
   ngOnInit(): void {
-    this.router.events
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((event: any) => {
-        const currentUrl = event?.routerEvent?.urlAfterRedirects;
-        if (currentUrl?.includes('/adv/device')) {
-          this.title = 'Danh sách thiết bị';
-          return;
-        }
-        if (currentUrl?.includes('/adv/file')) {
-          this.title = 'Danh sách tệp';
-          return;
-        }
-      });
+    this.apiUserService.breadCrumb$.subscribe((data) => {
+      this.breadCrumbData = data;
+    });
   }
 }
