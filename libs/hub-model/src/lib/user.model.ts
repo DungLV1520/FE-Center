@@ -1,5 +1,3 @@
-
-
 export interface ILoginReq {
   username: string;
   password: string;
@@ -29,6 +27,5 @@ export interface IDevice {
   serialNumber?: string;
   model?: string;
   isPresenting?: boolean;
+  lastDisconnectedTime?: string;
 }
-
-

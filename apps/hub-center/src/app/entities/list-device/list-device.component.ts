@@ -167,8 +167,8 @@ export class ListDeviceComponent implements OnInit {
 
   onConfirmDeleteDevice(id: string, deviceName: string) {
     this.modal.confirm({
-      nzTitle: `Bạn có chắc muốn xoá thiết bị ${deviceName}?`,
-      nzContent: 'Số lượng: 1',
+      nzTitle: `Bạn có chắc muốn xoá thiết bị?`,
+      nzContent: `Tên: ${deviceName}`,
       nzCancelText: 'Không',
       nzOkText: 'Đồng ý',
       nzOnOk: () => {
@@ -180,14 +180,14 @@ export class ListDeviceComponent implements OnInit {
 
   onDeleteDevice(id: string, deviceName: string) {
     this.modal.success({
-      nzTitle: `Xoá thiết bị ${deviceName} thành công`,
-      nzContent: 'Số lượng: 1',
+      nzTitle: `Xoá thiết bị thành công !!!`,
+      nzContent: `Tên: ${deviceName}`,
       nzCancelText: 'Khôi phục',
       nzOkText: 'Đóng',
       nzOnOk: () => this.deleteDevice(id),
       nzOnCancel: () => {
         this.addDeviceBack(id);
-        this.notification.success('Thông báo', 'Hoàn tác thành công!!!', {
+        this.notification.success('Thông báo', 'Khôi phục thành công!!!', {
           nzDuration: 2000,
         });
       },

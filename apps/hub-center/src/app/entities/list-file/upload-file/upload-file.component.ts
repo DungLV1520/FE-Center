@@ -2,19 +2,34 @@ import { Component } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { TuiFileLike, TuiInputFilesModule } from '@taiga-ui/kit';
 import { TuiRootModule } from '@taiga-ui/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, switchMap, of, Observable, timer, map, finalize } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import vi from '@angular/common/locales/vi';
+import {TUI_LANGUAGE, TUI_VIETNAMESE_LANGUAGE} from '@taiga-ui/i18n';
+import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
+registerLocaleData(vi);
+
 
 @Component({
   imports: [
     CommonModule,
+    FormsModule,
     TuiInputFilesModule,
     TuiRootModule,
     ReactiveFormsModule,
+    NzSelectModule
   ],
   standalone: true,
   selector: 'adv-upload-file',
+  providers: [
+    NzMessageService,
+    {
+      provide: TUI_LANGUAGE,
+      useValue: of(TUI_VIETNAMESE_LANGUAGE),
+    },
+  ],
   template: `
     <tui-root>
       <tui-input-files
@@ -31,14 +46,12 @@ import { CommonModule } from '@angular/common';
           [showDelete]="control.enabled"
           (removed)="removeFile()"
         ></tui-file>
-
         <tui-file
           *ngIf="rejectedFiles$ | async as file"
           [file]="file"
           [showDelete]="control.enabled"
           (removed)="clearRejected()"
         ></tui-file>
-
         <tui-file
           *ngIf="loadingFiles$ | async as file"
           state="loading"
@@ -46,9 +59,20 @@ import { CommonModule } from '@angular/common';
           [showDelete]="control.enabled"
         ></tui-file>
       </tui-files>
+      <nz-select
+        class="w-100 mt-4"
+        nzPlaceHolder="Chon kiểu hiển thị"
+        [(ngModel)]="inputData"
+      >
+        <ng-container *ngFor="let item; of display">
+          <nz-option
+            nzValue="{{ item.id }}"
+            nzLabel="{{ item.name }}"
+          ></nz-option>
+        </ng-container>
+      </nz-select>
     </tui-root>
   `,
-  providers: [NzMessageService],
 })
 export class UploadFileComponent {
   readonly control = new FormControl();
@@ -57,6 +81,22 @@ export class UploadFileComponent {
   readonly loadedFiles$ = this.control.valueChanges.pipe(
     switchMap((file) => (file ? this.makeRequest(file) : of(null)))
   );
+
+  display = [
+    {
+      id: 0,
+      name: 'Ngang',
+    },
+    {
+      id: 1,
+      name: 'Dọc',
+    },
+  ];
+  inputData:any
+
+  constructor(private i18n: NzI18nService) {
+    this.i18n.setLocale(vi_VN);
+  }
 
   onReject(file: TuiFileLike | readonly TuiFileLike[]): void {
     this.rejectedFiles$.next(file as TuiFileLike);
@@ -81,6 +121,10 @@ export class UploadFileComponent {
       }),
       finalize(() => this.loadingFiles$.next(null))
     );
+  }
+
+  getDataId(): string {
+    return this.inputData;
   }
 
   getData() {

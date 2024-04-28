@@ -20,11 +20,13 @@ import {
   ErrorInterceptor,
   JwtInterceptor,
 } from '@hub-center/hub-service/interceptor';
-import { NzI18nService, en_US, vi_VN } from 'ng-zorro-antd/i18n';
+import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { TuiRootModule } from '@taiga-ui/core';
+import {TUI_LANGUAGE, TUI_VIETNAMESE_LANGUAGE} from '@taiga-ui/i18n';
+import { of } from 'rxjs';
 registerLocaleData(vi);
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -58,7 +60,11 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
       useClass: ErrorInterceptor,
       multi: true,
     },
-    NzNotificationService
+    NzNotificationService,
+    {
+      provide: TUI_LANGUAGE,
+      useValue: of(TUI_VIETNAMESE_LANGUAGE),
+    },
   ],
   bootstrap: [AppComponent],
 })

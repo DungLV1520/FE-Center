@@ -127,7 +127,7 @@
           <tr *ngFor="let data of devices; let i = index">
             <td nz>{{ i + 1 }}</td>
             <td>
-              {{ data.name }}
+              {{ data.name ? data.name : '--' }}
             </td>
             <td>
               <nz-tag [nzColor]="data?.available ? 'green' : 'red'">{{
@@ -139,20 +139,20 @@
                 data?.isPresenting ? 'Đang trình chiếu' : 'Không trình chiếu'
               }}</nz-tag>
             </td>
-            <td>-</td>
-            <td>-</td>
+            <td>{{ data.isPresenting ? data.isPresenting : '--' }}</td>
+            <td>{{ data.lastDisconnectedTime | date : 'HH:mm dd/MM/yyyy' }}</td>
             <td>
-              {{ calculateTimeAgo(data.timeOffAgo) }}
+              {{ calculateTimeAgo(data.timeOffAgo) ?? '--' }}
             </td>
             <td>
-              {{ data.location }}
+              {{ data.location ? data.location : '--' }}
             </td>
-            <td>{{ data.model }}</td>
+            <td>{{ data.model ? data.model : '--' }}</td>
 
-            <td>{{ data.serialNumber }}</td>
-            <td>{{ data.manufacturer }}</td>
-            <td>{{ data.appVersion }}</td>
-            <td>{{ data.osVersion }}</td>
+            <td>{{ data.serialNumber ? data.serialNumber : '--' }}</td>
+            <td>{{ data.manufacturer ? data.manufacturer : '--' }}</td>
+            <td>{{ data.appVersion ? data.appVersion : '--' }}</td>
+            <td>{{ data.osVersion ? data.osVersion : '--' }}</td>
             <td style="cursor: pointer">
               <span
                 nz-icon

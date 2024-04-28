@@ -47,6 +47,7 @@ import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { SafePipe } from './safe.pipe';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { MoveFileComponent } from './moveFile/move-file.component';
+import { Environment } from '@hub-center/hub-model';
 
 @Component({
   selector: 'adv-list-file',
@@ -120,7 +121,8 @@ export class ListFileComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: NzNotificationService,
     private loadingService: LoadingService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private environment: Environment
   ) {}
 
   ngOnInit(): void {
@@ -396,8 +398,8 @@ export class ListFileComponent implements OnInit {
 
   onConfirmDeleteFile(data: any) {
     this.modal.confirm({
-      nzTitle: `Bạn có chắc muốn xoá tệp ${data.name}?`,
-      nzContent: 'Số lượng: 1',
+      nzTitle: `Bạn có chắc muốn xoá tệp?`,
+      nzContent: `Tên:  ${data.name}`,
       nzCancelText: 'Không',
       nzOkText: 'Đồng ý',
       nzOnOk: () => {
@@ -405,8 +407,8 @@ export class ListFileComponent implements OnInit {
           return file.id !== data.id;
         });
         this.modal.success({
-          nzTitle: `Xoá tệp ${data.name} thành công!!!`,
-          nzContent: 'Số lượng: 1',
+          nzTitle: `Xoá tệp thành công!!!`,
+          nzContent: `Tên: ${data.name}`,
           nzCancelText: 'Khôi phục',
           nzOkText: 'Đóng',
           nzOnOk: () => {
@@ -414,6 +416,9 @@ export class ListFileComponent implements OnInit {
           },
           nzOnCancel: () => {
             this.file = [...this.fileOriginal];
+            this.notification.success('Thông báo', 'Khôi phục tệp thành công', {
+              nzDuration: 2000,
+            });
           },
         });
       },
@@ -435,19 +440,42 @@ export class ListFileComponent implements OnInit {
       nzOkText: 'OK',
       nzWidth: 500,
       nzOnOk: () => {
+        const file = modal.getContentComponent().getData();
+        const displayType = modal.getContentComponent().getDataId();
+
         const obj = {
           folderId: this.folderId,
+          displayType: displayType,
         };
-        const file = modal.getContentComponent().getData();
         const formData = new FormData();
         formData.append('files', file);
-        formData.append('data', JSON.stringify(obj));
+        const jsonData = JSON.stringify(obj);
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        formData.append('data', blob);
+
         this.apiUserService.uploadFile(formData).subscribe({
           next: (res) => {
             console.log(res);
+            if (res.result.ok) {
+              this.notification.success('Thông báo', 'Tải tệp lên thành công', {
+                nzDuration: 2000,
+              });
+              const obj = {
+                folderId: this.folderId,
+                page: 0,
+                size: this.pageSize,
+              };
+              this.getListFile(obj);
+            } else {
+              this.notification.error('Thông báo', res.result.message, {
+                nzDuration: 2000,
+              });
+            }
           },
-          error: (err) => {
-            console.log(err);
+          error: () => {
+            this.notification.error('Thông báo', 'Tải tệp thất bại', {
+              nzDuration: 2000,
+            });
           },
         });
       },
