@@ -26,6 +26,8 @@ export class SidebarComponent implements OnInit {
   indexSlideShow = false;
   indexPer = 0;
   indexRegion = 0;
+  subDeviceIndex = 0;
+  subFolderIndex = -1;
   officeId?: number;
   folder: any;
   regions: any;
@@ -37,16 +39,18 @@ export class SidebarComponent implements OnInit {
     this.getListFolder();
   }
 
-  navigateDevice(data: any, i?: number, item?: any): void {
+  navigateDevice(data: any, i?: number, item?: any, index?: any): void {
     this.indexRegion = i ?? 0;
     this.indexPer = -1;
     this.indexSlideShow = false;
+    this.subFolderIndex = -1;
     if (data?.subs?.length > 0) {
       const obj = [
         'Thiết bị',
         data.name,
         item ? item.name : data?.subs[0]?.name,
       ];
+      this.subDeviceIndex = index ?? 0;
       this.apiUserService.sendData(obj);
       this.router.navigate(['adv/device'], {
         queryParams: { regionId: item ? item.id : data?.subs[0]?.id },
@@ -60,16 +64,18 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-  navigateFolder(data: any, i?: number, item?: any): void {
+  navigateFolder(data: any, i?: number, item?: any, index?: any): void {
     this.indexPer = i ?? 0;
     this.indexSlideShow = false;
     this.indexRegion = -1;
+    this.subDeviceIndex = -1;
     if (data?.subs?.length > 0) {
       const obj = ['Tệp', data.name, item ? item.name : data?.subs[0]?.name];
       this.apiUserService.sendData(obj);
       this.router.navigate(['adv/file'], {
         queryParams: { folderId: item ? item.id : data?.subs[0]?.id },
       });
+      this.subFolderIndex = index ?? 0;
     } else {
       const obj = ['Tệp', data.name];
       this.apiUserService.sendData(obj);
@@ -98,8 +104,13 @@ export class SidebarComponent implements OnInit {
   }
 
   activeSlideShow(): void {
+    this.subFolderIndex = -1;
+    this.subDeviceIndex = -1;
     this.indexSlideShow = true;
     this.indexPer = -1;
     this.indexRegion = -1;
+    const obj = ['Trình chiếu'];
+    this.apiUserService.sendData(obj);
+    this.router.navigate(['adv/presentation-slide']);
   }
 }

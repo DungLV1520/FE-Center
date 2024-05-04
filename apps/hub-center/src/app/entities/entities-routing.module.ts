@@ -28,6 +28,14 @@ const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
+      {
+        path: 'presentation-slide',
+        loadComponent: () =>
+          import('./presentation-slide/presentation-slide.component').then(
+            (m) => m.PresentationSlideComponent
+          ),
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

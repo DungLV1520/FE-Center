@@ -1,0 +1,51 @@
+export const CONFIG_TABLE_COLUMN = [
+  {
+    title: 'STT',
+    priority: 0,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
+    title: 'Tên lịch',
+    priority: 1,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
+    title: 'Thời gian chạy',
+    priority: 2,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
+    title: 'Số lượng tệp',
+    priority: 3,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
+    title: 'Tổng thời gian',
+    priority: 4,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
+    title: 'Thiết bị áp dụng',
+    priority: 6,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
+    title: "",
+    priority: 7,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+];

@@ -1,0 +1,104 @@
+<hub-loading></hub-loading>
+<tui-root>
+  <div class="user-list-wrapper">
+    <div class="filter-header">
+      <div class="search-box">
+        <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
+          <input
+            type="text"
+            nz-input
+            placeholder="Tìm kiếm theo tên lịch trình chiếu"
+            [formControl]="searchForm"
+          />
+        </nz-input-group>
+        <ng-template #suffixIconSearch>
+          <span nz-icon nzType="search"></span>
+        </ng-template>
+      </div>
+      <div class="btn-action-group">
+        <button nz-button nzType="default" class="create-team" nzSize="large">
+          <span nz-icon nzType="calendar" nzTheme="outline"></span>
+          <span>Thêm lịch</span>
+        </button>
+      </div>
+    </div>
+    <div class="device-info">
+      <div>
+        <nz-tag>Tổng: {{ totalElements }} lịch</nz-tag>
+      </div>
+    </div>
+    <div class="table-body" style="overflow: auto">
+      <nz-table
+        #filterTable
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+        [nzData]="presentationSlide"
+      >
+        <thead>
+          <tr>
+            <th
+              *ngFor="let column of listOfColumn"
+              [ngStyle]="{
+                whiteSpace: 'nowrap'
+              }"
+            >
+              {{ column.title }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of presentationSlide; let i = index">
+            <td nz>{{ i + 1 }}</td>
+            <td>
+              {{ data.name }}
+            </td>
+            <td>
+              <a> {{ data.capacity }}</a>
+            </td>
+            <td>{{ data.type | uppercase }}</td>
+            <td>{{ data.displayType }}</td>
+            <td>{{ data.path }}</td>
+            <td class="text-center">
+              <span
+                nz-icon
+                nzType="ellipsis"
+                nz-dropdown
+                [nzDropdownMenu]="menu2"
+                nzPlacement="bottomRight"
+                style="transform: rotate(90deg)"
+              ></span>
+              <nz-dropdown-menu #menu2="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item>Chỉnh sửa</li>
+                  <li nz-menu-item>Tạo bản sao</li>
+                  <li
+                    nz-menu-item
+                    (click)="onConfirmDeleteFile(data)"
+                    style="color: red"
+                  >
+                    Xoá
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+    <div class="pagination-footer mt-4">
+      <nz-pagination
+        [nzPageIndex]="pageIndex + 1"
+        [nzTotal]="totalElements"
+        nzShowSizeChanger
+        [nzPageSize]="pageSize"
+        [nzShowTotal]="totalTemplate"
+        (nzPageIndexChange)="onPageIndexChange($event)"
+        (nzPageSizeChange)="onPageSizeChange($event)"
+      ></nz-pagination>
+      <ng-template #totalTemplate let-total
+        >Tổng: {{ totalElements }} kết quả</ng-template
+      >
+    </div>
+  </div>
+</tui-root>

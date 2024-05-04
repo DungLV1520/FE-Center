@@ -76,6 +76,10 @@ export class ApiUserService {
     return this.http.post(this.hubBackendApiEndpoint + `document/search`, obj);
   }
 
+  getListPresentationSlide(obj: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `schedule/search`, obj);
+  }
+
   deleteDevice(id: string) {
     return this.http.delete(this.hubBackendApiEndpoint + `device/delete`, {
       params: { ids: [id] },
@@ -105,6 +109,10 @@ export class ApiUserService {
     return this.http.delete(this.hubBackendApiEndpoint + `document/delete`, {
       params: { ids: [id] },
     });
+  }
+
+  deletePresentationSlide(id: any) {
+    return this.http.delete(this.hubBackendApiEndpoint + `schedule/${id}`);
   }
 
   uploadFile(data: any) {

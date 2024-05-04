@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  height: 100%;
+  .user-list-wrapper {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    .filter-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      .search-box {
+        min-width: 432px;
+      }
+      .btn-action-group {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+      }
+    }
+    .device-info {
+      margin-top: 24px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .table-body {
+      flex: 1;
+      background: white;
+    }
+    .grid-body {
+      // flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 16px 24px;
+      .grid-item {
+        cursor: pointer;
+        padding: 16px;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border: 1px solid #0000000f;
+        justify-content: space-between;
+        border-radius: 8px;
+        .device-name {
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 24px;
+          text-align: left;
+        }
+        .device-status {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 10px;
+          height: 200px;
+          .time-desc {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 22px;
+            text-align: left;
+          }
+          img {
+            background-size: cover;
+          }
+        }
+      }
+    }
+  }
+  .create-team {
+    display: flex;
+    align-items: center;
+  }
+  .file-image {
+    border-radius: 4px;
+  }
+  .file-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bg-active {
+    background: #bae7ff !important;
+  }
+  .empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.content {
+  background-color: white;
+  width: 50rem;
+  height: 68.75rem;
+  padding: 3.75rem;
+  box-sizing: border-box;
+  border-radius: 0.75rem;
+}
+
+.polymorpheus {
+  padding: 2.5rem 10.375rem;
+}
+
+:host :ng-deep {
+  nz-upload-list .ant-upload-list-item-info {
+    display: none !important;
+  }
+  iframe {
+    pointer-events: unset !important;
+  }
+}
+iframe {
+  pointer-events: unset !important;
+}
