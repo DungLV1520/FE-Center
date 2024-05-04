@@ -56,20 +56,31 @@ export class LoginComponent {
           })
         )
         .subscribe({
-          next: () => {
-            this.notification.create(
-              'success',
-              'Thông báo',
-              'Đăng nhập thành công!!!',
-              {
-                nzDuration: 2000,
-              }
-            );
-            this.router.navigate(['adv/device']);
+          next: (res: any) => {
+            console.log(res);
+
+            if (res?.result?.ok) {
+              this.notification.create(
+                'success',
+                'Thông báo',
+                'Đăng nhập thành công!!!',
+                {
+                  nzDuration: 2000,
+                }
+              );
+              this.router.navigate(['adv/device']);
+            } else {
+              this.notification.create(
+                'error',
+                'Thông báo',
+                res?.result?.message,
+                {
+                  nzDuration: 2000,
+                }
+              );
+            }
           },
           error: (err) => {
-            console.log(err);
-
             this.notification.create('error', 'Thông báo', err, {
               nzDuration: 2000,
             });

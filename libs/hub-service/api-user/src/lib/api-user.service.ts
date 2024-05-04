@@ -1,43 +1,26 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
+import { Subject, map } from 'rxjs';
 import { ILoginReq, Environment } from '@hub-center/hub-model';
-import {
-  LocalStorageService,
-  LocalStoreEnum,
-} from '@hub-center/hub-service/storage';
+import { LocalStoreEnum } from '@hub-center/hub-service/storage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiUserService {
-  public currentUserSubject: BehaviorSubject<unknown>;
-  public currentUser: Observable<unknown>;
   hubBackendApiEndpoint: string;
   breadCrumb = new Subject<any>();
   breadCrumb$ = this.breadCrumb.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    private environment: Environment,
-    private localStorageService: LocalStorageService
-  ) {
+  constructor(private http: HttpClient, private environment: Environment) {
     this.hubBackendApiEndpoint = this.environment.hubBackendApiEndpoint;
-    this.currentUserSubject = new BehaviorSubject<unknown>(
-      JSON.parse(this.localStorageService.getItem(LocalStoreEnum.CUSTOMER_KEY)!)
-    );
-    this.currentUser = this.currentUserSubject.asObservable();
-  }
-
-  public get currentUserValue(): unknown {
-    return this.currentUserSubject.value;
   }
 
   login(user: ILoginReq) {
     return this.http.post(this.hubBackendApiEndpoint + `auth/login`, user).pipe(
       map((res: any) => {
-        if (res) {
+        if (res?.result?.ok) {
           localStorage.setItem(
             LocalStoreEnum.CUSTOMER_KEY,
             JSON.stringify(res.data.user)
@@ -49,9 +32,7 @@ export class ApiUserService {
           );
         }
 
-        this.currentUserSubject.next(user);
-
-        return user;
+        return res;
       })
     );
   }
