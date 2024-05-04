@@ -14,6 +14,12 @@ import { environment } from '../../environments/environment.local';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
+import { registerLocaleData } from '@angular/common';
+import vi from '@angular/common/locales/vi';
+import {TUI_LANGUAGE, TUI_VIETNAMESE_LANGUAGE} from '@taiga-ui/i18n';
+import { of } from 'rxjs';
+registerLocaleData(vi);
 
 @NgModule({
   imports: [
@@ -32,6 +38,14 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
     ApiUserService,
     { provide: Environment, useValue: environment },
     NzNotificationService,
+    {
+      provide: TUI_LANGUAGE,
+      useValue: of(TUI_VIETNAMESE_LANGUAGE),
+    },
   ],
 })
-export class LoginModule {}
+export class LoginModule {
+  constructor(private i18n: NzI18nService) {
+    this.i18n.setLocale(vi_VN);
+  }
+}
