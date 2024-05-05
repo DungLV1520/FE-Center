@@ -440,7 +440,7 @@ export class ListFileComponent implements OnInit {
       nzOkText: 'OK',
       nzWidth: 500,
       nzOnOk: () => {
-        const file = modal.getContentComponent().getData();
+        const files = modal.getContentComponent().getData();
         const displayType = modal.getContentComponent().getDataId();
 
         const obj = {
@@ -448,7 +448,9 @@ export class ListFileComponent implements OnInit {
           displayType: displayType,
         };
         const formData = new FormData();
-        formData.append('files', file);
+        files?.forEach((file) => {
+          formData.append('files', file);
+        });
         const jsonData = JSON.stringify(obj);
         const blob = new Blob([jsonData], { type: 'application/json' });
         formData.append('data', blob);
