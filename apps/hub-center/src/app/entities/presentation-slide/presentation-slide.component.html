@@ -16,7 +16,13 @@
         </ng-template>
       </div>
       <div class="btn-action-group">
-        <button nz-button nzType="default" class="create-team" nzSize="large">
+        <button
+          (click)="createPresentation()"
+          nz-button
+          nzType="default"
+          class="create-team"
+          nzSize="large"
+        >
           <span nz-icon nzType="calendar" nzTheme="outline"></span>
           <span>Thêm lịch</span>
         </button>

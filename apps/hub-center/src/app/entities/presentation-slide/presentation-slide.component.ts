@@ -34,7 +34,7 @@ import {
 import { TuiButtonModule } from '@taiga-ui/core';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, debounceTime, finalize, tap, throwError } from 'rxjs';
 import { SafePipe } from './safe.pipe';
 
@@ -93,6 +93,7 @@ export class PresentationSlideComponent implements OnInit {
     private apiUserService: ApiUserService,
     @Inject(TuiPreviewDialogService)
     private route: ActivatedRoute,
+    private router: Router,
     private notification: NzNotificationService,
     private loadingService: LoadingService,
     private modal: NzModalService
@@ -210,5 +211,11 @@ export class PresentationSlideComponent implements OnInit {
     };
 
     this.getListPresentationSlide(obj);
+  }
+
+  createPresentation(): void {
+    const obj = ['Trình chiếu', 'Tạo lịch trình chiếu'];
+    this.apiUserService.sendData(obj);
+    this.router.navigate(['adv/create-presentation-slide']);
   }
 }

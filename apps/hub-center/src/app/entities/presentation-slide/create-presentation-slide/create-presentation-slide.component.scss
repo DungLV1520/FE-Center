@@ -1,0 +1,94 @@
+:host {
+  display: block;
+  height: 100%;
+  .radio-form {
+    display: flex;
+    gap: 20px;
+  }
+  .presentation-slide {
+    background: white;
+    padding: 50px 20px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+  .description {
+    font-size: 12px;
+    margin-top: 0.25rem;
+    color: rgba(27, 31, 59, 0.4);
+  }
+  .description-setting {
+    font-size: 12px;
+    margin-top: 4px;
+    color: rgba(27, 31, 59, 0.4);
+  }
+  .setting-pre {
+    display: flex;
+    gap: 30px;
+  }
+  .view-time {
+    background: white;
+    padding: 20px;
+    height: 60px;
+    overflow: auto;
+    margin-top: 10px;
+  }
+  .grid-body {
+    display: flex;
+    gap: 16px 24px;
+    .grid-item {
+      cursor: pointer;
+      padding: 16px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid #0000000f;
+      justify-content: space-between;
+      border-radius: 8px;
+      .device-name {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        text-align: left;
+      }
+      .device-status {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        height: 200px;
+        .time-desc {
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 22px;
+          text-align: left;
+        }
+        img {
+          background-size: cover;
+        }
+      }
+    }
+  }
+  .repeat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+  }
+  .pad-20 {
+    padding-right: 20px;
+  }
+  .w-custom-250 {
+    width: 250px;
+  }
+  .mili-presentation {
+    margin-left: 27px;
+    width: 60px;
+  }
+}
+
+:host :ng-deep {
+  .mb-4 {
+    margin-bottom: 20px !important;
+  }
+}

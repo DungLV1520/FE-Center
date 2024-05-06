@@ -1,0 +1,321 @@
+<hub-loading></hub-loading>
+<tui-root>
+  <div class="presentation-list-wrapper">
+    <div class="row align-items-center mb-4">
+      <div class="col-3"><b>Tên lịch trình chiếu</b></div>
+      <div class="col-9">
+        <tui-input
+          [tuiTextfieldCleaner]="true"
+          tuiTextfieldSize="s"
+          [tuiTextfieldLabelOutside]="true"
+        >
+          Tên trình chiếu
+          <input tuiTextfield type="text" />
+        </tui-input>
+      </div>
+    </div>
+    <div class="row align-items-center mb-4">
+      <div class="col-3"><b>Thời gian chạy</b></div>
+      <div class="col-9">
+        <form [formGroup]="radioForm" class="radio-form">
+          <tui-radio-labeled
+            class="tui-space_bottom-3"
+            formControlName="timeRunning"
+            [item]="itemsRadio[0]"
+          >
+            <div>Chạy cả ngày</div>
+            <div class="description" *ngIf="showSettingTimeRunning">
+              (00h00 đến 23h59)
+            </div>
+          </tui-radio-labeled>
+          <tui-radio-labeled
+            class="tui-space_bottom-3"
+            formControlName="timeRunning"
+            [item]="itemsRadio[1]"
+          >
+            Lịch tuỳ chỉnh
+          </tui-radio-labeled>
+        </form>
+      </div>
+    </div>
+    <div
+      class="row align-items-center mb-4"
+      [formGroup]="scheduleForm"
+      *ngIf="!showSettingTimeRunning"
+    >
+      <div class="col-3"><b>Lịch tuỳ chỉnh</b></div>
+      <div class="col-7">
+        <div class="mb-4 row">
+          <div class="col-3">
+            <tui-input-number
+              [tuiTextfieldCleaner]="true"
+              formControlName="startHour"
+              tuiTextfieldSize="s"
+              [tuiTextfieldLabelOutside]="true"
+            >
+              Giờ bắt đầu
+              <input tuiTextfield type="text" />
+            </tui-input-number>
+          </div>
+
+          <div class="col-3">
+            <tui-input-number
+              [tuiTextfieldCleaner]="true"
+              formControlName="startMinute"
+              tuiTextfieldSize="s"
+              [tuiTextfieldLabelOutside]="true"
+            >
+              Phút bắt đầu
+              <input tuiTextfield type="text" />
+            </tui-input-number>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <tui-input-number
+              formControlName="endHour"
+              [tuiTextfieldCleaner]="true"
+              tuiTextfieldSize="s"
+              [tuiTextfieldLabelOutside]="true"
+            >
+              Giờ kết thúc
+              <input tuiTextfield type="text" />
+            </tui-input-number>
+          </div>
+          <div class="col-3">
+            <tui-input-number
+              formControlName="endMinute"
+              [tuiTextfieldCleaner]="true"
+              tuiTextfieldSize="s"
+              [tuiTextfieldLabelOutside]="true"
+            >
+              Phút kết thúc
+              <input tuiTextfield type="text" />
+            </tui-input-number>
+          </div>
+        </div>
+        <div class="row">
+          <div class="description-setting">
+            <div class="description-setting">
+              <i>Các trường không được bỏ trống</i>
+            </div>
+            <div class="description-setting">
+              <i>Giờ từ 0 đến 23 và phút từ 0 đến 59 để thiết lập lịch chạy.</i>
+            </div>
+            <i
+              >Giờ/phút bắt đầu không được lớn hơn hoặc bằng giờ/phút kết
+              thúc</i
+            >
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-3">
+            <button
+              nz-button
+              nzType="default"
+              nzSize="large"
+              [disabled]="!scheduleForm.valid"
+              (click)="addSchedule()"
+            >
+              Thêm lịch
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="view-time">
+        <nz-tag *ngFor="let item of schedules"
+          ><span>
+            {{
+              (item.startHour < 10 ? '0' + item.startHour : item.startHour) +
+                ':' +
+                (item.startMinute < 10
+                  ? '0' + item.startMinute
+                  : item.startMinute) +
+                ' - ' +
+                (item.endHour < 10 ? '0' + item.endHour : item.endHour) +
+                ':' +
+                (item.endMinute < 10 ? '0' + item.endMinute : item.endMinute)
+            }}
+          </span>
+
+          <div style="display: inline-flex; margin-left: 5px; cursor: pointer">
+            <span class="anticon anticon-close"
+              ><svg
+                style="padding-bottom: 1px"
+                fill-rule="evenodd"
+                viewBox="64 64 896 896"
+                focusable="false"
+                fill="currentColor"
+                width="1em"
+                height="1em"
+                data-icon="close"
+                aria-hidden="true"
+                class=""
+              >
+                <path
+                  d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
+                ></path></svg
+            ></span>
+          </div>
+        </nz-tag>
+      </div>
+    </div>
+    <div class="row align-items-center mb-4">
+      <div class="col-3"><b>Sắp xếp</b></div>
+      <div class="col-9 radio-form" style="gap: 43px">
+        <div class="d-flex align-items-center">
+          <form [formGroup]="sortForm" class="radio-form">
+            <tui-radio-labeled
+              class="tui-space_bottom-3"
+              formControlName="sortRunning"
+              [item]="itemsSort[0]"
+            >
+              Ngẫu nhiên
+            </tui-radio-labeled>
+            <tui-radio-labeled
+              class="tui-space_bottom-3"
+              formControlName="sortRunning"
+              [item]="itemsSort[1]"
+            >
+              Tuỳ chỉnh
+            </tui-radio-labeled>
+          </form>
+        </div>
+        <div class="row align-items-center w-50">
+          <div class="col-3"><b>Thời gian chuyển</b></div>
+          <div class="col-9 d-flex justify-content-start" style="gap: 20px">
+            <tui-input-number
+              [tuiTextfieldCleaner]="true"
+              tuiTextfieldSize="s"
+              [tuiTextfieldLabelOutside]="true"
+              [readOnly]="showSettingSortRunning"
+            >
+              Thời gian chuyển
+              <input tuiTextfield type="text" />
+            </tui-input-number>
+            <div class="d-flex align-items-center">(giây)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row align-items-center mb-4">
+      <div class="col-3"><b>Danh sách tệp</b></div>
+      <div class="col-9">
+        <span>(Đã chọn: 5)</span>
+        <button nz-button nzType="default" nzSize="small" class="mx-2">
+          Chọn thêm tệp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="presentation-slide mb-4">
+    <!-- <nz-empty nzNotFoundImage="simple"></nz-empty> -->
+    <div
+      [formGroup]="imageForm"
+      class="grid-body"
+      infinite-scroll
+      [infiniteScrollDistance]="scrollDistance"
+      [infiniteScrollUpDistance]="scrollUpDistance"
+      [infiniteScrollThrottle]="throttle"
+    >
+      <ng-container formArrayName="imagesArray">
+        <ng-container
+          *ngFor="let data of imagesArray!.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <div class="d-flex align-items-center">
+            <div
+              class="w-custom-250"
+              [ngClass]="file.length - 1 === i ? 'pad-20' : ''"
+            >
+              <div class="grid-item mb-2">
+                <div class="device-name">
+                  <label
+                    >{{ data?.value?.content?.name | truncate }}</label
+                  >
+                </div>
+                <div class="device-status">
+                  <div class="w-100 h-100">
+                    <img
+                      *ngIf="
+                        data.value.content.type === 'jpg' ||
+                        data.value.content.type === 'jpeg' ||
+                        data.value.content.type === 'png'
+                      "
+                      class="w-100 h-100 file-image"
+                      loading="lazy"
+                      src="http://167.71.198.237:8080{{
+                        data.value.content.path
+                      }}"
+                      alt=""
+                    />
+                    <video
+                      class="w-100 h-100 file-image"
+                      controls
+                      preload="auto"
+                      *ngIf="data.value.content.type === 'mp4'"
+                    >
+                      <source
+                        src="http://167.71.198.237:8080{{
+                          data.value.content.path
+                        }}"
+                        type="video/mp4"
+                      />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+                <div class="file-action">
+                  <span
+                    nz-icon
+                    *ngIf="
+                      data.value.content.type === 'jpg' ||
+                        data.value.content.type === 'pnj';
+                      else check
+                    "
+                    nzType="file-image"
+                    nzTheme="outline"
+                  ></span>
+                  <ng-template #check>
+                    <span
+                      nz-icon
+                      nzType="video-camera-add"
+                      nzTheme="outline"
+                    ></span>
+                  </ng-template>
+                </div>
+              </div>
+              <div class="repeat">
+                <div>Lặp lại (lần)</div>
+                <input
+                  nz-input
+                  nzSize="default"
+                  formControlName="inputFields"
+                />
+              </div>
+            </div>
+            <div class="mili-presentation" *ngIf="file.length - 1 !== i">
+              <input
+                nz-input
+                nzSize="default"
+                formControlName="middleInputFields"
+              />
+              <div class="d-flex justify-content-center mt-2">(giây)</div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mb-4 pb-4">
+    <div><b>Tổng thời gian: 60 giây</b></div>
+    <div>
+      <button nz-button nzType="default" class="mx-4">Huỷ bỏ</button>
+      <button nz-button nzType="primary" (click)="createPresentation()">
+        Tạo lịch
+      </button>
+    </div>
+  </div>
+</tui-root>
