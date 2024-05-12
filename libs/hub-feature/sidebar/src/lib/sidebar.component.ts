@@ -99,7 +99,8 @@ export class SidebarComponent implements OnInit {
         return { ...item, show: showValue };
       });
 
-      if (this.regions.length > 0) this.navigateDevice(this.regions[0]);
+      // if (this.regions.length > 0) this.navigateDevice(this.regions[0]);
+      this.router.navigate(['adv/create-presentation-slide']);
     });
   }
 

@@ -442,7 +442,6 @@ export class ListFileComponent implements OnInit {
       nzOnOk: () => {
         const files = modal.getContentComponent().getData();
         const displayType = modal.getContentComponent().getDataId();
-console.log(files);
 
         const obj = {
           folderId: this.folderId,

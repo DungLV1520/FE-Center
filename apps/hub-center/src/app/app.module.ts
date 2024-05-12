@@ -24,9 +24,11 @@ import { NzI18nService, vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { TuiRootModule } from '@taiga-ui/core';
+import { TuiDialogModule, TuiRootModule } from '@taiga-ui/core';
 import {TUI_LANGUAGE, TUI_VIETNAMESE_LANGUAGE} from '@taiga-ui/i18n';
 import { of } from 'rxjs';
+import { DndModule } from 'ngx-drag-drop';
+
 registerLocaleData(vi);
 const antDesignIcons = AllIcons as {
   [key: string]: IconDefinition;
@@ -45,7 +47,9 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(
     HttpClientJsonpModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    TuiRootModule
+    TuiRootModule,
+    TuiDialogModule,
+    DndModule
   ],
   providers: [
     { provide: NZ_ICONS, useValue: icons },

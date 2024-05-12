@@ -1,5 +1,5 @@
-import { Component, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -29,17 +29,26 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { TuiPreviewModule } from '@taiga-ui/addon-preview';
-import { TuiButtonModule } from '@taiga-ui/core';
+import {
+  TuiButtonModule,
+  TuiDialogModule,
+  TuiDialogService,
+} from '@taiga-ui/core';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   TuiInputModule,
   TuiInputNumberModule,
   TuiRadioLabeledModule,
+  TuiStepperModule,
 } from '@taiga-ui/kit';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { TruncatePipe } from './truncate.pipe';
+import { DndDropEvent, DndModule, DropEffect } from 'ngx-drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'adv-create-presentation',
@@ -76,8 +85,15 @@ import { TruncatePipe } from './truncate.pipe';
     TuiInputNumberModule,
     InfiniteScrollModule,
     TruncatePipe,
+    TuiDialogModule,
+    TuiStepperModule,
+    DndModule,
+    MatListModule,
+    NgForOf,
+    NgIf,
+    MatIconModule,
   ],
-  providers: [NzNotificationService],
+  providers: [NzNotificationService, MatSnackBar],
   templateUrl: './create-presentation-slide.component.html',
   styleUrls: ['./create-presentation-slide.component.scss'],
   schemas: [NO_ERRORS_SCHEMA],
@@ -97,7 +113,6 @@ export class CreatePresentationSlideComponent implements OnInit {
     endHour: number;
     endMinute: number;
   }[] = [];
-
   scheduleForm!: FormGroup;
   showSettingTimeRunning = true;
   showSettingSortRunning = true;
@@ -106,6 +121,15 @@ export class CreatePresentationSlideComponent implements OnInit {
   scrollDistance = 1;
   scrollUpDistance = 2;
   imageForm!: FormGroup;
+  checked?: boolean[] = new Array(8).fill(false);
+  checkedId?: Array<string> = [];
+  currentDraggableEvent?: DragEvent;
+  currentDragEffectMsg?: string;
+  toggleSortFile = false;
+  filteredItems: any[] = [];
+  sortDialog: any;
+  sortList: any;
+  totalMiddle = 0;
 
   constructor(
     private apiUserService: ApiUserService,
@@ -113,7 +137,10 @@ export class CreatePresentationSlideComponent implements OnInit {
     private notification: NzNotificationService,
     private loadingService: LoadingService,
     private modal: NzModalService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
+    private snackBarService: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -161,17 +188,16 @@ export class CreatePresentationSlideComponent implements OnInit {
 
   getListFile(): void {
     this.apiUserService.getAllFiles().subscribe((res: any) => {
-      this.file = res?.data;
+      this.file = res?.data.map((file: any) => {
+        return {
+          ...file,
+          effectAllowed: 'move',
+          disable: false,
+          handle: false,
+        };
+      });
       const numberOfImages = this.file.length;
-      for (let i = 0; i < numberOfImages; i++) {
-        const imageFormGroup = this.formBuilder.group({
-          inputFields: [''],
-          middleInputFields: [],
-          content: [this.file[i]],
-        });
-
-        this.imagesArray.push(imageFormGroup);
-      }
+      this.checked = new Array(numberOfImages).fill(false);
 
       this.file.forEach((data: any) => {
         if (
@@ -265,5 +291,142 @@ export class CreatePresentationSlideComponent implements OnInit {
 
   createPresentation(): void {
     console.log(this.imageForm.value);
+  }
+
+  addFiles(content: any): void {
+    this.sortDialog = this.dialogs.open(content, { size: 'page' }).subscribe();
+  }
+
+  chooseFile(data: any): void {
+    if (this.isChecked(data)) {
+      this.uncheckItem(data);
+    } else {
+      this.checkItem(data);
+    }
+  }
+
+  isChecked(data: any): boolean {
+    return (this.checkedId && this.checkedId.includes(data.id)) as boolean;
+  }
+
+  checkItem(data: any): void {
+    if (!this.checkedId) {
+      this.checkedId = [data.id];
+    } else {
+      this.checkedId.push(data.id);
+    }
+  }
+
+  uncheckItem(data: any): void {
+    if (this.checkedId) {
+      this.checkedId = this.checkedId.filter((id: any) => {
+        return id !== data.id;
+      });
+    }
+  }
+
+  onDragStart(event: DragEvent) {
+    this.currentDragEffectMsg = '';
+    this.currentDraggableEvent = event;
+
+    this.snackBarService.dismiss();
+    this.snackBarService.open('Bắt đầu sắp xếp!', undefined, {
+      duration: 2000,
+    });
+  }
+
+  onDragged(item: any, list: any[], effect: DropEffect) {
+    this.currentDragEffectMsg = `Kết thúc sắp xếp`;
+    this.sortList = list;
+    console.log(this.sortList);
+
+    if (effect === 'move') {
+      const index = list.indexOf(item);
+      list.splice(index, 1);
+    }
+  }
+
+  onDragEnd(event: DragEvent) {
+    this.currentDraggableEvent = event;
+    this.snackBarService.dismiss();
+    this.snackBarService.open(
+      this.currentDragEffectMsg || `Kết thúc sắp xếp`,
+      undefined,
+      { duration: 2000 }
+    );
+  }
+
+  onDrop(event: DndDropEvent, list?: any[]) {
+    if (list && (event.dropEffect === 'copy' || event.dropEffect === 'move')) {
+      let index = event.index;
+
+      if (typeof index === 'undefined') {
+        index = list.length;
+      }
+
+      list.splice(index, 0, event.data);
+    }
+  }
+
+  showSortFile(): void {
+    this.toggleSortFile = !this.toggleSortFile;
+    this.filteredItems = this.file.filter((item: any) =>
+      this.checkedId?.includes(item.id)
+    );
+  }
+
+  doneSortFile(observer: any): void {
+    this.imageForm = this.formBuilder.group({
+      imagesArray: this.formBuilder.array([]),
+    });
+    this.filteredItems = this.file.filter((item: any) =>
+      this.checkedId?.includes(item.id)
+    );
+    const data = this.sortList?.length > 0 ? this.sortList : this.filteredItems;
+    const numberOfImages = data?.length;
+    for (let i = 0; i < numberOfImages; i++) {
+      const imageFormGroup = this.formBuilder.group({
+        inputFields: [''],
+        middleInputFields: [],
+        content:
+          this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
+      });
+
+      this.imagesArray.push(imageFormGroup);
+    }
+    observer.complete();
+
+    const imagesArray = this.imageForm.get('imagesArray') as FormArray;
+    imagesArray.valueChanges.subscribe((values) => {
+      this.totalMiddle = this.calculateMiddleInputFieldsSum(values);
+
+    });
+
+    for (let i = 0; i < imagesArray.length; i++) {
+      this.subscribeToFormControls(imagesArray.at(i) as FormGroup);
+    }
+  }
+
+  private subscribeToFormControls(formGroup: FormGroup) {
+    const middleInputFields = formGroup.get('middleInputFields');
+    if (middleInputFields) {
+      middleInputFields.valueChanges.subscribe(() => {
+        //TODO VALUES
+      });
+    }
+  }
+
+  calculateMiddleInputFieldsSum(data: any): number {
+    let sum = 0;
+    data?.forEach((item: any) => {
+      if (item.middleInputFields !== null && !isNaN(item.middleInputFields)) {
+        sum += item.middleInputFields;
+      }
+    });
+    return sum;
+  }
+
+  cancelCreatePresentation(): void {
+    this.router.navigate(['/adv/presentation-slide']);
   }
 }
