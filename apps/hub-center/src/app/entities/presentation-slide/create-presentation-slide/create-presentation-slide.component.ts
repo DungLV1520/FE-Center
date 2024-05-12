@@ -16,7 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
@@ -36,7 +36,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   TuiInputModule,
   TuiInputNumberModule,
@@ -133,10 +133,8 @@ export class CreatePresentationSlideComponent implements OnInit {
 
   constructor(
     private apiUserService: ApiUserService,
-    private route: ActivatedRoute,
     private notification: NzNotificationService,
     private loadingService: LoadingService,
-    private modal: NzModalService,
     private formBuilder: FormBuilder,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
     private snackBarService: MatSnackBar,
@@ -399,7 +397,6 @@ export class CreatePresentationSlideComponent implements OnInit {
     const imagesArray = this.imageForm.get('imagesArray') as FormArray;
     imagesArray.valueChanges.subscribe((values) => {
       this.totalMiddle = this.calculateMiddleInputFieldsSum(values);
-
     });
 
     for (let i = 0; i < imagesArray.length; i++) {
