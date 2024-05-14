@@ -21,6 +21,14 @@ const routes: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: 'presentation-detail',
+        loadComponent: () =>
+          import(
+            './list-device/presentationDetail/presentation-detail.component'
+          ).then((m) => m.PresentationDetailComponent),
+        canActivate: [authGuard],
+      },
+      {
         path: 'file',
         loadComponent: () =>
           import('./list-file/list-file.component').then(

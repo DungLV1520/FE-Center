@@ -87,6 +87,10 @@ export class ApiUserService {
     return this.http.put(this.hubBackendApiEndpoint + `device/rename`, params);
   }
 
+  getInfoDevice(params: any) {
+    return this.http.get(this.hubBackendApiEndpoint + `device/${params}`);
+  }
+
   renameFile(id: any, data: any) {
     return this.http.put(
       this.hubBackendApiEndpoint + `document/update/${id}`,
@@ -118,5 +122,11 @@ export class ApiUserService {
 
   sendData(data: any): void {
     this.breadCrumb.next(data);
+  }
+
+  getScheduleDetail(deviceId: string) {
+    return this.http.post(this.hubBackendApiEndpoint + `schedule/detail`, {
+      deviceId,
+    });
   }
 }

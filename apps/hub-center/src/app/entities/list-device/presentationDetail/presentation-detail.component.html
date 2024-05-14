@@ -1,0 +1,88 @@
+<hub-loading></hub-loading>
+<div class="presentation-detail-wrapper">
+  <nz-tabset>
+    <nz-tab nzTitle="Lịch trình chiếu">
+      <div class="tab-presentation-header">
+        <div class="btn-group">
+          <button
+            nz-button
+            nzType="default"
+            mwlCalendarPreviousView
+            [view]="view"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="closeOpenMonthViewDay()"
+          >
+            Trước
+          </button>
+          <button
+            nz-button
+            nzType="default"
+            mwlCalendarToday
+            [(viewDate)]="viewDate"
+          >
+            Hiện tại
+          </button>
+          <button
+            nz-button
+            nzType="default"
+            mwlCalendarNextView
+            [view]="view"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="closeOpenMonthViewDay()"
+          >
+            Sau
+          </button>
+        </div>
+        <div class="detail-time">
+          {{ viewDate | calendarDate : view + 'ViewTitle' : 'vi' }}
+        </div>
+        <div class="actions-group">
+          <nz-select [(ngModel)]="view" (ngModelChange)="onModeChange($event)">
+            <nz-option nzValue="day" nzLabel="Chế độ xem: Ngày"></nz-option>
+            <nz-option nzValue="week" nzLabel="Chế độ xem: Tuần"></nz-option>
+            <nz-option nzValue="month" nzLabel="Chế độ xem: Tháng"></nz-option>
+          </nz-select>
+          <button nz-button nzType="primary" (click)="onShowModalAddPresentation()">Thêm lịch trình chiếu</button>
+        </div>
+      </div>
+
+      <div class="tab-presentation-container" [ngSwitch]="view">
+        <mwl-calendar-month-view
+          *ngSwitchCase="CalendarView.Month"
+          [viewDate]="viewDate"
+          [events]="events"
+          [refresh]="refresh"
+          [activeDayIsOpen]="activeDayIsOpen"
+          (dayClicked)="dayClicked($event.day)"
+          (eventClicked)="handleEvent('Clicked', $event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)"
+          [locale]="'vi'"
+        >
+        </mwl-calendar-month-view>
+        <mwl-calendar-week-view
+          *ngSwitchCase="CalendarView.Week"
+          [viewDate]="viewDate"
+          [events]="events"
+          [refresh]="refresh"
+          (eventClicked)="handleEvent('Clicked', $event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)"
+          [locale]="'vi'"
+        >
+        </mwl-calendar-week-view>
+        <mwl-calendar-day-view
+          *ngSwitchCase="CalendarView.Day"
+          [viewDate]="viewDate"
+          [events]="events"
+          [refresh]="refresh"
+          (eventClicked)="handleEvent('Clicked', $event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)"
+          [locale]="'vi'"
+        >
+        </mwl-calendar-day-view>
+      </div>
+    </nz-tab>
+    <nz-tab (nzClick)="getInfoDevice(deviceId)" nzTitle="Thông tin thiết bị"
+      >Content of Tab Pane 2</nz-tab
+    >
+  </nz-tabset>
+</div>
