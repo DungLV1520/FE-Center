@@ -36,7 +36,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   TuiInputModule,
   TuiInputNumberModule,
@@ -49,6 +49,17 @@ import { DndDropEvent, DndModule, DropEffect } from 'ngx-drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs';
+
+enum RUN_TIME_TYPE {
+  FULL_DAY = 'FULL_DAY',
+  FLEXIBLE_TIME = 'FLEXIBLE_TIME',
+}
+
+enum ORDER_TYPE {
+  RANDOM = 'RANDOM',
+  FLEXIBLE_ORDER = 'FLEXIBLE_ORDER',
+}
 
 @Component({
   selector: 'adv-create-presentation',
@@ -99,11 +110,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   schemas: [NO_ERRORS_SCHEMA],
 })
 export class CreatePresentationSlideComponent implements OnInit {
-  itemsRadio = [{ name: true }, { name: false }];
+  itemsRadio = [
+    { name: RUN_TIME_TYPE.FULL_DAY },
+    { name: RUN_TIME_TYPE.FLEXIBLE_TIME },
+  ];
   radioForm = new FormGroup({
     timeRunning: new FormControl(this.itemsRadio[0]),
   });
-  itemsSort = [{ name: true }, { name: false }];
+  itemsSort = [
+    { name: ORDER_TYPE.RANDOM },
+    { name: ORDER_TYPE.FLEXIBLE_ORDER },
+  ];
   sortForm = new FormGroup({
     sortRunning: new FormControl(this.itemsSort[0]),
   });
@@ -114,8 +131,10 @@ export class CreatePresentationSlideComponent implements OnInit {
     endMinute: number;
   }[] = [];
   scheduleForm!: FormGroup;
-  showSettingTimeRunning = true;
-  showSettingSortRunning = true;
+  RUN_TIME_TYPE = RUN_TIME_TYPE;
+  ORDER_TYPE = ORDER_TYPE;
+  showSettingTimeRunning = RUN_TIME_TYPE.FULL_DAY;
+  showSettingSortRunning = ORDER_TYPE.RANDOM;
   file: any;
   throttle = 300;
   scrollDistance = 1;
@@ -130,6 +149,9 @@ export class CreatePresentationSlideComponent implements OnInit {
   sortDialog: any;
   sortList: any;
   totalMiddle = 0;
+  type:any
+  scheduleName = new FormControl();
+  timeChange = new FormControl();
 
   constructor(
     private apiUserService: ApiUserService,
@@ -138,7 +160,8 @@ export class CreatePresentationSlideComponent implements OnInit {
     private formBuilder: FormBuilder,
     @Inject(TuiDialogService) private readonly dialogs: TuiDialogService,
     private snackBarService: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -174,10 +197,45 @@ export class CreatePresentationSlideComponent implements OnInit {
     });
 
     this.sortForm.valueChanges.subscribe((value: any) => {
-      console.log(value);
       this.showSettingSortRunning = value.sortRunning.name;
+      if (this.showSettingSortRunning === this.ORDER_TYPE.RANDOM) {
+        this.timeChange.setValue(60);
+        this.totalMiddle = 60;
+      } else {
+        this.timeChange.setValue(null);
+      }
     });
     this.getListFile();
+    this.route.queryParams.subscribe((params: any) => {
+      this.type = params['type'];
+      const obj = {
+        deviceId: params.deviceId,
+        scheduleId: params.scheduleId,
+        name: params.name,
+      };
+      this.apiUserService
+        .viewDetailSlidePresentation(obj)
+        .subscribe((res: any) => {
+          console.log(res);
+          this.scheduleName.setValue(res.data[0].scheduleInfo.name);
+          this.showSettingTimeRunning = res.data[0].scheduleInfo.runTimeType;
+          this.showSettingSortRunning = res.data[0].scheduleInfo.orderType;
+          if (res.data[0].scheduleInfo.orderType === this.ORDER_TYPE.RANDOM) {
+            this.timeChange.setValue(res.data[0].scheduleInfo.timeToTransfer);
+          }
+          // const listDocuments=res.data[0].listDocuments
+          // for (let i = 0; i < listDocuments?.length; i++) {
+          //   const imageFormGroup = this.formBuilder.group({
+          //     inputFields: [listDocuments[i].loopNumber],
+          //     middleInputFields: [listDocuments[i].duration],
+          //     content:
+          //       this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
+          //   });
+
+          //   this.imagesArray.push(imageFormGroup);
+          // }
+        });
+    });
   }
 
   get imagesArray(): FormArray {
@@ -287,10 +345,6 @@ export class CreatePresentationSlideComponent implements OnInit {
     return item.id;
   }
 
-  createPresentation(): void {
-    console.log(this.imageForm.value);
-  }
-
   addFiles(content: any): void {
     this.sortDialog = this.dialogs.open(content, { size: 'page' }).subscribe();
   }
@@ -384,7 +438,7 @@ export class CreatePresentationSlideComponent implements OnInit {
     const numberOfImages = data?.length;
     for (let i = 0; i < numberOfImages; i++) {
       const imageFormGroup = this.formBuilder.group({
-        inputFields: [''],
+        inputFields: [],
         middleInputFields: [],
         content:
           this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
@@ -425,5 +479,92 @@ export class CreatePresentationSlideComponent implements OnInit {
 
   cancelCreatePresentation(): void {
     this.router.navigate(['/adv/presentation-slide']);
+  }
+
+  createPresentation(): void {
+    const scheduleRequest = {
+      name: this.scheduleName.value,
+      runTimeType: this.showSettingTimeRunning,
+      orderType: this.showSettingSortRunning,
+      timeToTransfer: this.timeChange.value ?? 0,
+    };
+    const scheduleId = null;
+    const imageForm = this.imageForm?.value?.imagesArray?.map((item: any) => {
+      return {
+        duration: item.inputFields || 0,
+        loopNumber: item.middleInputFields || 0,
+        documentId: item.content.id,
+      };
+    });
+    const schedules = this.schedules?.map((item) => {
+      return {
+        fromTime: item.startHour + ':' + item.startMinute,
+        toTime: item.endHour + ':' + item.endMinute,
+      };
+    });
+
+    const obj = {
+      scheduleId,
+      scheduleTimeRequests: schedules,
+      scheduleDocumentRequests: imageForm,
+      scheduleRequest: scheduleRequest,
+    };
+
+    if (!this.scheduleName.value) {
+      this.notification.error(
+        'Thông báo',
+        'Tên lịch trình chiếu không được bỏ trống',
+        {
+          nzDuration: 2000,
+        }
+      );
+      return;
+    }
+
+    if (this.showSettingTimeRunning === RUN_TIME_TYPE.FLEXIBLE_TIME) {
+      if (schedules?.length <= 0) {
+        this.notification.error('Thông báo', 'Chưa có lịch tuỳ chỉnh', {
+          nzDuration: 2000,
+        });
+        return;
+      }
+    }
+    if (this.showSettingSortRunning === ORDER_TYPE.RANDOM) {
+      if (!this.timeChange.value) {
+        this.notification.error('Thông báo', 'Chưa nhập thời gian chuyển', {
+          nzDuration: 2000,
+        });
+        return;
+      }
+    }
+    if (imageForm?.length <= 0) {
+      this.notification.error('Thông báo', 'Chưa có danh sách tệp', {
+        nzDuration: 2000,
+      });
+      return;
+    }
+
+    this.loadingService.showLoading();
+    this.apiUserService
+      .createSlidePresentation(obj)
+      .pipe(
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
+      )
+      .subscribe(() => {
+        this.scheduleName.reset();
+        this.showSettingSortRunning = this.ORDER_TYPE.RANDOM;
+        this.showSettingTimeRunning = this.RUN_TIME_TYPE.FULL_DAY;
+        this.imageForm.reset();
+        this.schedules = [];
+        this.notification.success(
+          'Thông báo',
+          'Tạo lịch trình chiếu thành công',
+          {
+            nzDuration: 2000,
+          }
+        );
+      });
   }
 }

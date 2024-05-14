@@ -218,4 +218,15 @@ export class PresentationSlideComponent implements OnInit {
     this.apiUserService.sendData(obj);
     this.router.navigate(['adv/create-presentation-slide']);
   }
+
+  editPresentation(data: any, type: string): void {
+    this.router.navigate(['adv/create-presentation-slide'], {
+      queryParams: {
+        scheduleId: data.id,
+        name: data.name,
+        deviceId: data.deviceId,
+        type: type,
+      },
+    });
+  }
 }

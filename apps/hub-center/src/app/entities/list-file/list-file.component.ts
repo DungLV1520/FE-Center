@@ -47,7 +47,6 @@ import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { SafePipe } from './safe.pipe';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { MoveFileComponent } from './moveFile/move-file.component';
-import { Environment } from '@hub-center/hub-model';
 
 @Component({
   selector: 'adv-list-file',
@@ -122,7 +121,6 @@ export class ListFileComponent implements OnInit {
     private notification: NzNotificationService,
     private loadingService: LoadingService,
     private modal: NzModalService,
-    private environment: Environment
   ) {}
 
   ngOnInit(): void {

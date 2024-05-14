@@ -75,8 +75,8 @@
               ></span>
               <nz-dropdown-menu #menu2="nzDropdownMenu">
                 <ul nz-menu>
-                  <li nz-menu-item>Chỉnh sửa</li>
-                  <li nz-menu-item>Tạo bản sao</li>
+                  <li nz-menu-item (click)="editPresentation(data,'edit')">Chỉnh sửa</li>
+                  <li nz-menu-item (click)="editPresentation(data,'copy')">Tạo bản sao</li>
                   <li
                     nz-menu-item
                     (click)="onConfirmDeleteFile(data)"

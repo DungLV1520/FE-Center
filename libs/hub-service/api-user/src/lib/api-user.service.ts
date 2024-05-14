@@ -57,6 +57,14 @@ export class ApiUserService {
     return this.http.post(this.hubBackendApiEndpoint + `document/search`, obj);
   }
 
+  createSlidePresentation(obj: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `schedule/create`, obj);
+  }
+
+  viewDetailSlidePresentation(obj: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `schedule/detail`, obj);
+  }
+
   getAllFiles() {
     return this.http.get(this.hubBackendApiEndpoint + `document`);
   }
