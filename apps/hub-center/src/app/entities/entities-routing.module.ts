@@ -44,6 +44,14 @@ const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
+      {
+        path: 'create-presentation-slide',
+        loadComponent: () =>
+          import('./presentation-slide/create-presentation-slide/create-presentation-slide.component').then(
+            (m) => m.CreatePresentationSlideComponent
+          ),
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

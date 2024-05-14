@@ -42,7 +42,7 @@ registerLocaleData(vi);
   template: `
     <tui-root>
       <tui-input-files
-        accept="image/*"
+        accept="image/*, video/mp4"
         [formControl]="control"
         [multiple]="true"
         (ngModelChange)="control.markAsTouched()"
@@ -142,9 +142,7 @@ export function maxFilesLength(maxLength: number): ValidatorFn {
   return ({ value }: AbstractControl) =>
     value.length > maxLength
       ? {
-          maxLength: new TuiValidationError(
-            'Lỗi: Tải lên tối đa 5 tệp'
-          ),
+          maxLength: new TuiValidationError('Lỗi: Tải lên tối đa 5 tệp'),
         }
       : null;
 }

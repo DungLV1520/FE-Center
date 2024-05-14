@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA, NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EntitiesRoutingModule } from './entities-routing.module';
 import { TuiPreviewModule } from '@taiga-ui/addon-preview';
+import { TuiDialogModule } from '@taiga-ui/core';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // import { MAT_DATE_LOCALE } from '@angular/material/core';
@@ -12,6 +13,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     CommonModule,
     EntitiesRoutingModule,
     TuiPreviewModule,
+    TuiDialogModule,
     CalendarModule.forRoot({
       useFactory: adapterFactory,
       provide: DateAdapter,
