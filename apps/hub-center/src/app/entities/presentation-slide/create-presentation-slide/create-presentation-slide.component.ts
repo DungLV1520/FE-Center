@@ -122,7 +122,7 @@ export class CreatePresentationSlideComponent implements OnInit {
     { name: ORDER_TYPE.FLEXIBLE_ORDER },
   ];
   sortForm = new FormGroup({
-    sortRunning: new FormControl(this.itemsSort[0]),
+    sortRunning: new FormControl(this.itemsSort[1]),
   });
   schedules: {
     startHour: number;
@@ -134,7 +134,7 @@ export class CreatePresentationSlideComponent implements OnInit {
   RUN_TIME_TYPE = RUN_TIME_TYPE;
   ORDER_TYPE = ORDER_TYPE;
   showSettingTimeRunning = RUN_TIME_TYPE.FULL_DAY;
-  showSettingSortRunning = ORDER_TYPE.RANDOM;
+  showSettingSortRunning = ORDER_TYPE.FLEXIBLE_ORDER;
   file: any;
   throttle = 300;
   scrollDistance = 1;
@@ -149,7 +149,7 @@ export class CreatePresentationSlideComponent implements OnInit {
   sortDialog: any;
   sortList: any;
   totalMiddle = 0;
-  type:any
+  type: any;
   scheduleName = new FormControl();
   timeChange = new FormControl();
 
@@ -207,34 +207,36 @@ export class CreatePresentationSlideComponent implements OnInit {
     });
     this.getListFile();
     this.route.queryParams.subscribe((params: any) => {
-      this.type = params['type'];
-      const obj = {
-        deviceId: params.deviceId,
-        scheduleId: params.scheduleId,
-        name: params.name,
-      };
-      this.apiUserService
-        .viewDetailSlidePresentation(obj)
-        .subscribe((res: any) => {
-          console.log(res);
-          this.scheduleName.setValue(res.data[0].scheduleInfo.name);
-          this.showSettingTimeRunning = res.data[0].scheduleInfo.runTimeType;
-          this.showSettingSortRunning = res.data[0].scheduleInfo.orderType;
-          if (res.data[0].scheduleInfo.orderType === this.ORDER_TYPE.RANDOM) {
-            this.timeChange.setValue(res.data[0].scheduleInfo.timeToTransfer);
-          }
-          // const listDocuments=res.data[0].listDocuments
-          // for (let i = 0; i < listDocuments?.length; i++) {
-          //   const imageFormGroup = this.formBuilder.group({
-          //     inputFields: [listDocuments[i].loopNumber],
-          //     middleInputFields: [listDocuments[i].duration],
-          //     content:
-          //       this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
-          //   });
+      if (params['type']) {
+        this.type = params['type'];
+        const obj = {
+          deviceId: params.deviceId,
+          scheduleId: params.scheduleId,
+          name: params.name,
+        };
+        this.apiUserService
+          .viewDetailSlidePresentation(obj)
+          .subscribe((res: any) => {
+            console.log(res);
+            this.scheduleName.setValue(res.data[0].scheduleInfo.name);
+            this.showSettingTimeRunning = res.data[0].scheduleInfo.runTimeType;
+            this.showSettingSortRunning = res.data[0].scheduleInfo.orderType;
+            if (res.data[0].scheduleInfo.orderType === this.ORDER_TYPE.RANDOM) {
+              this.timeChange.setValue(res.data[0].scheduleInfo.timeToTransfer);
+            }
+            // const listDocuments=res.data[0].listDocuments
+            // for (let i = 0; i < listDocuments?.length; i++) {
+            //   const imageFormGroup = this.formBuilder.group({
+            //     inputFields: [listDocuments[i].loopNumber],
+            //     middleInputFields: [listDocuments[i].duration],
+            //     content:
+            //       this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
+            //   });
 
-          //   this.imagesArray.push(imageFormGroup);
-          // }
-        });
+            //   this.imagesArray.push(imageFormGroup);
+            // }
+          });
+      }
     });
   }
 
@@ -553,10 +555,10 @@ export class CreatePresentationSlideComponent implements OnInit {
         })
       )
       .subscribe(() => {
-        this.scheduleName.reset();
+        // this.scheduleName.reset();
         this.showSettingSortRunning = this.ORDER_TYPE.RANDOM;
         this.showSettingTimeRunning = this.RUN_TIME_TYPE.FULL_DAY;
-        this.imageForm.reset();
+        // this.imageForm.reset();
         this.schedules = [];
         this.notification.success(
           'Thông báo',
