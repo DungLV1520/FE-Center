@@ -31,7 +31,7 @@ import {
   throwError,
   debounceTime,
 } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { IDevice } from '@hub-center/hub-model';
 import { MoveDeviceComponent } from './moveDevice/move-device.component';
@@ -90,7 +90,8 @@ export class ListDeviceComponent implements OnInit {
     private modal: NzModalService,
     private route: ActivatedRoute,
     private notification: NzNotificationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -402,6 +403,12 @@ export class ListDeviceComponent implements OnInit {
     this.checked = new Array(this.allDevices.length).fill(true);
     this.checkedId = this.allDevices.map((data: any) => {
       return data.id;
+    });
+  }
+
+  onViewDetailPresentation(deviceId: string) {
+    this.router.navigate(['adv/presentation-detail'], {
+      queryParams: { deviceId: deviceId },
     });
   }
 }
