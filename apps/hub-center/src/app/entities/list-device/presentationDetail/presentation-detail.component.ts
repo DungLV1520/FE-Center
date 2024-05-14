@@ -24,7 +24,8 @@ import { catchError, finalize, Subject, tap, throwError } from 'rxjs';
 import { NgSwitch, NgSwitchCase } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
-import { format } from 'date-fns';
+import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
+import {AddPresentationModalComponent} from "../addPresentationModal/add-presentation-modal.component";
 
 export interface Daum {
   scheduleInfo: ScheduleInfo;
@@ -80,6 +81,7 @@ export interface ListTime {
     FormsModule,
     NgSwitch,
     NgSwitchCase,
+    NzModalModule
   ],
 })
 export class PresentationDetailComponent implements OnInit {
@@ -124,7 +126,8 @@ export class PresentationDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private apiUserService: ApiUserService,
     private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private modalService: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -278,5 +281,13 @@ export class PresentationDetailComponent implements OnInit {
 
   getInfoDevice(deviceId: string) {
     this.apiUserService.getInfoDevice(deviceId).subscribe();
+  }
+
+  onShowModalAddPresentation() {
+    this.modalService.create({
+      nzTitle: 'Chọn lịch trình chiếu',
+      nzContent: AddPresentationModalComponent,
+      nzClosable: false
+    });
   }
 }

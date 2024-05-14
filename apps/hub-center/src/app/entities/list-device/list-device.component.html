@@ -253,7 +253,7 @@
             ></span>
             <nz-dropdown-menu #moreAction="nzDropdownMenu">
               <ul nz-menu>
-                <li nz-menu-item>Thiết lập lịch trình chiếu</li>
+                <li nz-menu-item  (click)="onViewDetailPresentation(device.identityDevice)">Thiết lập lịch trình chiếu</li>
                 <li nz-menu-item (click)="moveFile(device)">Di chuyển</li>
                 <li nz-menu-item (click)="renameDevice(device.id, device.name)">
                   Đổi tên
