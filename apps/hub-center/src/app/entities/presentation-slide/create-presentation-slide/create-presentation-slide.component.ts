@@ -150,6 +150,8 @@ export class CreatePresentationSlideComponent implements OnInit {
   sortList: any;
   totalMiddle = 0;
   type: any;
+  scheduleId: any;
+  listDocuments: any;
   scheduleName = new FormControl();
   timeChange = new FormControl();
 
@@ -192,7 +194,6 @@ export class CreatePresentationSlideComponent implements OnInit {
     );
 
     this.radioForm.valueChanges.subscribe((value: any) => {
-      console.log(value);
       this.showSettingTimeRunning = value.timeRunning.name;
     });
 
@@ -207,6 +208,7 @@ export class CreatePresentationSlideComponent implements OnInit {
     });
     this.getListFile();
     this.route.queryParams.subscribe((params: any) => {
+      this.scheduleId = params['scheduleId'];
       if (params['type']) {
         this.type = params['type'];
         const obj = {
@@ -217,26 +219,58 @@ export class CreatePresentationSlideComponent implements OnInit {
         this.apiUserService
           .viewDetailSlidePresentation(obj)
           .subscribe((res: any) => {
-            console.log(res);
             this.scheduleName.setValue(res.data[0].scheduleInfo.name);
             this.showSettingTimeRunning = res.data[0].scheduleInfo.runTimeType;
             this.showSettingSortRunning = res.data[0].scheduleInfo.orderType;
+            this.sortForm.patchValue({
+              sortRunning: this.itemsSort.find(
+                (item) => item.name === res.data[0].scheduleInfo.orderType
+              ),
+            });
+            this.radioForm.patchValue({
+              timeRunning: this.itemsRadio.find(
+                (item) => item.name === res.data[0].scheduleInfo.runTimeType
+              ),
+            });
             if (res.data[0].scheduleInfo.orderType === this.ORDER_TYPE.RANDOM) {
               this.timeChange.setValue(res.data[0].scheduleInfo.timeToTransfer);
             }
-            // const listDocuments=res.data[0].listDocuments
-            // for (let i = 0; i < listDocuments?.length; i++) {
-            //   const imageFormGroup = this.formBuilder.group({
-            //     inputFields: [listDocuments[i].loopNumber],
-            //     middleInputFields: [listDocuments[i].duration],
-            //     content:
-            //       this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
-            //   });
+            const listDocuments = res.data[0].listDocuments;
+            this.filteredItems = listDocuments;
 
-            //   this.imagesArray.push(imageFormGroup);
-            // }
+            this.listDocuments = res.data[0].listDocuments;
+            for (let i = 0; i < listDocuments?.length; i++) {
+              const imageFormGroup = this.formBuilder.group({
+                inputFields: [listDocuments[i].loopNumber],
+                middleInputFields: [listDocuments[i].duration],
+                content: listDocuments[i],
+              });
+
+              this.imagesArray.push(imageFormGroup);
+            }
+
+            const schedules = res.data[0].listTimes?.map((item: any) => {
+              const [startHour, startMinute] = item.fromTime
+                .split(':')
+                .map(Number);
+              const [endHour, endMinute] = item.toTime.split(':').map(Number);
+
+              return {
+                startHour,
+                startMinute,
+                endHour,
+                endMinute,
+              };
+            });
+            this.schedules = schedules;
           });
       }
+    });
+  }
+
+  removeItem(data: any): void {
+    this.schedules = this.schedules.filter((item: any) => {
+      return item.id !== data.id;
     });
   }
 
@@ -392,7 +426,6 @@ export class CreatePresentationSlideComponent implements OnInit {
   onDragged(item: any, list: any[], effect: DropEffect) {
     this.currentDragEffectMsg = `Kết thúc sắp xếp`;
     this.sortList = list;
-    console.log(this.sortList);
 
     if (effect === 'move') {
       const index = list.indexOf(item);
@@ -490,7 +523,7 @@ export class CreatePresentationSlideComponent implements OnInit {
       orderType: this.showSettingSortRunning,
       timeToTransfer: this.timeChange.value ?? 0,
     };
-    const scheduleId = null;
+    const scheduleId = this.type === 'edit' ? this.scheduleId : null;
     const imageForm = this.imageForm?.value?.imagesArray?.map((item: any) => {
       return {
         duration: item.inputFields || 0,
@@ -507,9 +540,9 @@ export class CreatePresentationSlideComponent implements OnInit {
 
     const obj = {
       scheduleId,
-      scheduleTimeRequests: schedules,
-      scheduleDocumentRequests: imageForm,
-      scheduleRequest: scheduleRequest,
+      scheduleTimeRequests: schedules ?? [],
+      scheduleDocumentRequests: imageForm ?? [],
+      scheduleRequest: scheduleRequest ?? null,
     };
 
     if (!this.scheduleName.value) {
@@ -545,6 +578,7 @@ export class CreatePresentationSlideComponent implements OnInit {
       });
       return;
     }
+    console.log(obj);
 
     this.loadingService.showLoading();
     this.apiUserService
@@ -555,11 +589,12 @@ export class CreatePresentationSlideComponent implements OnInit {
         })
       )
       .subscribe(() => {
+        this.router.navigate(['/adv/presentation-slide']);
         // this.scheduleName.reset();
-        this.showSettingSortRunning = this.ORDER_TYPE.RANDOM;
-        this.showSettingTimeRunning = this.RUN_TIME_TYPE.FULL_DAY;
+        // this.showSettingSortRunning = this.ORDER_TYPE.RANDOM;
+        // this.showSettingTimeRunning = this.RUN_TIME_TYPE.FULL_DAY;
         // this.imageForm.reset();
-        this.schedules = [];
+        // this.schedules = [];
         this.notification.success(
           'Thông báo',
           'Tạo lịch trình chiếu thành công',
