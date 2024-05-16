@@ -129,4 +129,8 @@ export class ApiUserService {
       deviceId,
     });
   }
+
+  applyScheduleToDevice(data: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `schedule/apply`, data);
+  }
 }

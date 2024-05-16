@@ -408,7 +408,7 @@ export class ListDeviceComponent implements OnInit {
 
   onViewDetailPresentation(deviceId: string) {
     this.router.navigate(['adv/presentation-detail'], {
-      queryParams: { deviceId: deviceId },
+      queryParams: { regionId: this.regionId, deviceId: deviceId },
     });
   }
 }

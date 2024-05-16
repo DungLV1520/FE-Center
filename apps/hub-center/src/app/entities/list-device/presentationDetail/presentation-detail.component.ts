@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { HubFeatureLoadingModule, LoadingService } from '@hub-center/loading';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -12,20 +12,21 @@ import {
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormsModule } from '@angular/forms';
 import {
-  startOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
+  addHours,
   isSameDay,
   isSameMonth,
-  addHours,
+  endOfMonth,
+  subDays,
+  startOfDay,
+  addDays,
 } from 'date-fns';
 import { catchError, finalize, Subject, tap, throwError } from 'rxjs';
 import { NgSwitch, NgSwitchCase } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
-import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
-import {AddPresentationModalComponent} from "../addPresentationModal/add-presentation-modal.component";
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { AddPresentationModalComponent } from '../addPresentationModal/add-presentation-modal.component';
+import { EventColor } from 'calendar-utils';
 
 export interface Daum {
   scheduleInfo: ScheduleInfo;
@@ -81,12 +82,14 @@ export interface ListTime {
     FormsModule,
     NgSwitch,
     NgSwitchCase,
-    NzModalModule
+    NzModalModule,
   ],
 })
 export class PresentationDetailComponent implements OnInit {
   // @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
   deviceId = '';
+  regionId = '';
+
   view: CalendarView = CalendarView.Month;
 
   CalendarView = CalendarView;
@@ -134,6 +137,7 @@ export class PresentationDetailComponent implements OnInit {
     this.route.queryParams.pipe().subscribe((param) => {
       if (param['deviceId']) {
         this.deviceId = param['deviceId'];
+        this.regionId = param['regionId'];
         this.getScheduleDetail(this.deviceId);
       }
     });
@@ -183,9 +187,9 @@ export class PresentationDetailComponent implements OnInit {
                     title: `(${formattedStartTime} - ${formattedEndTime}) ${scheduleInfo.name}`,
                     allDay: scheduleInfo.runTimeType === 'FULL_DAY',
                   });
-                  this.refresh.next();
                 });
               });
+              this.refresh.next();
             });
           }
         }),
@@ -195,7 +199,6 @@ export class PresentationDetailComponent implements OnInit {
           return throwError(err?.error?.result?.message);
         }),
         finalize(() => {
-          // this.loadDevices();
           this.loadingService.hideLoading();
         })
       )
@@ -240,27 +243,6 @@ export class PresentationDetailComponent implements OnInit {
     // this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  // addEvent(): void {
-  //   this.events = [
-  //     ...this.events,
-  //     {
-  //       title: 'New event',
-  //       start: startOfDay(new Date()),
-  //       end: endOfDay(new Date()),
-  //       color: colors.red,
-  //       draggable: true,
-  //       resizable: {
-  //         beforeStart: true,
-  //         afterEnd: true,
-  //       },
-  //     },
-  //   ];
-  // }
-
-  deleteEvent(eventToDelete: CalendarEvent) {
-    // this.events = this.events.filter((event) => event !== eventToDelete);
-  }
-
   onModeChange(mode: string) {
     if (mode === 'month') {
       this.setView(CalendarView.Month);
@@ -284,10 +266,19 @@ export class PresentationDetailComponent implements OnInit {
   }
 
   onShowModalAddPresentation() {
-    this.modalService.create({
+    const modal = this.modalService.create({
       nzTitle: 'Chọn lịch trình chiếu',
       nzContent: AddPresentationModalComponent,
-      nzClosable: false
+      nzData: { regionId: this.regionId, deviceId: this.deviceId },
+      nzClosable: false,
+      nzFooter: null,
+    });
+
+    modal.afterClose.subscribe((result) => {
+      if (result === 'success') {
+        this.getScheduleDetail(this.deviceId);
+        this.refresh.next();
+      }
     });
   }
 }

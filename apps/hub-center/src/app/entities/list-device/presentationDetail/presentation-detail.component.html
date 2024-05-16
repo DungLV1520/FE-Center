@@ -42,7 +42,13 @@
             <nz-option nzValue="week" nzLabel="Chế độ xem: Tuần"></nz-option>
             <nz-option nzValue="month" nzLabel="Chế độ xem: Tháng"></nz-option>
           </nz-select>
-          <button nz-button nzType="primary" (click)="onShowModalAddPresentation()">Thêm lịch trình chiếu</button>
+          <button
+            nz-button
+            nzType="primary"
+            (click)="onShowModalAddPresentation()"
+          >
+            Thêm lịch trình chiếu
+          </button>
         </div>
       </div>
 
@@ -67,6 +73,8 @@
           (eventClicked)="handleEvent('Clicked', $event.event)"
           (eventTimesChanged)="eventTimesChanged($event)"
           [locale]="'vi'"
+          [hourDuration]="40"
+          [hourSegments]="2"
         >
         </mwl-calendar-week-view>
         <mwl-calendar-day-view

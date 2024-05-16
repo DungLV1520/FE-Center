@@ -1,43 +1,73 @@
 <div class="add-presentation-modal">
   <div class="search-box">
-    <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
-      <input
-        type="text"
-        nz-input
-        placeholder="Tìm kiếm theo tên lịch trình chiếu"
-        [formControl]="searchForm"
-      />
-    </nz-input-group>
-    <ng-template #suffixIconSearch>
-      <span nz-icon nzType="search"></span>
-    </ng-template>
-
-  </div>
-  <div class="value-box">
-    <nz-select [(ngModel)]="multipleValue" [nzSize]="'large'" [nzDisabled]="multipleValue.length === 0" nzMode="multiple" nzPlaceHolder="Lịch đã chọn">
-<!--      <nz-option *ngFor="let option of listOfOption" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>-->
+    <nz-select
+      nzMode="multiple"
+      nzPlaceHolder="Chọn lịch sẽ trình chiếu"
+      [(ngModel)]="listOfSelectedSchedule"
+      [nzCustomTemplate]="customTemplate"
+    >
+      <nz-option
+        *ngFor="let item of listSchedule"
+        [nzLabel]="item.name"
+        [nzValue]="item.id"
+      >
+        <div>{{ item.name }}</div>
+      </nz-option>
     </nz-select>
+    <ng-template #customTemplate let-selected>
+      <span
+        (click)="
+          onViewDetailPresentation(selected.nzValue, selected.nzLabel, $event)
+        "
+        nz-tooltip
+        nzTooltipTitle="Click vào để xem chi tiết"
+        >{{ selected.nzLabel }}</span
+      >
+    </ng-template>
   </div>
 
   <div class="time-box">
     <div class="options">
-      <span>Thời gian chạy</span>
-      <nz-radio-group [(ngModel)]="radioValue">
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 8px;
+        "
+      >
+        <span style="font-weight: 700">Thời gian chạy</span>
+        <span>(Vui lòng chọn trong khoảng 90 ngày gần nhất)</span>
+      </div>
+      <nz-radio-group style="flex: 1" [(ngModel)]="radioValue">
         <label nz-radio nzValue="day">Theo ngày</label>
         <label nz-radio nzValue="custom">Tuỳ chỉnh</label>
       </nz-radio-group>
     </div>
     <div class="value-time">
-      <nz-date-picker *ngIf="radioValue === 'day'" [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
-      <nz-select *ngIf="radioValue !== 'day'" nzMode="multiple" nzPlaceHolder="Please select">
-      <nz-option *ngFor="let option of options" [nzLabel]="option" [nzValue]="option"></nz-option>
-      <nz-option [nzLabel]="'Add new date'" nzCustomContent>
-        <button nz-button nzType="link" (click)="openDatePicker()">Add new date</button>
-      </nz-option>
-      </nz-select>
-      <nz-modal [(nzVisible)]="isDatePickerVisible" nzTitle="Select Date" (nzOnOk)="addDate()" (nzOnCancel)="isDatePickerVisible=false">
-        <nz-date-picker [(ngModel)]="selectedDate" (ngModelChange)="handleDateChange($event)"></nz-date-picker>
-      </nz-modal>
+      <nz-date-picker
+        [nzDisabledDate]="disabledDate"
+        *ngIf="radioValue === 'day'"
+        [(ngModel)]="date"
+        (ngModelChange)="onChange($event)"
+      ></nz-date-picker>
+      <tui-calendar
+        *ngIf="radioValue !== 'day'"
+        [min]="minDate"
+        [max]="maxDate"
+        [value]="selectedMultiDate"
+        (dayClick)="onDayClick($event)"
+      ></tui-calendar>
     </div>
+  </div>
+
+  <div class="footer">
+    <button nz-button (click)="closeModal()" nzType="default">Huỷ bỏ</button>
+    <button nz-button nzType="primary" (click)="addPresentation()">
+      Thêm lịch trình chiếu
+    </button>
+  </div>
+  <div *ngIf="isLoading" class="loading">
+    <nz-spin nzSimple></nz-spin>
   </div>
 </div>
