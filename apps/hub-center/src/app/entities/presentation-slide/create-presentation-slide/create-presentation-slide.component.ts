@@ -597,7 +597,7 @@ export class CreatePresentationSlideComponent implements OnInit {
         // this.schedules = [];
         this.notification.success(
           'Thông báo',
-          'Tạo lịch trình chiếu thành công',
+          this.type==='edit'?'Chỉnh sửa lịch trình chiếu thành công':'Tạo lịch trình chiếu thành công',
           {
             nzDuration: 2000,
           }
