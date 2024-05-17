@@ -12,6 +12,8 @@ export class ApiUserService {
   hubBackendApiEndpoint: string;
   breadCrumb = new Subject<any>();
   breadCrumb$ = this.breadCrumb.asObservable();
+  navigateReload = new Subject<any>();
+  navigateReload$ = this.navigateReload.asObservable();
 
   constructor(private http: HttpClient, private environment: Environment) {
     this.hubBackendApiEndpoint = this.environment.hubBackendApiEndpoint;
@@ -122,6 +124,10 @@ export class ApiUserService {
 
   sendData(data: any): void {
     this.breadCrumb.next(data);
+  }
+
+  navigateReloadLogin(data: any): void {
+    this.navigateReload.next(data);
   }
 
   getScheduleDetail(deviceId: string) {

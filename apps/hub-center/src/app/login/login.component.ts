@@ -57,9 +57,8 @@ export class LoginComponent {
         )
         .subscribe({
           next: (res: any) => {
-            console.log(res);
-
             if (res?.result?.ok) {
+              localStorage.setItem('navigate', 'true');
               this.notification.create(
                 'success',
                 'Thông báo',

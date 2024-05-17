@@ -166,7 +166,6 @@ export class ListFileComponent implements OnInit {
     } else {
       this.checkedId.push(data.id);
     }
-    console.log(this.checkedId);
   }
 
   uncheckItem(data: any): void {
@@ -455,7 +454,6 @@ export class ListFileComponent implements OnInit {
 
         this.apiUserService.uploadFile(formData).subscribe({
           next: (res) => {
-            console.log(res);
             if (res.result.ok) {
               this.notification.success('Thông báo', 'Tải tệp lên thành công', {
                 nzDuration: 2000,

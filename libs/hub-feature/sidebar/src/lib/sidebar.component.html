@@ -4,7 +4,12 @@
   nzTheme="light"
 >
   <ul nz-menu nzMode="inline">
-    <li nz-submenu nzIcon="mobile" nzOpen nzTitle="Thiết bị">
+    <li
+      nz-submenu
+      nzIcon="mobile"
+      [(nzOpen)]="checkOpenReloadDevice"
+      nzTitle="Thiết bị"
+    >
       <ul>
         <ng-container *ngFor="let data of regions; let i = index">
           <ul
@@ -39,7 +44,12 @@
     </li>
   </ul>
   <ul nz-menu nzMode="inline" class="sider-menu">
-    <li nz-submenu nzIcon="folder" nzTitle="Tệp">
+    <li
+      nz-submenu
+      nzIcon="folder"
+      nzTitle="Tệp"
+      [(nzOpen)]="checkOpenReloadFile"
+    >
       <ul>
         <ng-container *ngFor="let data of folder; let index = index">
           <ul
@@ -48,7 +58,7 @@
             class="sider-menu"
             *ngIf="data?.subs?.length! > 0"
           >
-            <li nz-submenu nzTitle="{{ data.name }}">
+            <li nz-submenu nzTitle="{{ data.name }}" [(nzOpen)]="data.show">
               <ul>
                 <li
                   nz-menu-item

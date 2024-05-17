@@ -216,8 +216,14 @@ export class CreatePresentationSlideComponent implements OnInit {
           scheduleId: params.scheduleId,
           name: params.name,
         };
+        this.loadingService.showLoading();
         this.apiUserService
           .viewDetailSlidePresentation(obj)
+          .pipe(
+            finalize(() => {
+              this.loadingService.hideLoading();
+            })
+          )
           .subscribe((res: any) => {
             this.scheduleName.setValue(res.data[0].scheduleInfo.name);
             this.showSettingTimeRunning = res.data[0].scheduleInfo.runTimeType;
@@ -578,7 +584,6 @@ export class CreatePresentationSlideComponent implements OnInit {
       });
       return;
     }
-    console.log(obj);
 
     this.loadingService.showLoading();
     this.apiUserService
@@ -597,7 +602,9 @@ export class CreatePresentationSlideComponent implements OnInit {
         // this.schedules = [];
         this.notification.success(
           'Thông báo',
-          this.type==='edit'?'Chỉnh sửa lịch trình chiếu thành công':'Tạo lịch trình chiếu thành công',
+          this.type === 'edit'
+            ? 'Chỉnh sửa lịch trình chiếu thành công'
+            : 'Tạo lịch trình chiếu thành công',
           {
             nzDuration: 2000,
           }

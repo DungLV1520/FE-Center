@@ -208,7 +208,6 @@ export class ListDeviceComponent implements OnInit {
           }
         }),
         catchError((err) => {
-          console.log(err);
           this.loadingService.hideLoading();
           return throwError(err?.error?.result?.message);
         }),
@@ -383,7 +382,6 @@ export class ListDeviceComponent implements OnInit {
     } else {
       this.checkedId.push(data.id);
     }
-    console.log(this.checkedId);
   }
 
   uncheckItem(data: any): void {
