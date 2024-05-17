@@ -532,8 +532,11 @@ export class CreatePresentationSlideComponent implements OnInit {
     const scheduleId = this.type === 'edit' ? this.scheduleId : null;
     const imageForm = this.imageForm?.value?.imagesArray?.map((item: any) => {
       return {
-        duration: item.inputFields || 0,
-        loopNumber: item.middleInputFields || 0,
+        loopNumber: item.inputFields || 0,
+        duration:
+          this.showSettingSortRunning === ORDER_TYPE.RANDOM
+            ? this.timeChange.value || 0
+            : item.middleInputFields || 0,
         documentId: item.content.id,
       };
     });
