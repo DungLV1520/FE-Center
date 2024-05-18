@@ -243,6 +243,15 @@ export class CreatePresentationSlideComponent implements OnInit {
             }
             const listDocuments = res.data[0].listDocuments;
             this.filteredItems = listDocuments;
+            listDocuments.forEach((bItem: { documentId: string }) => {
+              const index = this.file.findIndex(
+                (sItem: { id: string }) => sItem.id === bItem.documentId
+              );
+              if (index !== -1) {
+                this.checked[index] = true;
+              }
+              this.checkedId?.push(bItem.documentId);
+            });
 
             this.listDocuments = res.data[0].listDocuments;
             for (let i = 0; i < listDocuments?.length; i++) {
@@ -404,7 +413,8 @@ export class CreatePresentationSlideComponent implements OnInit {
 
   isChecked(data: any): boolean {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return (this.checkedId!.length>0 && this.checkedId?.includes(data.id)) as boolean;
+    return (this.checkedId!.length > 0 &&
+      this.checkedId?.includes(data.id)) as boolean;
   }
 
   checkItem(data: any): void {
@@ -413,14 +423,11 @@ export class CreatePresentationSlideComponent implements OnInit {
     } else {
       this.checkedId.push(data.id);
     }
-
-    console.log(this.checkedId);
-
   }
 
   uncheckItem(data: any): void {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (this.checkedId!.length>0) {
+    if (this.checkedId!.length > 0) {
       this.checkedId = this.checkedId?.filter((id: any) => {
         return id !== data.id;
       });
@@ -597,9 +604,6 @@ export class CreatePresentationSlideComponent implements OnInit {
       });
       return;
     }
-
-    console.log(obj);
-    console.log(this.imageForm?.value);
 
     this.loadingService.showLoading();
     this.apiUserService
