@@ -140,7 +140,7 @@ export class CreatePresentationSlideComponent implements OnInit {
   scrollDistance = 1;
   scrollUpDistance = 2;
   imageForm!: FormGroup;
-  checked?: boolean[] = new Array(8).fill(false);
+  checked: boolean[] = new Array(8).fill(false);
   checkedId?: Array<string> = [];
   currentDraggableEvent?: DragEvent;
   currentDragEffectMsg?: string;
@@ -203,7 +203,7 @@ export class CreatePresentationSlideComponent implements OnInit {
         this.timeChange.setValue(60);
         this.totalMiddle = 60;
       } else {
-        this.timeChange.setValue(null);
+        this.timeChange.setValue(0);
       }
     });
     this.getListFile();
@@ -249,7 +249,10 @@ export class CreatePresentationSlideComponent implements OnInit {
               const imageFormGroup = this.formBuilder.group({
                 inputFields: [listDocuments[i].loopNumber],
                 middleInputFields: [listDocuments[i].duration],
-                content: listDocuments[i],
+                content: {
+                  ...listDocuments[i],
+                  id: listDocuments[i].documentId,
+                },
               });
 
               this.imagesArray.push(imageFormGroup);
@@ -392,6 +395,8 @@ export class CreatePresentationSlideComponent implements OnInit {
   }
 
   chooseFile(data: any): void {
+    console.log(data);
+
     if (this.isChecked(data)) {
       this.uncheckItem(data);
     } else {
@@ -400,7 +405,8 @@ export class CreatePresentationSlideComponent implements OnInit {
   }
 
   isChecked(data: any): boolean {
-    return (this.checkedId && this.checkedId.includes(data.id)) as boolean;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return (this.checkedId!.length>0 && this.checkedId?.includes(data.id)) as boolean;
   }
 
   checkItem(data: any): void {
@@ -409,11 +415,15 @@ export class CreatePresentationSlideComponent implements OnInit {
     } else {
       this.checkedId.push(data.id);
     }
+
+    console.log(this.checkedId);
+
   }
 
   uncheckItem(data: any): void {
-    if (this.checkedId) {
-      this.checkedId = this.checkedId.filter((id: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (this.checkedId!.length>0) {
+      this.checkedId = this.checkedId?.filter((id: any) => {
         return id !== data.id;
       });
     }
@@ -479,8 +489,10 @@ export class CreatePresentationSlideComponent implements OnInit {
     const numberOfImages = data?.length;
     for (let i = 0; i < numberOfImages; i++) {
       const imageFormGroup = this.formBuilder.group({
-        inputFields: [],
-        middleInputFields: [],
+        inputFields: [0],
+        middleInputFields: [
+          this.showSettingSortRunning === ORDER_TYPE.RANDOM ? 60 : 0,
+        ],
         content:
           this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
       });
@@ -587,6 +599,9 @@ export class CreatePresentationSlideComponent implements OnInit {
       });
       return;
     }
+
+    console.log(obj);
+    console.log(this.imageForm?.value);
 
     this.loadingService.showLoading();
     this.apiUserService
