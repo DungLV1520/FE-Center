@@ -395,8 +395,6 @@ export class CreatePresentationSlideComponent implements OnInit {
   }
 
   chooseFile(data: any): void {
-    console.log(data);
-
     if (this.isChecked(data)) {
       this.uncheckItem(data);
     } else {

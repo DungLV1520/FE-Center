@@ -388,7 +388,7 @@
               <label
                 nz-checkbox
                 [(ngModel)]="checked[i]"
-                (click)="chooseFile(data)"
+                (ngModelChange)="chooseFile(data)"
                 >{{ data?.name | truncate }}</label
               >
             </div>
