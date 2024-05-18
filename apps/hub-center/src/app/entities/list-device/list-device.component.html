@@ -55,7 +55,7 @@
     </div>
 
     <div *ngIf="!isModeViewTable">
-      <nz-tag
+      <nz-tag *ngIf="allDevices.length > 0"
         ><span>Đã chọn {{ checkedId?.length! }}</span>
         <div
           style="display: inline-flex; margin-left: 5px; cursor: pointer"
@@ -81,6 +81,7 @@
         </div>
       </nz-tag>
       <button
+        [disabled]="allDevices!.length === 0"
         (click)="checkAll()"
         nz-button
         nzType="default"
@@ -193,7 +194,10 @@
         </tbody>
       </nz-table>
     </div>
-    <div *ngIf="!isModeViewTable" class="grid-body">
+    <div
+      *ngIf="!isModeViewTable && allDevices.length > 0; else noDataDevice"
+      class="grid-body"
+    >
       <div
         *ngFor="let device of devices$ | async; let i = index"
         class="grid-item"
@@ -253,7 +257,12 @@
             ></span>
             <nz-dropdown-menu #moreAction="nzDropdownMenu">
               <ul nz-menu>
-                <li nz-menu-item  (click)="onViewDetailPresentation(device.identityDevice)">Thiết lập lịch trình chiếu</li>
+                <li
+                  nz-menu-item
+                  (click)="onViewDetailPresentation(device.identityDevice)"
+                >
+                  Thiết lập lịch trình chiếu
+                </li>
                 <li nz-menu-item (click)="moveFile(device)">Di chuyển</li>
                 <li nz-menu-item (click)="renameDevice(device.id, device.name)">
                   Đổi tên
@@ -281,6 +290,11 @@
         </ng-template>
       </div>
     </div>
+    <ng-template #noDataDevice>
+      <div class="empty-data-device">
+        <nz-empty nzNotFoundImage="simple"></nz-empty>
+      </div>
+    </ng-template>
   </div>
   <div class="pagination-footer">
     <nz-pagination

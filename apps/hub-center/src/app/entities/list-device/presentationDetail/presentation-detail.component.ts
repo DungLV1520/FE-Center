@@ -162,7 +162,7 @@ export class PresentationDetailComponent implements OnInit {
               const activeDates = scheduleInfo.activeDate.split(',');
 
               activeDates.forEach((date) => {
-                listTimes.forEach((time) => {
+                listTimes?.forEach((time) => {
                   const [day, month, year] = date.split('/').map(Number);
                   const [fromHour, fromMinute] = time.fromTime
                     .split(':')
@@ -278,6 +278,7 @@ export class PresentationDetailComponent implements OnInit {
       if (result === 'success') {
         this.getScheduleDetail(this.deviceId);
         this.refresh.next();
+        // window.location.reload();
       }
     });
   }

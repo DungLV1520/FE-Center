@@ -77,6 +77,14 @@
           }
         }
       }
+      .empty-data-device {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 50px;
+        background: white;
+      }
     }
     .pagination-footer {
       margin-top: 24px;
