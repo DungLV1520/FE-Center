@@ -14,6 +14,8 @@ export class ApiUserService {
   breadCrumb$ = this.breadCrumb.asObservable();
   navigateReload = new Subject<any>();
   navigateReload$ = this.navigateReload.asObservable();
+  addRegion = new Subject<any>();
+  addRegion$ = this.addRegion.asObservable();
 
   constructor(private http: HttpClient, private environment: Environment) {
     this.hubBackendApiEndpoint = this.environment.hubBackendApiEndpoint;
@@ -124,6 +126,10 @@ export class ApiUserService {
 
   sendData(data: any): void {
     this.breadCrumb.next(data);
+  }
+
+  sendRegion(data: any): void {
+    this.addRegion.next(data);
   }
 
   navigateReloadLogin(data: any): void {

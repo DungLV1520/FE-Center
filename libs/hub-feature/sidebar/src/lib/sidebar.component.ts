@@ -5,6 +5,8 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
+import { finalize } from 'rxjs';
+import { LoadingService } from '@hub-center/loading';
 
 @Component({
   selector: 'hub-sidebar',
@@ -38,12 +40,19 @@ export class SidebarComponent implements OnInit {
   constructor(
     private router: Router,
     private apiUserService: ApiUserService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit(): void {
     this.getListRegion();
     this.getListFolder();
+
+    this.apiUserService.addRegion$.subscribe((data) => {
+      if (data) {
+        this.getListRegion();
+      }
+    });
   }
 
   navigateDevice(data: any, i?: number, item?: any, index?: number): void {
@@ -53,7 +62,7 @@ export class SidebarComponent implements OnInit {
     this.subFolderIndex = -1;
     if (data?.subs?.length > 0) {
       const obj = [
-        'Thiết bị',
+        'Khu vực',
         data.name,
         item ? item.name : data?.subs[0]?.name,
       ];
@@ -64,7 +73,7 @@ export class SidebarComponent implements OnInit {
         queryParams: { regionId: item ? item.id : data?.subs[0]?.id },
       });
     } else {
-      const obj = ['Thiết bị', data.name];
+      const obj = ['Khu vực', data.name];
       this.apiUserService.sendData(obj);
       this.router.navigate(['adv/device'], {
         queryParams: { regionId: data.id },
@@ -78,14 +87,18 @@ export class SidebarComponent implements OnInit {
     this.indexRegion = -1;
     this.subDeviceIndex = -1;
     if (data?.subs?.length > 0) {
-      const obj = ['Tệp', data.name, item ? item.name : data?.subs[0]?.name];
+      const obj = [
+        'Thư mục',
+        data.name,
+        item ? item.name : data?.subs[0]?.name,
+      ];
       this.apiUserService.sendData(obj);
       this.router.navigate(['adv/file'], {
         queryParams: { folderId: item ? item.id : data?.subs[0]?.id },
       });
       this.subFolderIndex = index ?? 0;
     } else {
-      const obj = ['Tệp', data.name];
+      const obj = ['Thư mục', data.name];
       this.apiUserService.sendData(obj);
       this.router.navigate(['adv/file'], {
         queryParams: { folderId: data.id },
@@ -94,27 +107,34 @@ export class SidebarComponent implements OnInit {
   }
 
   getListFolder(): void {
-    this.apiUserService.getListFolder().subscribe((res: any) => {
-      this.folder = res.data;
-      const url = this.router.url;
-      if (url.includes('/adv/file')) {
-        this.checkOpenReloadFile = true;
-        this.checkOpenReloadDevice = false;
-        this.route.queryParams.subscribe((params: any) => {
-          this.checkNavigate(this.folder, params.folderId);
-        });
-      } else {
-        if (url.includes('/adv/presentation-slide')) {
-          this.checkHiddenNotPresentation();
-          this.activeSlideShow();
-        } else if (url.includes('/adv/create-presentation-slide')) {
-          this.checkActiveSlideShow();
-          this.checkHiddenNotPresentation();
-          const obj = ['Trình chiếu', 'Tạo lịch trình chiếu'];
-          this.apiUserService.sendData(obj);
+    this.apiUserService
+      .getListFolder()
+      .pipe(
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
+      )
+      .subscribe((res: any) => {
+        this.folder = res.data;
+        const url = this.router.url;
+        if (url.includes('/adv/file')) {
+          this.checkOpenReloadFile = true;
+          this.checkOpenReloadDevice = false;
+          this.route.queryParams.subscribe((params: any) => {
+            this.checkNavigate(this.folder, params.folderId);
+          });
+        } else {
+          if (url.includes('/adv/presentation-slide')) {
+            this.checkHiddenNotPresentation();
+            this.activeSlideShow();
+          } else if (url.includes('/adv/create-presentation-slide')) {
+            this.checkActiveSlideShow();
+            this.checkHiddenNotPresentation();
+            const obj = ['Trình chiếu', 'Tạo lịch trình chiếu'];
+            this.apiUserService.sendData(obj);
+          }
         }
-      }
-    });
+      });
   }
 
   checkHiddenNotPresentation(): void {
@@ -123,36 +143,43 @@ export class SidebarComponent implements OnInit {
   }
 
   getListRegion(): void {
-    this.apiUserService.getListRegion().subscribe((res: any) => {
-      this.regions = res.data;
-      this.regions = res.data.map((item: any, index: number) => {
-        return { ...item };
-      });
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const check = JSON.parse(localStorage.getItem('navigate')!);
+    this.apiUserService
+      .getListRegion()
+      .pipe(
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
+      )
+      .subscribe((res: any) => {
+        this.regions = res.data;
+        this.regions = res.data.map((item: any, index: number) => {
+          return { ...item };
+        });
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const check = JSON.parse(localStorage.getItem('navigate')!);
 
-      if (check) {
-        if (this.regions.length > 0) this.navigateDevice(this.regions[0]);
-        const url = this.router.url;
-        if (url.includes('/adv/device')) {
-          this.checkOpenReloadFile = false;
-          this.checkOpenReloadDevice = true;
-          this.route.queryParams.subscribe((params: any) => {
-            this.checkNavigate(this.regions, params.regionId);
-          });
+        if (check) {
+          if (this.regions.length > 0) this.navigateDevice(this.regions[0]);
+          const url = this.router.url;
+          if (url.includes('/adv/device')) {
+            this.checkOpenReloadFile = false;
+            this.checkOpenReloadDevice = true;
+            this.route.queryParams.subscribe((params: any) => {
+              this.checkNavigate(this.regions, params.regionId);
+            });
+          }
+          localStorage.removeItem('navigate');
+        } else {
+          const url = this.router.url;
+          if (url.includes('/adv/device')) {
+            this.checkOpenReloadFile = false;
+            this.checkOpenReloadDevice = true;
+            this.route.queryParams.subscribe((params: any) => {
+              this.checkNavigate(this.regions, params.regionId);
+            });
+          }
         }
-        localStorage.removeItem('navigate');
-      } else {
-        const url = this.router.url;
-        if (url.includes('/adv/device')) {
-          this.checkOpenReloadFile = false;
-          this.checkOpenReloadDevice = true;
-          this.route.queryParams.subscribe((params: any) => {
-            this.checkNavigate(this.regions, params.regionId);
-          });
-        }
-      }
-    });
+      });
   }
 
   activeSlideShow(): void {

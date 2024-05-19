@@ -35,6 +35,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { IDevice } from '@hub-center/hub-model';
 import { MoveDeviceComponent } from './moveDevice/move-device.component';
+import { AddRegionComponent } from './addRegion/add-region.component';
 
 @Component({
   selector: 'adv-list-device',
@@ -407,6 +408,30 @@ export class ListDeviceComponent implements OnInit {
   onViewDetailPresentation(deviceId: string) {
     this.router.navigate(['adv/presentation-detail'], {
       queryParams: { regionId: this.regionId, deviceId: deviceId },
+    });
+  }
+
+  addRegion() {
+    const modal = this.modal.confirm({
+      nzTitle: `Thêm mới khu vực`,
+      nzContent: AddRegionComponent,
+      nzCancelText: 'Đóng',
+      nzOkText: 'OK',
+      nzOnOk: () => {
+        const name = modal.getContentComponent().getData();
+        if (!name || name === '') {
+          this.notification.error(
+            'Thông báo',
+            'Tên khu vực không được bỏ trống',
+            {
+              nzDuration: 2000,
+            }
+          );
+          return;
+        }
+        this.loadingService.showLoading();
+        this.apiUserService.sendRegion(true);
+      },
     });
   }
 }
