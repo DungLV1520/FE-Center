@@ -71,7 +71,7 @@ export class ListDeviceComponent implements OnInit {
   totalDevicesCount = 0;
   totalDevicesOnlineCount = 0;
   totalDevicesOfflineCount = 0;
-  isModeViewTable = true;
+  isModeViewTable = false;
   devices$: Observable<IDevice[]> | null = null;
   currentPage$ = new BehaviorSubject<number>(1);
   pageSize = 15;

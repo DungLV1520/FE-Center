@@ -91,7 +91,7 @@ export class ListFileComponent implements OnInit {
   totalItems = 0;
   pageIndex = 0;
   pageSize = 10;
-  isModeViewTable = true;
+  isModeViewTable = false;
   @ViewChild('preview')
   readonly preview?: TemplateRef<TuiDialogContext>;
   @ViewChild('contentSample')

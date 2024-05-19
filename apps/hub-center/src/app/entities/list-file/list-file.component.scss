@@ -65,6 +65,7 @@
           }
           img {
             background-size: cover;
+            object-fit: cover;
           }
         }
       }
@@ -90,6 +91,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: white;
+    padding: 100px;
   }
 }
 
