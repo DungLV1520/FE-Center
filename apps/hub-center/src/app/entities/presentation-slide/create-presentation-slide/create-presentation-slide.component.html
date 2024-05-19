@@ -144,8 +144,7 @@
           </span>
 
           <div style="display: inline-flex; margin-left: 5px; cursor: pointer">
-            <span class="anticon anticon-close"
-            (click)="removeItem(item)"
+            <span class="anticon anticon-close" (click)="removeItem(item)"
               ><svg
                 style="padding-bottom: 1px"
                 fill-rule="evenodd"
@@ -191,8 +190,8 @@
           </form>
         </div>
         <div class="row align-items-center w-50">
-          <div class="col-3"><b>Thời gian chuyển</b></div>
-          <div class="col-9 d-flex justify-content-start" style="gap: 20px">
+          <div class="col-4"><b>Thời gian chiếu tệp</b></div>
+          <div class="col-8 d-flex justify-content-start" style="gap: 20px">
             <tui-input-number
               [tuiTextfieldCleaner]="true"
               tuiTextfieldSize="s"
@@ -200,7 +199,7 @@
               [readOnly]="showSettingSortRunning === ORDER_TYPE.FLEXIBLE_ORDER"
               [formControl]="timeChange"
             >
-              Thời gian chuyển
+              Thời gian chiếu
               <input tuiTextfield type="text" />
             </tui-input-number>
             <div class="d-flex align-items-center">(giây)</div>
@@ -315,10 +314,7 @@
                 />
               </div>
             </div>
-            <div
-              class="mili-presentation"
-              *ngIf="filteredItems.length - 1 !== i"
-            >
+            <div class="mili-presentation">
               <input
                 nz-input
                 nzSize="default"
