@@ -558,9 +558,11 @@ export class CreatePresentationSlideComponent implements OnInit {
       };
     });
     const schedules = this.schedules?.map((item) => {
+      const padWithZero = (num: number) => (num < 10 ? '0' : '') + num;
+
       return {
-        fromTime: item.startHour + ':' + item.startMinute,
-        toTime: item.endHour + ':' + item.endMinute,
+        fromTime: padWithZero(item.startHour) + ':' + padWithZero(item.startMinute),
+        toTime: padWithZero(item.endHour) + ':' + padWithZero(item.endMinute),
       };
     });
 
