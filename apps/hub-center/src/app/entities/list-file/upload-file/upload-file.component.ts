@@ -73,7 +73,7 @@ registerLocaleData(vi);
 
       <nz-select
         class="w-100 mt-4"
-        nzPlaceHolder="Chon kiểu hiển thị"
+        nzPlaceHolder="Chọn kiểu hiển thị"
         [(ngModel)]="inputData"
       >
         <ng-container *ngFor="let item of display">

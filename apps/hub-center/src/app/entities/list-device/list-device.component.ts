@@ -412,13 +412,13 @@ export class ListDeviceComponent implements OnInit {
   }
 
   addRegion() {
-    const modal = this.modal.confirm({
-      nzTitle: `Thêm mới khu vực`,
+    const modal = this.modal.create({
+      nzTitle: `Tạo khu vực`,
       nzContent: AddRegionComponent,
       nzCancelText: 'Đóng',
       nzOkText: 'OK',
       nzOnOk: () => {
-        const name = modal.getContentComponent().getData();
+        const name = modal.getContentComponent().getRegionName();
         if (!name || name === '') {
           this.notification.error(
             'Thông báo',
