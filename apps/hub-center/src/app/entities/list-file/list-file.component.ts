@@ -47,6 +47,7 @@ import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { SafePipe } from './safe.pipe';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { MoveFileComponent } from './moveFile/move-file.component';
+import { AddFolderComponent } from './addFolder/add-folder.component';
 
 @Component({
   selector: 'adv-list-file',
@@ -85,30 +86,30 @@ import { MoveFileComponent } from './moveFile/move-file.component';
   schemas: [NO_ERRORS_SCHEMA],
 })
 export class ListFileComponent implements OnInit {
+  @ViewChild('preview')
+  preview?: TemplateRef<TuiDialogContext>;
+  @ViewChild('contentSample')
+  contentSample?: TemplateRef<Record<string, unknown>>;
   size: NzSelectSizeType = 'large';
   listOfColumn = CONFIG_TABLE_COLUMN;
-  devices: any;
   totalItems = 0;
   pageIndex = 0;
   pageSize = 10;
   isModeViewTable = false;
-  @ViewChild('preview')
-  readonly preview?: TemplateRef<TuiDialogContext>;
-  @ViewChild('contentSample')
-  readonly contentSample?: TemplateRef<Record<string, unknown>>;
   index = 0;
   length = 2;
-  file: any;
-  totalElements: any;
-  totalImage: any;
-  totalVideo: any;
-  folderId: any;
-  itemPreview: any;
-  path: any;
-  pageNumber: any;
   checked?: boolean[] = new Array(8).fill(false);
+  totalElements!: number;
+  totalImage!: number;
+  totalVideo!: number;
+  pageNumber!: number;
+  folderId!: string;
+  path!: string;
   checkedId?: Array<string> = [];
   readonly searchForm = new FormControl();
+  itemPreview: any;
+  devices: any;
+  file: any;
   fileOriginal: any;
 
   constructor(
@@ -120,7 +121,7 @@ export class ListFileComponent implements OnInit {
     private route: ActivatedRoute,
     private notification: NzNotificationService,
     private loadingService: LoadingService,
-    private modal: NzModalService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -505,6 +506,42 @@ export class ListFileComponent implements OnInit {
     this.checked = new Array(this.totalElements).fill(true);
     this.checkedId = this.file.map((data: any) => {
       return data.id;
+    });
+  }
+
+  addFolder() {
+    const modal = this.modal.create({
+      nzTitle: `Tạo thư mục`,
+      nzContent: AddFolderComponent,
+      nzCancelText: 'Đóng',
+      nzOkText: 'OK',
+      nzOnOk: () => {
+        const name = modal.getContentComponent().getFolderName();
+        const id = modal.getContentComponent().getFolderPositionSave();
+        console.log({ name, id });
+
+        if (!name || name === '') {
+          this.notification.error(
+            'Thông báo',
+            'Tên thư mục không được bỏ trống',
+            {
+              nzDuration: 2000,
+            }
+          );
+          return;
+        }
+        const obj = {
+          name,
+          description: name,
+          parentId: id,
+        };
+        this.loadingService.showLoading();
+        this.apiUserService.createFolder(obj).subscribe((res: any) => {
+          if (res.result.ok) {
+            this.apiUserService.sendFolder(true);
+          }
+        });
+      },
     });
   }
 }

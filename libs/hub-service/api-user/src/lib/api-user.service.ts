@@ -10,12 +10,12 @@ import { LocalStoreEnum } from '@hub-center/hub-service/storage';
 })
 export class ApiUserService {
   hubBackendApiEndpoint: string;
-  breadCrumb = new Subject<any>();
+  breadCrumb = new Subject<string[]>();
   breadCrumb$ = this.breadCrumb.asObservable();
-  navigateReload = new Subject<any>();
-  navigateReload$ = this.navigateReload.asObservable();
-  addRegion = new Subject<any>();
+  addRegion = new Subject<boolean>();
   addRegion$ = this.addRegion.asObservable();
+  addFolder = new Subject<boolean>();
+  addFolder$ = this.addFolder.asObservable();
 
   constructor(private http: HttpClient, private environment: Environment) {
     this.hubBackendApiEndpoint = this.environment.hubBackendApiEndpoint;
@@ -124,18 +124,6 @@ export class ApiUserService {
     });
   }
 
-  sendData(data: any): void {
-    this.breadCrumb.next(data);
-  }
-
-  sendRegion(data: any): void {
-    this.addRegion.next(data);
-  }
-
-  navigateReloadLogin(data: any): void {
-    this.navigateReload.next(data);
-  }
-
   getScheduleDetail(deviceId: string) {
     return this.http.post(this.hubBackendApiEndpoint + `schedule/detail`, {
       deviceId,
@@ -148,5 +136,21 @@ export class ApiUserService {
 
   createRegion(data: any) {
     return this.http.post(this.hubBackendApiEndpoint + `region/create`, data);
+  }
+
+  createFolder(data: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `folder/create`, data);
+  }
+
+  sendData(data: string[]): void {
+    this.breadCrumb.next(data);
+  }
+
+  sendRegion(data: boolean): void {
+    this.addRegion.next(data);
+  }
+
+  sendFolder(data: boolean): void {
+    this.addFolder.next(data);
   }
 }

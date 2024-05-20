@@ -11,7 +11,7 @@ import { ApiUserService } from '@hub-center/hub-service/api-user';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent implements OnInit {
-  breadCrumbData:any
+  breadCrumbData:string[]=[]
 
   constructor(private apiUserService: ApiUserService) {}
 

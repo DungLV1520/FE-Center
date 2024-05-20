@@ -17,6 +17,16 @@
       </div>
       <div class="btn-action-group">
         <button
+        (click)="addFolder()"
+        nz-button
+        nzType="default"
+        class="create-team"
+        nzSize="large"
+      >
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        <span>Thêm thư mục</span>
+      </button>
+        <button
           nz-button
           nzType="default"
           class="create-team"

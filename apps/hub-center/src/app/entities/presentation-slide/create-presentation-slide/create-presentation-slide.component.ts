@@ -40,6 +40,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   TuiInputModule,
   TuiInputNumberModule,
+  TuiInputTimeModule,
   TuiRadioLabeledModule,
   TuiStepperModule,
 } from '@taiga-ui/kit';
@@ -103,6 +104,7 @@ enum ORDER_TYPE {
     NgForOf,
     NgIf,
     MatIconModule,
+    TuiInputTimeModule,
   ],
   providers: [NzNotificationService, MatSnackBar],
   templateUrl: './create-presentation-slide.component.html',
@@ -149,8 +151,8 @@ export class CreatePresentationSlideComponent implements OnInit {
   sortDialog: any;
   sortList: any;
   totalMiddle = 0;
-  type: any;
-  scheduleId: any;
+  type!: string;
+  scheduleId!: string;
   listDocuments: any;
   scheduleName = new FormControl();
   timeChange = new FormControl();
@@ -171,27 +173,10 @@ export class CreatePresentationSlideComponent implements OnInit {
       imagesArray: this.formBuilder.array([]),
     });
 
-    this.scheduleForm = this.formBuilder.group(
-      {
-        startHour: [
-          null,
-          [Validators.required, Validators.min(0), Validators.max(23)],
-        ],
-        startMinute: [
-          null,
-          [Validators.required, Validators.min(0), Validators.max(59)],
-        ],
-        endHour: [
-          null,
-          [Validators.required, Validators.min(0), Validators.max(23)],
-        ],
-        endMinute: [
-          null,
-          [Validators.required, Validators.min(0), Validators.max(59)],
-        ],
-      },
-      { validator: this.timeRangeValidator }
-    );
+    this.scheduleForm = this.formBuilder.group({
+      startHour: [null, [Validators.required]],
+      endHour: [null, [Validators.required]],
+    });
 
     this.radioForm.valueChanges.subscribe((value: any) => {
       this.showSettingTimeRunning = value.timeRunning.name;
@@ -328,7 +313,13 @@ export class CreatePresentationSlideComponent implements OnInit {
 
   addSchedule() {
     if (this.scheduleForm?.valid) {
-      const newSchedule = this.scheduleForm.value;
+      let newSchedule = this.scheduleForm.value;
+      newSchedule = {
+        startHour: newSchedule.startHour.hours,
+        startMinute: newSchedule.startHour.minutes,
+        endHour: newSchedule.endHour.hours,
+        endMinute: newSchedule.endHour.minutes,
+      };
 
       if (this.isStartTimeAfterEndTime(newSchedule)) {
         this.notification.error(
@@ -370,21 +361,6 @@ export class CreatePresentationSlideComponent implements OnInit {
       }
     }
     return false;
-  }
-
-  timeRangeValidator(formGroup: FormGroup) {
-    const startHour = formGroup?.get('startHour')?.value;
-    const startMinute = formGroup.get('startMinute')?.value;
-    const endHour = formGroup.get('endHour')?.value;
-    const endMinute = formGroup.get('endMinute')?.value;
-
-    if (
-      startHour > endHour ||
-      (startHour === endHour && startMinute >= endMinute)
-    ) {
-      return { timeRangeError: true };
-    }
-    return null;
   }
 
   isStartTimeAfterEndTime(schedule: any): boolean {
@@ -561,7 +537,8 @@ export class CreatePresentationSlideComponent implements OnInit {
       const padWithZero = (num: number) => (num < 10 ? '0' : '') + num;
 
       return {
-        fromTime: padWithZero(item.startHour) + ':' + padWithZero(item.startMinute),
+        fromTime:
+          padWithZero(item.startHour) + ':' + padWithZero(item.startMinute),
         toTime: padWithZero(item.endHour) + ':' + padWithZero(item.endMinute),
       };
     });

@@ -1,2 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'global';
+[tuiWrapper][data-appearance='textfield'] {
+  box-shadow: none !important;
+}
+tui-input-time {
+  border-radius: 4px !important;
+}

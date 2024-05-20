@@ -4,15 +4,14 @@
     <div class="row align-items-center mb-4">
       <div class="col-3"><b>Tên lịch trình chiếu</b></div>
       <div class="col-9">
-        <tui-input
-          [tuiTextfieldCleaner]="true"
-          tuiTextfieldSize="s"
-          [tuiTextfieldLabelOutside]="true"
-          [formControl]="scheduleName"
-        >
-          Tên trình chiếu
-          <input tuiTextfield type="text" />
-        </tui-input>
+        <nz-input-group nzSize="large">
+          <input
+            type="text"
+            nz-input
+            placeholder="Nhập tên trình chiếu"
+            [formControl]="scheduleName"
+          />
+        </nz-input-group>
       </div>
     </div>
     <div class="row align-items-center mb-4">
@@ -49,68 +48,31 @@
     >
       <div class="col-3"><b>Lịch tuỳ chỉnh</b></div>
       <div class="col-7">
-        <div class="mb-4 row">
-          <div class="col-3">
-            <tui-input-number
-              [tuiTextfieldCleaner]="true"
-              formControlName="startHour"
-              tuiTextfieldSize="s"
-              [tuiTextfieldLabelOutside]="true"
-            >
-              Giờ bắt đầu
-              <input tuiTextfield type="text" />
-            </tui-input-number>
-          </div>
+        <div style="display: flex; gap: 20px">
+          <tui-input-time
+            [tuiTextfieldLabelOutside]="false"
+            formControlName="startHour"
+            tuiUnfinishedValidator
+          >
+            Giờ bắt đầu
+          </tui-input-time>
+          <tui-input-time
+            [tuiTextfieldLabelOutside]="false"
+            formControlName="endHour"
+            tuiUnfinishedValidator
+          >
+            Giờ kết thúc
+          </tui-input-time>
+        </div>
 
-          <div class="col-3">
-            <tui-input-number
-              [tuiTextfieldCleaner]="true"
-              formControlName="startMinute"
-              tuiTextfieldSize="s"
-              [tuiTextfieldLabelOutside]="true"
-            >
-              Phút bắt đầu
-              <input tuiTextfield type="text" />
-            </tui-input-number>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-3">
-            <tui-input-number
-              formControlName="endHour"
-              [tuiTextfieldCleaner]="true"
-              tuiTextfieldSize="s"
-              [tuiTextfieldLabelOutside]="true"
-            >
-              Giờ kết thúc
-              <input tuiTextfield type="text" />
-            </tui-input-number>
-          </div>
-          <div class="col-3">
-            <tui-input-number
-              formControlName="endMinute"
-              [tuiTextfieldCleaner]="true"
-              tuiTextfieldSize="s"
-              [tuiTextfieldLabelOutside]="true"
-            >
-              Phút kết thúc
-              <input tuiTextfield type="text" />
-            </tui-input-number>
-          </div>
-        </div>
-        <div class="row">
+        <div class="description-setting">
           <div class="description-setting">
-            <div class="description-setting">
-              <i>Các trường không được bỏ trống</i>
-            </div>
-            <div class="description-setting">
-              <i>Giờ từ 0 đến 23 và phút từ 0 đến 59 để thiết lập lịch chạy.</i>
-            </div>
-            <i
-              >Giờ/phút bắt đầu không được lớn hơn hoặc bằng giờ/phút kết
-              thúc</i
-            >
+            <i>Các trường không được bỏ trống</i>
           </div>
+          <div class="description-setting">
+            <i>Giờ từ 0 đến 23 và phút từ 0 đến 59 để thiết lập lịch chạy.</i>
+          </div>
+          <i>Giờ/phút bắt đầu không được lớn hơn hoặc bằng giờ/phút kết thúc</i>
         </div>
 
         <div class="row mt-4">
@@ -192,16 +154,18 @@
         <div class="row align-items-center w-50">
           <div class="col-4"><b>Thời gian chiếu tệp</b></div>
           <div class="col-8 d-flex justify-content-start" style="gap: 20px">
-            <tui-input-number
-              [tuiTextfieldCleaner]="true"
-              tuiTextfieldSize="s"
-              [tuiTextfieldLabelOutside]="true"
-              [readOnly]="showSettingSortRunning === ORDER_TYPE.FLEXIBLE_ORDER"
-              [formControl]="timeChange"
-            >
-              Thời gian chiếu
-              <input tuiTextfield type="text" />
-            </tui-input-number>
+            <nz-input-group nzSize="large">
+              <input
+                type="number"
+                nz-input
+                placeholder="Nhập thời gian chiếu tệp"
+                [readOnly]="
+                  showSettingSortRunning === ORDER_TYPE.FLEXIBLE_ORDER
+                "
+                [formControl]="timeChange"
+                [formControl]="scheduleName"
+              />
+            </nz-input-group>
             <div class="d-flex align-items-center">(giây)</div>
           </div>
         </div>

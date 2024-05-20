@@ -22,20 +22,22 @@ import { LoadingService } from '@hub-center/loading';
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit {
-  office: any;
-  ROUTE_TEAM = '/personnel/team';
-  ROUTE_USER = '/personnel/user';
+  ROUTE_DEVICE = 'adv/device';
+  ROUTE_FOLDER = 'adv/file';
   indexSlideShow = false;
   indexPer = 0;
   indexRegion = 0;
   subDeviceIndex = 0;
   subFolderIndex = -1;
   openDevice = -1;
-  officeId?: number;
   folder: any;
   regions: any;
   checkOpenReloadFile = false;
   checkOpenReloadDevice = true;
+  titleDevice = 'Thiết bị';
+  titleFolder = 'Tệp';
+  titleSlide = 'Trình chiếu';
+  createSlideTitle = 'Tạo lịch trình chiếu';
 
   constructor(
     private router: Router,
@@ -53,26 +55,26 @@ export class SidebarComponent implements OnInit {
         this.getListRegion();
       }
     });
-    // this.apiUserService.addFolder$.subscribe((data) => {
-    //   if (data) {
-    //     this.getListFolder();
-    //   }
-    // });
+    this.apiUserService.addFolder$.subscribe((data) => {
+      if (data) {
+        this.getListFolder();
+      }
+    });
   }
 
   navigateOriginalDevice(): void {
     if (this.regions?.length <= 0) {
-      const obj = ['Thiết bị'];
+      const obj = [this.titleDevice];
       this.apiUserService.sendData(obj);
-      this.router.navigate(['adv/device']);
+      this.router.navigate([this.ROUTE_DEVICE]);
     }
   }
 
   navigateOriginalFile(): void {
     if (this.folder?.length <= 0) {
-      const obj = ['Thiết bị'];
+      const obj = [this.titleDevice];
       this.apiUserService.sendData(obj);
-      this.router.navigate(['adv/file']);
+      this.router.navigate([this.ROUTE_FOLDER]);
     }
   }
 
@@ -83,20 +85,20 @@ export class SidebarComponent implements OnInit {
     this.subFolderIndex = -1;
     if (data?.subs?.length > 0) {
       const obj = [
-        'Thiết bị',
+        this.titleDevice,
         data.name,
         item ? item.name : data?.subs[0]?.name,
       ];
       this.subDeviceIndex = index ?? 0;
 
       this.apiUserService.sendData(obj);
-      this.router.navigate(['adv/device'], {
+      this.router.navigate([this.ROUTE_DEVICE], {
         queryParams: { regionId: item ? item.id : data?.subs[0]?.id },
       });
     } else {
-      const obj = ['Thiết bị', data.name];
+      const obj = [this.titleDevice, data.name];
       this.apiUserService.sendData(obj);
-      this.router.navigate(['adv/device'], {
+      this.router.navigate([this.ROUTE_DEVICE], {
         queryParams: { regionId: data.id },
       });
     }
@@ -109,19 +111,19 @@ export class SidebarComponent implements OnInit {
     this.subDeviceIndex = -1;
     if (data?.subs?.length > 0) {
       const obj = [
-        'Thư mục',
+        this.titleFolder,
         data.name,
         item ? item.name : data?.subs[0]?.name,
       ];
       this.apiUserService.sendData(obj);
-      this.router.navigate(['adv/file'], {
+      this.router.navigate([this.ROUTE_FOLDER], {
         queryParams: { folderId: item ? item.id : data?.subs[0]?.id },
       });
       this.subFolderIndex = index ?? 0;
     } else {
-      const obj = ['Thư mục', data.name];
+      const obj = [this.titleFolder, data.name];
       this.apiUserService.sendData(obj);
-      this.router.navigate(['adv/file'], {
+      this.router.navigate([this.ROUTE_FOLDER], {
         queryParams: { folderId: data.id },
       });
     }
@@ -138,7 +140,7 @@ export class SidebarComponent implements OnInit {
       .subscribe((res: any) => {
         this.folder = res.data;
         const url = this.router.url;
-        if (url.includes('/adv/file')) {
+        if (url.includes(this.ROUTE_FOLDER)) {
           this.checkOpenReloadFile = true;
           this.checkOpenReloadDevice = false;
           this.route.queryParams.subscribe((params: any) => {
@@ -151,7 +153,7 @@ export class SidebarComponent implements OnInit {
           } else if (url.includes('/adv/create-presentation-slide')) {
             this.checkActiveSlideShow();
             this.checkHiddenNotPresentation();
-            const obj = ['Trình chiếu', 'Tạo lịch trình chiếu'];
+            const obj = [this.titleSlide, this.createSlideTitle];
             this.apiUserService.sendData(obj);
           }
         }
@@ -173,7 +175,7 @@ export class SidebarComponent implements OnInit {
       )
       .subscribe((res: any) => {
         this.regions = res.data;
-        this.regions = res.data.map((item: any, index: number) => {
+        this.regions = res.data.map((item: any) => {
           return { ...item };
         });
 
@@ -186,7 +188,7 @@ export class SidebarComponent implements OnInit {
         if (check) {
           if (this.regions.length > 0) this.navigateDevice(this.regions[0]);
           const url = this.router.url;
-          if (url.includes('/adv/device')) {
+          if (url.includes(this.ROUTE_DEVICE)) {
             this.checkOpenReloadFile = false;
             this.checkOpenReloadDevice = true;
             this.route.queryParams.subscribe((params: any) => {
@@ -196,7 +198,7 @@ export class SidebarComponent implements OnInit {
           localStorage.removeItem('navigate');
         } else {
           const url = this.router.url;
-          if (url.includes('/adv/device')) {
+          if (url.includes(this.ROUTE_DEVICE)) {
             this.checkOpenReloadFile = false;
             this.checkOpenReloadDevice = true;
             this.route.queryParams.subscribe((params: any) => {
@@ -209,7 +211,7 @@ export class SidebarComponent implements OnInit {
 
   activeSlideShow(): void {
     this.checkActiveSlideShow();
-    const obj = ['Trình chiếu'];
+    const obj = [this.titleSlide];
     this.apiUserService.sendData(obj);
     this.router.navigate(['adv/presentation-slide']);
   }
@@ -222,38 +224,38 @@ export class SidebarComponent implements OnInit {
     this.indexRegion = -1;
   }
 
-  checkNavigate(a?: any, id?: string): void {
+  checkNavigate(data?: any, id?: string): void {
     const url = this.router.url;
     let found = false;
-    for (let i = 0; i < a?.length; i++) {
-      if (a[i].id === id) {
+    for (let i = 0; i < data?.length; i++) {
+      if (data[i].id === id) {
         found = true;
-        if (url.includes('/adv/device')) {
+        if (url.includes(this.ROUTE_DEVICE)) {
           this.subDeviceIndex = -1;
-          this.navigateDevice(a[i], i);
-        } else if (url.includes('/adv/file')) {
-          this.navigateFolder(a[i], i);
+          this.navigateDevice(data[i], i);
+        } else if (url.includes(this.ROUTE_FOLDER)) {
+          this.navigateFolder(data[i], i);
         }
         break;
       }
 
-      if (a[i]?.subs) {
-        for (let j = 0; j < a[i].subs.length; j++) {
-          if (a[i].subs[j].id === id) {
+      if (data[i]?.subs) {
+        for (let j = 0; j < data[i].subs.length; j++) {
+          if (data[i].subs[j].id === id) {
             found = true;
-            if (url.includes('/adv/device')) {
+            if (url.includes(this.ROUTE_DEVICE)) {
               this.regions = this.regions.map((item: any, index: number) => {
                 const showValue = index === i ? true : false;
                 return { ...item, show: showValue };
               });
               this.openDevice = i;
-              this.navigateDevice(a[i], i, a[i].subs[j], j);
-            } else if (url.includes('/adv/file')) {
+              this.navigateDevice(data[i], i, data[i].subs[j], j);
+            } else if (url.includes(this.ROUTE_FOLDER)) {
               this.folder = this.folder.map((item: any, index: number) => {
                 const showValue = index === i ? true : false;
                 return { ...item, show: showValue };
               });
-              this.navigateFolder(a[i], i, a[i].subs[j], j);
+              this.navigateFolder(data[i], i, data[i].subs[j], j);
             }
             break;
           }
