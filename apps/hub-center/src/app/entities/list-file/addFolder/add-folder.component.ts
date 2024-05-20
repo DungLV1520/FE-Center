@@ -15,7 +15,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
       type="text"
       [(ngModel)]="folderName"
       nz-input
-      placeholder="Nhập tên khu vực"
+      placeholder="Nhập tên thư mục"
     />
     <label class="mt-4 mb-2">Vị trí lưu</label>
     <nz-select
