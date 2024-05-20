@@ -419,6 +419,9 @@ export class ListDeviceComponent implements OnInit {
       nzOkText: 'OK',
       nzOnOk: () => {
         const name = modal.getContentComponent().getRegionName();
+        const id = modal.getContentComponent().getRegionPositionSave();
+        console.log({ name, id });
+
         if (!name || name === '') {
           this.notification.error(
             'Thông báo',
@@ -429,8 +432,17 @@ export class ListDeviceComponent implements OnInit {
           );
           return;
         }
+        const obj = {
+          name,
+          description: name,
+          parentId: id,
+        };
         this.loadingService.showLoading();
-        this.apiUserService.sendRegion(true);
+        this.apiUserService.createRegion(obj).subscribe((res: any) => {
+          if (res.result.ok) {
+            this.apiUserService.sendRegion(true);
+          }
+        });
       },
     });
   }

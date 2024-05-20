@@ -9,6 +9,7 @@
       nzIcon="mobile"
       [(nzOpen)]="checkOpenReloadDevice"
       nzTitle="Thiết bị"
+      (click)="navigateOriginalDevice()"
     >
       <ul>
         <ng-container *ngFor="let data of regions; let i = index">
@@ -49,6 +50,7 @@
       nzIcon="folder"
       nzTitle="Tệp"
       [(nzOpen)]="checkOpenReloadFile"
+      (click)="navigateOriginalFile()"
     >
       <ul>
         <ng-container *ngFor="let data of folder; let index = index">

@@ -53,6 +53,27 @@ export class SidebarComponent implements OnInit {
         this.getListRegion();
       }
     });
+    // this.apiUserService.addFolder$.subscribe((data) => {
+    //   if (data) {
+    //     this.getListFolder();
+    //   }
+    // });
+  }
+
+  navigateOriginalDevice(): void {
+    if (this.regions?.length <= 0) {
+      const obj = ['Thiết bị'];
+      this.apiUserService.sendData(obj);
+      this.router.navigate(['adv/device']);
+    }
+  }
+
+  navigateOriginalFile(): void {
+    if (this.folder?.length <= 0) {
+      const obj = ['Thiết bị'];
+      this.apiUserService.sendData(obj);
+      this.router.navigate(['adv/file']);
+    }
   }
 
   navigateDevice(data: any, i?: number, item?: any, index?: number): void {
@@ -62,7 +83,7 @@ export class SidebarComponent implements OnInit {
     this.subFolderIndex = -1;
     if (data?.subs?.length > 0) {
       const obj = [
-        'Khu vực',
+        'Thiết bị',
         data.name,
         item ? item.name : data?.subs[0]?.name,
       ];
@@ -73,7 +94,7 @@ export class SidebarComponent implements OnInit {
         queryParams: { regionId: item ? item.id : data?.subs[0]?.id },
       });
     } else {
-      const obj = ['Khu vực', data.name];
+      const obj = ['Thiết bị', data.name];
       this.apiUserService.sendData(obj);
       this.router.navigate(['adv/device'], {
         queryParams: { regionId: data.id },
@@ -155,6 +176,10 @@ export class SidebarComponent implements OnInit {
         this.regions = res.data.map((item: any, index: number) => {
           return { ...item };
         });
+
+        if (this.regions.length === 1) {
+          this.navigateDevice(this.regions[0]);
+        }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const check = JSON.parse(localStorage.getItem('navigate')!);
 

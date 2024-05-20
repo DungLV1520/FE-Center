@@ -145,4 +145,8 @@ export class ApiUserService {
   applyScheduleToDevice(data: any) {
     return this.http.post(this.hubBackendApiEndpoint + `schedule/apply`, data);
   }
+
+  createRegion(data: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `region/create`, data);
+  }
 }
