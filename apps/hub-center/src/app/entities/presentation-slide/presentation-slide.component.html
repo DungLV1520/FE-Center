@@ -55,15 +55,20 @@
         <tbody>
           <tr *ngFor="let data of presentationSlide; let i = index">
             <td nz>{{ i + 1 }}</td>
-            <td>
+            <td
+              style="cursor: pointer"
+              (click)="editPresentation(data, 'edit')"
+            >
               {{ data.name }}
             </td>
             <td>
-              <a> {{ data.capacity }}</a>
+              {{
+                data.runTimeType === 'FLEXIBLE_TIME' ? 'Tuỳ chỉnh' : 'Cả ngày'
+              }}
             </td>
-            <td>{{ data.type | uppercase }}</td>
-            <td>{{ data.displayType }}</td>
-            <td>{{ data.path }}</td>
+            <td>{{ data.totalDoc }}</td>
+            <td>{{ data.totalDuration }}</td>
+            <td>{{ data.totalDeviceApply }}</td>
             <td class="text-center">
               <span
                 nz-icon
@@ -75,8 +80,12 @@
               ></span>
               <nz-dropdown-menu #menu2="nzDropdownMenu">
                 <ul nz-menu>
-                  <li nz-menu-item (click)="editPresentation(data,'edit')">Chỉnh sửa</li>
-                  <li nz-menu-item (click)="editPresentation(data,'copy')">Tạo bản sao</li>
+                  <li nz-menu-item (click)="editPresentation(data, 'edit')">
+                    Chỉnh sửa
+                  </li>
+                  <li nz-menu-item (click)="editPresentation(data, 'copy')">
+                    Tạo bản sao
+                  </li>
                   <li
                     nz-menu-item
                     (click)="onConfirmDeleteFile(data)"

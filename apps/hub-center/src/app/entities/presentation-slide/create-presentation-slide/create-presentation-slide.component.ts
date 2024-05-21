@@ -210,21 +210,21 @@ export class CreatePresentationSlideComponent implements OnInit {
             })
           )
           .subscribe((res: any) => {
-            this.scheduleName.setValue(res.data[0].scheduleInfo.name);
-            this.showSettingTimeRunning = res.data[0].scheduleInfo.runTimeType;
-            this.showSettingSortRunning = res.data[0].scheduleInfo.orderType;
+            this.scheduleName.setValue(res?.data[0]?.scheduleInfo?.name);
+            this.showSettingTimeRunning = res?.data[0]?.scheduleInfo?.runTimeType;
+            this.showSettingSortRunning = res?.data[0]?.scheduleInfo.orderType;
             this.sortForm.patchValue({
               sortRunning: this.itemsSort.find(
-                (item) => item.name === res.data[0].scheduleInfo.orderType
+                (item) => item.name === res?.data[0]?.scheduleInfo.orderType
               ),
             });
             this.radioForm.patchValue({
               timeRunning: this.itemsRadio.find(
-                (item) => item.name === res.data[0].scheduleInfo.runTimeType
+                (item) => item.name === res?.data[0]?.scheduleInfo.runTimeType
               ),
             });
             if (res.data[0].scheduleInfo.orderType === this.ORDER_TYPE.RANDOM) {
-              this.timeChange.setValue(res.data[0].scheduleInfo.timeToTransfer);
+              this.timeChange.setValue(res?.data[0]?.scheduleInfo?.timeToTransfer);
             }
             const listDocuments = res.data[0].listDocuments;
             this.filteredItems = listDocuments;
@@ -238,7 +238,7 @@ export class CreatePresentationSlideComponent implements OnInit {
               this.checkedId?.push(bItem.documentId);
             });
 
-            this.listDocuments = res.data[0].listDocuments;
+            this.listDocuments = res?.data[0]?.listDocuments;
             for (let i = 0; i < listDocuments?.length; i++) {
               const imageFormGroup = this.formBuilder.group({
                 inputFields: [listDocuments[i].loopNumber],

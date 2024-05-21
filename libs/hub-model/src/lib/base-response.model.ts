@@ -14,5 +14,5 @@ export interface BasePagination<T> {
   pageNumber: number;
   totalRecord: number;
   totalPages: number;
-  content: T
+  content: T;
 }
