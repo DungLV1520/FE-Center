@@ -27,6 +27,10 @@ import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { AddPresentationModalComponent } from '../addPresentationModal/add-presentation-modal.component';
 import { EventColor } from 'calendar-utils';
+import { IDevice } from '@hub-center/hub-model';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { MoveDeviceComponent } from '../moveDevice/move-device.component';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 export interface Daum {
   scheduleInfo: ScheduleInfo;
@@ -83,6 +87,7 @@ export interface ListTime {
     NgSwitch,
     NgSwitchCase,
     NzModalModule,
+    NzTagModule,
   ],
 })
 export class PresentationDetailComponent implements OnInit {
@@ -95,6 +100,7 @@ export class PresentationDetailComponent implements OnInit {
   CalendarView = CalendarView;
 
   viewDate: Date = new Date();
+  deviceInfo?: IDevice;
 
   // modalData: {
   //   action: string;
@@ -130,7 +136,8 @@ export class PresentationDetailComponent implements OnInit {
     private apiUserService: ApiUserService,
     private loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
-    private modalService: NzModalService
+    private modal: NzModalService,
+    private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
@@ -162,39 +169,63 @@ export class PresentationDetailComponent implements OnInit {
               const activeDates = scheduleInfo.activeDate.split(',');
 
               activeDates.forEach((date) => {
-                listTimes?.forEach((time) => {
-                  const [day, month, year] = date.split('/').map(Number);
-                  const [fromHour, fromMinute] = time.fromTime
-                    .split(':')
-                    .map(Number);
-                  const [toHour, toMinute] = time.toTime.split(':').map(Number);
+                const [day, month, year] = date.split('/').map(Number);
 
-                  const start = new Date(
-                    year,
-                    month - 1,
-                    day,
-                    fromHour,
-                    fromMinute
-                  );
-                  const end = new Date(year, month - 1, day, toHour, toMinute);
-
-                  const formattedStartTime = this.formatTime(start);
-                  const formattedEndTime = this.formatTime(end);
+                if (scheduleInfo.runTimeType === 'FULL_DAY') {
+                  // Thêm sự kiện cho cả ngày
+                  const start = new Date(year, month - 1, day, 0, 0);
+                  const end = new Date(year, month - 1, day, 23, 59);
 
                   this.events.push({
                     start,
                     end,
-                    title: `(${formattedStartTime} - ${formattedEndTime}) ${scheduleInfo.name}`,
-                    allDay: scheduleInfo.runTimeType === 'FULL_DAY',
+                    title: `(${this.formatTime(start)} - ${this.formatTime(
+                      end
+                    )}) ${scheduleInfo.name}`,
+                    allDay: true,
                   });
-                });
+                } else {
+                  // Thêm sự kiện theo listTimes
+                  listTimes?.forEach((time) => {
+                    const [fromHour, fromMinute] = time.fromTime
+                      .split(':')
+                      .map(Number);
+                    const [toHour, toMinute] = time.toTime
+                      .split(':')
+                      .map(Number);
+
+                    const start = new Date(
+                      year,
+                      month - 1,
+                      day,
+                      fromHour,
+                      fromMinute
+                    );
+                    const end = new Date(
+                      year,
+                      month - 1,
+                      day,
+                      toHour,
+                      toMinute
+                    );
+
+                    this.events.push({
+                      start,
+                      end,
+                      title: `(${this.formatTime(start)} - ${this.formatTime(
+                        end
+                      )}) ${scheduleInfo.name}`,
+                      allDay: false,
+                    });
+                  });
+                }
+                this.refresh.next();
               });
               this.refresh.next();
             });
           }
         }),
         catchError((err) => {
-          console.log(err);
           this.loadingService.hideLoading();
           return throwError(err?.error?.result?.message);
         }),
@@ -262,11 +293,29 @@ export class PresentationDetailComponent implements OnInit {
   }
 
   getInfoDevice(deviceId: string) {
-    this.apiUserService.getInfoDevice(deviceId).subscribe();
+    this.loadingService.showLoading();
+    this.apiUserService
+      .getInfoDevice(deviceId)
+      .pipe(
+        tap((res: any) => {
+          if (res.result.ok === true && res.data) {
+            console.log(res);
+            this.deviceInfo = res.data;
+          }
+        }),
+        catchError((err) => {
+          this.loadingService.hideLoading();
+          return throwError(err?.error?.result?.message);
+        }),
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
+      )
+      .subscribe();
   }
 
   onShowModalAddPresentation() {
-    const modal = this.modalService.create({
+    const modal = this.modal.create({
       nzTitle: 'Chọn lịch trình chiếu',
       nzContent: AddPresentationModalComponent,
       nzData: { regionId: this.regionId, deviceId: this.deviceId },

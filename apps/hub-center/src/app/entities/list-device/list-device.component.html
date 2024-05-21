@@ -180,10 +180,7 @@
               ></span>
               <nz-dropdown-menu #moreAction="nzDropdownMenu">
                 <ul nz-menu>
-                  <li
-                    nz-menu-item
-                    (click)="onViewDetailPresentation(data.identityDevice)"
-                  >
+                  <li nz-menu-item (click)="onViewDetailPresentation(data.id)">
                     Thiết lập lịch trình chiếu
                   </li>
                   <li nz-menu-item (click)="moveFile(data)">Di chuyển</li>
@@ -267,10 +264,7 @@
             ></span>
             <nz-dropdown-menu #moreAction="nzDropdownMenu">
               <ul nz-menu>
-                <li
-                  nz-menu-item
-                  (click)="onViewDetailPresentation(device.identityDevice)"
-                >
+                <li nz-menu-item (click)="onViewDetailPresentation(device.id)">
                   Thiết lập lịch trình chiếu
                 </li>
                 <li nz-menu-item (click)="moveFile(device)">Di chuyển</li>

@@ -186,8 +186,8 @@ export class AddPresentationModalComponent implements OnInit {
     event.stopPropagation();
     event.stopImmediatePropagation();
     const fakeLink = document.createElement('a');
-    const url = `${window.location.origin}/adv/create-presentation-slide?scheduleId=${scheduleId}&name=${name}&deviceId=${this.deviceId}&type=edit`;
-    console.log(url);
+    const url = `${window.location.origin}/adv/create-presentation-slide?scheduleId=${scheduleId}&name=${name}&type=edit`;
+    // const a = http://localhost:4200/adv/create-presentation-slide?scheduleId=f62cb70f-acbc-4b12-b9f6-9d5d2c12181f&name=Test3&type=edit
     fakeLink.href = url;
     fakeLink.target = '_blank';
     fakeLink.click();

@@ -89,8 +89,24 @@
         </mwl-calendar-day-view>
       </div>
     </nz-tab>
-    <nz-tab (nzClick)="getInfoDevice(deviceId)" nzTitle="Thông tin thiết bị"
-      >Content of Tab Pane 2</nz-tab
-    >
+    <nz-tab (nzClick)="getInfoDevice(deviceId)" nzTitle="Thông tin thiết bị">
+      <div class="device-info-wrapper">
+        <div class="info-header">
+          <span class="info-name">{{ deviceInfo?.name }}</span>
+          <nz-tag [nzColor]="deviceInfo?.available ? 'green' : 'red'">{{
+            deviceInfo?.available ? 'Đang hoạt động' : 'Mất kết nối'
+          }}</nz-tag>
+        </div>
+        <div class="info-content">
+          <span>Mã thiết bị: {{ deviceInfo?.identityDevice }}</span>
+          <span>Model máy: {{ deviceInfo?.model }}</span>
+          <span>Số seri: {{ deviceInfo?.serialNumber }}</span>
+          <span>Hãng sản xuất: {{ deviceInfo?.manufacturer }}</span>
+          <span>Phiên bản app: {{ deviceInfo?.appVersion }}</span>
+          <span>Phiên bản hệ điều hành: {{ deviceInfo?.osVersion }}</span>
+          <span>Vị trí: {{ deviceInfo?.location }}</span>
+        </div>
+      </div>
+    </nz-tab>
   </nz-tabset>
 </div>
