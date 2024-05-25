@@ -56,7 +56,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 })
 export class AddPresentationModalComponent implements OnInit {
   readonly searchForm = new FormControl();
-  radioValue: 'day' | 'custom' = 'day';
+  radioValue: 'day' | 'custom' | 'fixed' = 'day';
   date = null;
   options = [];
   minDate: TuiDay = TuiDay.currentLocal();
@@ -146,14 +146,40 @@ export class AddPresentationModalComponent implements OnInit {
   addPresentation() {
     this.isLoading = true;
     this.formatDates();
-    const result = {
+    let result: any = {
       deviceId: this.deviceId,
       scheduleId: this.listOfSelectedSchedule,
-      activeDates:
-        this.radioValue === 'day'
-          ? [this.datePipe.transform(this.date, 'dd/MM/yyyy')]
-          : this.formattedDates,
     };
+
+    if (this.radioValue === 'fixed') {
+      const currentDate = new Date();
+
+      const futureDate = new Date();
+      futureDate.setFullYear(currentDate.getFullYear() + 10);
+
+      const formatDate = (date: Date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng 0-11, cần +1
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
+      const runningDates = `${formatDate(currentDate)}-${formatDate(
+        futureDate
+      )}`;
+      result = {
+        ...result,
+        runningDates: runningDates,
+      };
+    } else {
+      result = {
+        ...result,
+        activeDates:
+          this.radioValue === 'day'
+            ? [this.datePipe.transform(this.date, 'dd/MM/yyyy')]
+            : this.formattedDates,
+      };
+    }
 
     this.apiService
       .applyScheduleToDevice(result)

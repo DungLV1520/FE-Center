@@ -39,9 +39,23 @@
         <span style="font-weight: 700">Thời gian chạy</span>
         <span>(Vui lòng chọn trong khoảng 90 ngày gần nhất)</span>
       </div>
-      <nz-radio-group style="flex: 1" [(ngModel)]="radioValue">
+      <nz-radio-group
+        style="
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+        "
+        [(ngModel)]="radioValue"
+      >
         <label nz-radio nzValue="day">Theo ngày</label>
         <label nz-radio nzValue="custom">Tuỳ chỉnh</label>
+        <label
+          *ngIf="listOfSelectedSchedule.length < 2"
+          nz-radio
+          nzValue="fixed"
+          >Cố định</label
+        >
       </nz-radio-group>
     </div>
     <div class="value-time">
@@ -52,7 +66,7 @@
         (ngModelChange)="onChange($event)"
       ></nz-date-picker>
       <tui-calendar
-        *ngIf="radioValue !== 'day'"
+        *ngIf="radioValue === 'custom'"
         [min]="minDate"
         [max]="maxDate"
         [value]="selectedMultiDate"

@@ -50,6 +50,7 @@ export interface ScheduleInfo {
   insDatetime: string;
   updDatetime: string;
   isDeleted: boolean;
+  runningDateRange?: string;
 }
 
 export interface ListDocument {
@@ -166,48 +167,33 @@ export class PresentationDetailComponent implements OnInit {
           if (res.result.ok === true && res.data.length > 0) {
             (res.data as Daum[]).forEach((eventData) => {
               const { scheduleInfo, listTimes } = eventData;
-              const activeDates = scheduleInfo.activeDate.split(',');
+              const activeDates = scheduleInfo.activeDate
+                ? scheduleInfo.activeDate.split(',')
+                : [];
+              const runningDates = scheduleInfo.runningDateRange
+                ? scheduleInfo.runningDateRange
+                    .split('-')
+                    .map(
+                      (date) => new Date(date.split('/').reverse().join('-'))
+                    )
+                : null;
 
-              activeDates.forEach((date) => {
-                const [day, month, year] = date.split('/').map(Number);
+              if (runningDates && runningDates.length === 2) {
+                const [startRunningDate, endRunningDate] = runningDates;
 
-                if (scheduleInfo.runTimeType === 'FULL_DAY') {
-                  // Thêm sự kiện cho cả ngày
-                  const start = new Date(year, month - 1, day, 0, 0);
-                  const end = new Date(year, month - 1, day, 23, 59);
+                for (
+                  let date = new Date(startRunningDate);
+                  date <= endRunningDate;
+                  date.setDate(date.getDate() + 1)
+                ) {
+                  const day = date.getDate();
+                  const month = date.getMonth() + 1; // Months are zero-based
+                  const year = date.getFullYear();
 
-                  this.events.push({
-                    start,
-                    end,
-                    title: `(${this.formatTime(start)} - ${this.formatTime(
-                      end
-                    )}) ${scheduleInfo.name}`,
-                    allDay: true,
-                  });
-                } else {
-                  // Thêm sự kiện theo listTimes
-                  listTimes?.forEach((time) => {
-                    const [fromHour, fromMinute] = time.fromTime
-                      .split(':')
-                      .map(Number);
-                    const [toHour, toMinute] = time.toTime
-                      .split(':')
-                      .map(Number);
-
-                    const start = new Date(
-                      year,
-                      month - 1,
-                      day,
-                      fromHour,
-                      fromMinute
-                    );
-                    const end = new Date(
-                      year,
-                      month - 1,
-                      day,
-                      toHour,
-                      toMinute
-                    );
+                  if (scheduleInfo.runTimeType === 'FULL_DAY') {
+                    // Add event for the whole day
+                    const start = new Date(year, month - 1, day, 0, 0);
+                    const end = new Date(year, month - 1, day, 23, 59);
 
                     this.events.push({
                       start,
@@ -215,12 +201,99 @@ export class PresentationDetailComponent implements OnInit {
                       title: `(${this.formatTime(start)} - ${this.formatTime(
                         end
                       )}) ${scheduleInfo.name}`,
-                      allDay: false,
+                      allDay: true,
                     });
-                  });
+                  } else {
+                    // Add events according to listTimes
+                    listTimes?.forEach((time) => {
+                      const [fromHour, fromMinute] = time.fromTime
+                        .split(':')
+                        .map(Number);
+                      const [toHour, toMinute] = time.toTime
+                        .split(':')
+                        .map(Number);
+
+                      const start = new Date(
+                        year,
+                        month - 1,
+                        day,
+                        fromHour,
+                        fromMinute
+                      );
+                      const end = new Date(
+                        year,
+                        month - 1,
+                        day,
+                        toHour,
+                        toMinute
+                      );
+
+                      this.events.push({
+                        start,
+                        end,
+                        title: `(${this.formatTime(start)} - ${this.formatTime(
+                          end
+                        )}) ${scheduleInfo.name}`,
+                        allDay: false,
+                      });
+                    });
+                  }
                 }
-                this.refresh.next();
-              });
+              } else {
+                activeDates.forEach((date) => {
+                  const [day, month, year] = date.split('/').map(Number);
+
+                  if (scheduleInfo.runTimeType === 'FULL_DAY') {
+                    // Thêm sự kiện cho cả ngày
+                    const start = new Date(year, month - 1, day, 0, 0);
+                    const end = new Date(year, month - 1, day, 23, 59);
+
+                    this.events.push({
+                      start,
+                      end,
+                      title: `(${this.formatTime(start)} - ${this.formatTime(
+                        end
+                      )}) ${scheduleInfo.name}`,
+                      allDay: true,
+                    });
+                  } else {
+                    // Thêm sự kiện theo listTimes
+                    listTimes?.forEach((time) => {
+                      const [fromHour, fromMinute] = time.fromTime
+                        .split(':')
+                        .map(Number);
+                      const [toHour, toMinute] = time.toTime
+                        .split(':')
+                        .map(Number);
+
+                      const start = new Date(
+                        year,
+                        month - 1,
+                        day,
+                        fromHour,
+                        fromMinute
+                      );
+                      const end = new Date(
+                        year,
+                        month - 1,
+                        day,
+                        toHour,
+                        toMinute
+                      );
+
+                      this.events.push({
+                        start,
+                        end,
+                        title: `(${this.formatTime(start)} - ${this.formatTime(
+                          end
+                        )}) ${scheduleInfo.name}`,
+                        allDay: false,
+                      });
+                    });
+                  }
+                  this.refresh.next();
+                });
+              }
               this.refresh.next();
             });
           }
