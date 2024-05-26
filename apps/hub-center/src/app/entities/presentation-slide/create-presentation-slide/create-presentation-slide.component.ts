@@ -50,7 +50,7 @@ import { DndDropEvent, DndModule, DropEffect } from 'ngx-drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { finalize } from 'rxjs';
+import { finalize, Observable, switchMap, tap } from 'rxjs';
 
 enum RUN_TIME_TYPE {
   FULL_DAY = 'FULL_DAY',
@@ -191,84 +191,91 @@ export class CreatePresentationSlideComponent implements OnInit {
         this.timeChange.setValue(0);
       }
     });
-    this.getListFile();
-    this.route.queryParams.subscribe((params: any) => {
-      this.scheduleId = params['scheduleId'];
-      if (params['type']) {
-        this.type = params['type'];
-        const obj = {
-          deviceId: params.deviceId,
-          scheduleId: params.scheduleId,
-          name: params.name,
-        };
-        this.loadingService.showLoading();
-        this.apiUserService
-          .viewDetailSlidePresentation(obj)
-          .pipe(
-            finalize(() => {
-              this.loadingService.hideLoading();
-            })
-          )
-          .subscribe((res: any) => {
-            this.scheduleName.setValue(res?.data[0]?.scheduleInfo?.name);
-            this.showSettingTimeRunning = res?.data[0]?.scheduleInfo?.runTimeType;
-            this.showSettingSortRunning = res?.data[0]?.scheduleInfo.orderType;
-            this.sortForm.patchValue({
-              sortRunning: this.itemsSort.find(
-                (item) => item.name === res?.data[0]?.scheduleInfo.orderType
-              ),
-            });
-            this.radioForm.patchValue({
-              timeRunning: this.itemsRadio.find(
-                (item) => item.name === res?.data[0]?.scheduleInfo.runTimeType
-              ),
-            });
-            if (res.data[0].scheduleInfo.orderType === this.ORDER_TYPE.RANDOM) {
-              this.timeChange.setValue(res?.data[0]?.scheduleInfo?.timeToTransfer);
-            }
-            const listDocuments = res.data[0].listDocuments;
-            this.filteredItems = listDocuments;
-            listDocuments.forEach((bItem: { documentId: string }) => {
-              const index = this.file.findIndex(
-                (sItem: { id: string }) => sItem.id === bItem.documentId
-              );
-              if (index !== -1) {
-                this.checked[index] = true;
+    this.getListFile()
+      .pipe(switchMap(() => this.route.queryParams))
+      .subscribe((params: any) => {
+        this.scheduleId = params['scheduleId'];
+        if (params['type']) {
+          this.type = params['type'];
+          const obj = {
+            deviceId: params.deviceId,
+            scheduleId: params.scheduleId,
+            name: params.name,
+          };
+          this.loadingService.showLoading();
+          this.apiUserService
+            .viewDetailSlidePresentation(obj)
+            .pipe(
+              finalize(() => {
+                this.loadingService.hideLoading();
+              })
+            )
+            .subscribe((res: any) => {
+              this.scheduleName.setValue(res?.data[0]?.scheduleInfo?.name);
+              this.showSettingTimeRunning =
+                res?.data[0]?.scheduleInfo?.runTimeType;
+              this.showSettingSortRunning =
+                res?.data[0]?.scheduleInfo.orderType;
+              this.sortForm.patchValue({
+                sortRunning: this.itemsSort.find(
+                  (item) => item.name === res?.data[0]?.scheduleInfo.orderType
+                ),
+              });
+              this.radioForm.patchValue({
+                timeRunning: this.itemsRadio.find(
+                  (item) => item.name === res?.data[0]?.scheduleInfo.runTimeType
+                ),
+              });
+              if (
+                res.data[0].scheduleInfo.orderType === this.ORDER_TYPE.RANDOM
+              ) {
+                this.timeChange.setValue(
+                  res?.data[0]?.scheduleInfo?.timeToTransfer
+                );
               }
-              this.checkedId?.push(bItem.documentId);
-            });
-
-            this.listDocuments = res?.data[0]?.listDocuments;
-            for (let i = 0; i < listDocuments?.length; i++) {
-              const imageFormGroup = this.formBuilder.group({
-                inputFields: [listDocuments[i].loopNumber],
-                middleInputFields: [listDocuments[i].duration],
-                content: {
-                  ...listDocuments[i],
-                  id: listDocuments[i].documentId,
-                },
+              const listDocuments = res.data[0].listDocuments;
+              this.filteredItems = listDocuments;
+              listDocuments.forEach((bItem: { documentId: string }) => {
+                const index = this.file.findIndex(
+                  (sItem: { id: string }) => sItem.id === bItem.documentId
+                );
+                if (index !== -1) {
+                  this.checked[index] = true;
+                }
+                this.checkedId?.push(bItem.documentId);
               });
 
-              this.imagesArray.push(imageFormGroup);
-            }
+              this.listDocuments = res?.data[0]?.listDocuments;
+              for (let i = 0; i < listDocuments?.length; i++) {
+                const imageFormGroup = this.formBuilder.group({
+                  inputFields: [listDocuments[i].loopNumber],
+                  middleInputFields: [listDocuments[i].duration],
+                  content: {
+                    ...listDocuments[i],
+                    id: listDocuments[i].documentId,
+                  },
+                });
 
-            const schedules = res.data[0].listTimes?.map((item: any) => {
-              const [startHour, startMinute] = item.fromTime
-                .split(':')
-                .map(Number);
-              const [endHour, endMinute] = item.toTime.split(':').map(Number);
+                this.imagesArray.push(imageFormGroup);
+              }
 
-              return {
-                startHour,
-                startMinute,
-                endHour,
-                endMinute,
-              };
+              const schedules = res.data[0].listTimes?.map((item: any) => {
+                const [startHour, startMinute] = item.fromTime
+                  .split(':')
+                  .map(Number);
+                const [endHour, endMinute] = item.toTime.split(':').map(Number);
+
+                return {
+                  startHour,
+                  startMinute,
+                  endHour,
+                  endMinute,
+                };
+              });
+              this.schedules = schedules ?? [];
             });
-            this.schedules = schedules;
-          });
-      }
-    });
+        }
+      });
   }
 
   removeItem(data: any): void {
@@ -281,34 +288,40 @@ export class CreatePresentationSlideComponent implements OnInit {
     return this.imageForm.get('imagesArray') as FormArray;
   }
 
-  getListFile(): void {
-    this.apiUserService.getAllFiles().subscribe((res: any) => {
-      this.file = res?.data.map((file: any) => {
-        return {
-          ...file,
-          effectAllowed: 'move',
-          disable: false,
-          handle: false,
-        };
-      });
-      const numberOfImages = this.file.length;
-      this.checked = new Array(numberOfImages).fill(false);
+  getListFile(): Observable<any> {
+    this.loadingService.showLoading()
+    return this.apiUserService.getAllFiles().pipe(
+      tap((res: any) => {
+        this.file = res?.data.map((file: any) => {
+          return {
+            ...file,
+            effectAllowed: 'move',
+            disable: false,
+            handle: false,
+          };
+        });
+        const numberOfImages = this.file.length;
+        this.checked = new Array(numberOfImages).fill(false);
 
-      this.file.forEach((data: any) => {
-        if (
-          data.type === 'jpg' ||
-          data.type === 'jpeg' ||
-          data.type === 'png'
-        ) {
-          const img = new Image();
-          img.src = `http://167.71.198.237:8080${data.path}`;
-        } else if (data.type === 'mp4') {
-          const video = document.createElement('video') as HTMLVideoElement;
-          video.src = `http://167.71.198.237:8080${data.path}`;
-          video.preload = 'auto';
-        }
-      });
-    });
+        this.file.forEach((data: any) => {
+          if (
+            data.type === 'jpg' ||
+            data.type === 'jpeg' ||
+            data.type === 'png'
+          ) {
+            const img = new Image();
+            img.src = `http://167.71.198.237:8080${data.path}`;
+          } else if (data.type === 'mp4') {
+            const video = document.createElement('video') as HTMLVideoElement;
+            video.src = `http://167.71.198.237:8080${data.path}`;
+            video.preload = 'auto';
+          }
+        });
+      }),
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
+    );
   }
 
   addSchedule() {
@@ -348,6 +361,9 @@ export class CreatePresentationSlideComponent implements OnInit {
   }
 
   isOverlapping(newSchedule: any): boolean {
+    if (this.schedules?.length <= 0) {
+      return false;
+    }
     for (const schedule of this.schedules) {
       if (
         (newSchedule.startHour >= schedule.startHour &&
