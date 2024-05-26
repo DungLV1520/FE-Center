@@ -110,18 +110,10 @@ export class PresentationDetailComponent implements OnInit {
 
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      },
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
+      label: 'Delete',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        // this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
+        alert('Comming soon ...');
       },
     },
   ];
@@ -255,6 +247,7 @@ export class PresentationDetailComponent implements OnInit {
                         end
                       )}) ${scheduleInfo.name}`,
                       allDay: true,
+                      actions: this.actions,
                     });
                   } else {
                     // Thêm sự kiện theo listTimes
@@ -288,6 +281,7 @@ export class PresentationDetailComponent implements OnInit {
                           end
                         )}) ${scheduleInfo.name}`,
                         allDay: false,
+                        actions: this.actions,
                       });
                     });
                   }
