@@ -89,7 +89,7 @@
           </div>
         </div>
       </div>
-      <div class="view-time" *ngIf="schedules?.length! > 0">
+      <div class="view-time" *ngIf="schedules?.length! > 0; else check">
         <nz-tag *ngFor="let item of schedules"
           ><span>
             {{
@@ -126,9 +126,11 @@
           </div>
         </nz-tag>
       </div>
-      <div class="view-time" *ngIf="schedules?.length === 0">
-        <span><i>Chưa có lịch tuỳ chỉnh</i></span>
-      </div>
+      <ng-template #check>
+        <div class="view-time">
+          <span><i>Chưa có lịch tuỳ chỉnh</i></span>
+        </div>
+      </ng-template>
     </div>
     <div class="row align-items-center mb-4">
       <div class="col-3"><b>Sắp xếp</b></div>
