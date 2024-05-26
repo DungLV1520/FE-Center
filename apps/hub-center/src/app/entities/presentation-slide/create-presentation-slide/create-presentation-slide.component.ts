@@ -289,6 +289,7 @@ export class CreatePresentationSlideComponent implements OnInit {
   }
 
   getListFile(): Observable<any> {
+    this.loadingService.showLoading()
     return this.apiUserService.getAllFiles().pipe(
       tap((res: any) => {
         this.file = res?.data.map((file: any) => {
@@ -316,7 +317,10 @@ export class CreatePresentationSlideComponent implements OnInit {
             video.preload = 'auto';
           }
         });
-      })
+      }),
+        finalize(() => {
+          this.loadingService.hideLoading();
+        })
     );
   }
 
