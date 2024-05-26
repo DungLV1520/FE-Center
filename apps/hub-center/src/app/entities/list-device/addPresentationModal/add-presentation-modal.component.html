@@ -5,6 +5,7 @@
       nzPlaceHolder="Chọn lịch sẽ trình chiếu"
       [(ngModel)]="listOfSelectedSchedule"
       [nzCustomTemplate]="customTemplate"
+      (ngModelChange)="changSelectedSchedule($event)"
     >
       <nz-option
         *ngFor="let item of listSchedule"
@@ -77,7 +78,12 @@
 
   <div class="footer">
     <button nz-button (click)="closeModal()" nzType="default">Huỷ bỏ</button>
-    <button nz-button nzType="primary" (click)="addPresentation()">
+    <button
+      nz-button
+      nzType="primary"
+      [disabled]="listOfSelectedSchedule.length === 0 || !radioValue"
+      (click)="addPresentation()"
+    >
       Thêm lịch trình chiếu
     </button>
   </div>

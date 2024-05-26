@@ -398,9 +398,10 @@ export class PresentationDetailComponent implements OnInit {
 
     modal.afterClose.subscribe((result) => {
       if (result === 'success') {
-        this.getScheduleDetail(this.deviceId);
-        this.refresh.next();
-        // window.location.reload();
+        // this.getScheduleDetail(this.deviceId);
+        // this.refresh.next();
+        // this.getScheduleDetail(this.deviceId);
+        window.location.reload();
       }
     });
   }

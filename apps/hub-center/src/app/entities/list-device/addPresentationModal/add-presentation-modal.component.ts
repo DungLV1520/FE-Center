@@ -112,6 +112,12 @@ export class AddPresentationModalComponent implements OnInit {
       : this.selectedMultiDate.concat(day);
   }
 
+  changSelectedSchedule(event: any) {
+    if (event.length > 1 && this.radioValue === 'fixed') {
+      this.radioValue = 'day';
+    }
+  }
+
   formatDates(): void {
     this.formattedDates = this.selectedMultiDate.map((date) => {
       const jsDate = date.toLocalNativeDate(); // Convert TuiDay to JavaScript Date
