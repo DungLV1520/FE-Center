@@ -5,6 +5,10 @@ pipeline {
         nodejs "NodeJS 16.18.0"
     }
 
+    environment {
+        GITHUB_CREDENTIALS_ID = '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'  // ID của thông tin xác thực bạn đã tạo
+    }
+
     stages {
         stage('Checkout') {
             steps {
