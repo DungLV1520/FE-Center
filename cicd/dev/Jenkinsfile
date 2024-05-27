@@ -28,7 +28,7 @@ pipeline {
             steps {
                 // Build the Angular project
                 sh """
-                            node node_modules/.bin/nx run hub-center:build --outputPath=./dist/** --verbose
+                            node node_modules/.bin/nx run hub-center:build --verbose
                         """
             }
         }
