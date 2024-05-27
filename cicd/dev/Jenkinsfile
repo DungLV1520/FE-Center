@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs "NodeJS 16.18.0"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clone the repository
+                git branch: 'dev/adv', url: 'https://github.com/DungLV1520/FE-Center.git'
+            }
+        }
+
+        stage('Install dependencies') {
+            steps {
+                // Install npm dependencies
+                sh 'npm install --force'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build the Angular project
+                sh 'npx nx run hub-center:build'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                // Archive the build artifacts
+                archiveArtifacts artifacts: 'dist/**', allowEmptyArchive: true
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Example deploy step, customize it based on your deployment strategy
+                sh 'echo "Deploy step"'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
