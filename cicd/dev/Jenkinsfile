@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the repository
-                git branch: 'dev/adv', url: 'https://github.com/DungLV1520/FE-Center.git'
+                git branch: 'dev/adv', url: 'https://github.com/DungLV1520/FE-Center.git', credentialsId: env.GITHUB_CREDENTIALS_ID
             }
         }
 
