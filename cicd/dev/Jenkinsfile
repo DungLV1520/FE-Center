@@ -21,7 +21,7 @@ pipeline {
             steps {
                 // Remove old files and copy new build artifacts
                 sh '''
-                    sudo cp -rf /var/lib/jenkins/workspace/ADV/dist /var/www/html/hub
+                    sudo cp -rf /var/lib/jenkins/workspace/ADV/dist/** /var/www/html/hub
                 '''
             }
         }
