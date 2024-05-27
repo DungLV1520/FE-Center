@@ -1,32 +1,4 @@
 <div class="add-presentation-modal">
-  <div class="search-box">
-    <nz-select
-      nzMode="multiple"
-      nzPlaceHolder="Chọn lịch sẽ trình chiếu"
-      [(ngModel)]="listOfSelectedSchedule"
-      [nzCustomTemplate]="customTemplate"
-      (ngModelChange)="changSelectedSchedule($event)"
-    >
-      <nz-option
-        *ngFor="let item of listSchedule"
-        [nzLabel]="item.name"
-        [nzValue]="item.id"
-      >
-        <div>{{ item.name }}</div>
-      </nz-option>
-    </nz-select>
-    <ng-template #customTemplate let-selected>
-      <span
-        (click)="
-          onViewDetailPresentation(selected.nzValue, selected.nzLabel, $event)
-        "
-        nz-tooltip
-        nzTooltipTitle="Click vào để xem chi tiết"
-        >{{ selected.nzLabel }}</span
-      >
-    </ng-template>
-  </div>
-
   <div class="time-box">
     <div class="options">
       <div
@@ -74,6 +46,46 @@
         (dayClick)="onDayClick($event)"
       ></tui-calendar>
     </div>
+  </div>
+  <div class="search-box">
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+      "
+    >
+      <span style="font-weight: 700">Chọn lịch trình chiếu</span>
+    </div>
+    <nz-select
+      [nzMaxMultipleCount]="radioValue !== 'fixed' ? 100 : 1"
+      nzMode="multiple"
+      nzPlaceHolder="Chọn lịch sẽ trình chiếu"
+      [(ngModel)]="listOfSelectedSchedule"
+      [nzCustomTemplate]="customTemplate"
+      (ngModelChange)="changSelectedSchedule($event)"
+    >
+      <nz-option
+        *ngFor="let item of listSchedule"
+        [nzLabel]="item.name"
+        [nzValue]="item.id"
+      >
+        <div>{{ item.name }}</div>
+      </nz-option>
+    </nz-select>
+    <ng-template #customTemplate let-selected>
+      <span
+        (click)="
+          onViewDetailPresentation(selected.nzValue, selected.nzLabel, $event)
+        "
+        nz-tooltip
+        nzTooltipTitle="Click vào để xem chi tiết"
+        >{{ selected.nzLabel }}</span
+      >
+    </ng-template>
   </div>
 
   <div class="footer">

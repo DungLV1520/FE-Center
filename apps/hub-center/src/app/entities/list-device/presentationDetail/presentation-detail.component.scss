@@ -1,6 +1,17 @@
 @import url('https://unpkg.com/angular-calendar@0.31.1/css/angular-calendar.css');
 
 :host {
+  ::ng-deep {
+    mwl-calendar-event-actions {
+      margin-left: 10px;
+      a {
+        color: red !important;
+      }
+    }
+    .cal-week-view .cal-event {
+      white-space: unset !important;
+    }
+  }
   .presentation-detail-wrapper {
     .tab-presentation-header {
       display: flex;
