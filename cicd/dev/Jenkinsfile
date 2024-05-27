@@ -27,16 +27,18 @@ pipeline {
         stage('Build') {
             steps {
                 // Build the Angular project
-                sh 'npx nx run hub-center:build'
+                sh """
+                            node node_modules/.bin/nx run hub-center:build --outputPath=./dist/hub-center
+                        """
             }
         }
 
-        stage('Archive') {
-            steps {
-                // Archive the build artifacts
-                archiveArtifacts artifacts: 'dist/**', allowEmptyArchive: true
-            }
-        }
+        // stage('Archive') {
+        //     steps {
+        //         // Archive the build artifacts
+        //         archiveArtifacts artifacts: 'dist/**', allowEmptyArchive: true
+        //     }
+        // }
 
         stage('Deploy') {
             steps {
