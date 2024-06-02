@@ -155,7 +155,7 @@ export class CreatePresentationSlideComponent implements OnInit {
   scheduleId!: string;
   listDocuments: any;
   scheduleName = new FormControl();
-  timeChange = new FormControl();
+  timeChange = new FormControl(0);
 
   constructor(
     private apiUserService: ApiUserService,
@@ -185,8 +185,8 @@ export class CreatePresentationSlideComponent implements OnInit {
     this.sortForm.valueChanges.subscribe((value: any) => {
       this.showSettingSortRunning = value.sortRunning.name;
       if (this.showSettingSortRunning === this.ORDER_TYPE.RANDOM) {
-        this.timeChange.setValue(60);
-        this.totalMiddle = 60;
+        this.timeChange.setValue(this.timeChange.value ?? 0);
+        this.totalMiddle = this.timeChange.value ?? 0;
       } else {
         this.timeChange.setValue(0);
       }
@@ -289,7 +289,7 @@ export class CreatePresentationSlideComponent implements OnInit {
   }
 
   getListFile(): Observable<any> {
-    this.loadingService.showLoading()
+    this.loadingService.showLoading();
     return this.apiUserService.getAllFiles().pipe(
       tap((res: any) => {
         this.file = res?.data.map((file: any) => {
@@ -318,9 +318,9 @@ export class CreatePresentationSlideComponent implements OnInit {
           }
         });
       }),
-        finalize(() => {
-          this.loadingService.hideLoading();
-        })
+      finalize(() => {
+        this.loadingService.hideLoading();
+      })
     );
   }
 
@@ -488,7 +488,9 @@ export class CreatePresentationSlideComponent implements OnInit {
       const imageFormGroup = this.formBuilder.group({
         inputFields: [0],
         middleInputFields: [
-          this.showSettingSortRunning === ORDER_TYPE.RANDOM ? 60 : 0,
+          this.showSettingSortRunning === ORDER_TYPE.RANDOM
+            ? this.timeChange.value
+            : 0,
         ],
         content:
           this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
