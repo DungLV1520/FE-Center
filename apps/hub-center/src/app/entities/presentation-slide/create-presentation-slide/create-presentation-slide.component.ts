@@ -155,7 +155,7 @@ export class CreatePresentationSlideComponent implements OnInit {
   scheduleId!: string;
   listDocuments: any;
   scheduleName = new FormControl();
-  timeChange = new FormControl(0);
+  timeChange = new FormControl();
 
   constructor(
     private apiUserService: ApiUserService,
@@ -588,8 +588,11 @@ export class CreatePresentationSlideComponent implements OnInit {
       }
     }
     if (this.showSettingSortRunning === ORDER_TYPE.RANDOM) {
-      if (!this.timeChange.value) {
-        this.notification.error('Thông báo', 'Chưa nhập thời gian chuyển', {
+      if (
+        this.timeChange.value === null ||
+        this.timeChange.value === undefined
+      ) {
+        this.notification.error('Thông báo', 'Chưa nhập thời gian chiếu tệp', {
           nzDuration: 2000,
         });
         return;
