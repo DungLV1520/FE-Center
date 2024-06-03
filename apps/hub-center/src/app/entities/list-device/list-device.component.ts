@@ -405,9 +405,9 @@ export class ListDeviceComponent implements OnInit {
     });
   }
 
-  onViewDetailPresentation(deviceId: string) {
+  onViewDetailPresentation(deviceId: string, detailId: string) {
     this.router.navigate(['adv/presentation-detail'], {
-      queryParams: { regionId: this.regionId, deviceId: deviceId },
+      queryParams: { regionId: this.regionId, deviceId: deviceId, detailId: detailId },
     });
   }
 

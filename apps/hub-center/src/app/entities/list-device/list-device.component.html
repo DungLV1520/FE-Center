@@ -180,7 +180,7 @@
               ></span>
               <nz-dropdown-menu #moreAction="nzDropdownMenu">
                 <ul nz-menu>
-                  <li nz-menu-item (click)="onViewDetailPresentation(data.id)">
+                  <li nz-menu-item (click)="onViewDetailPresentation(data.identityDevice, data.id)">
                     Thiết lập lịch trình chiếu
                   </li>
                   <li nz-menu-item (click)="moveFile(data)">Di chuyển</li>
@@ -213,6 +213,7 @@
         [nzPopoverContent]="contentTemplate"
         nzPopoverTrigger="hover"
         [ngClass]="{ 'bg-active': checked![i] }"
+        (click)="onViewDetailPresentation(device.identityDevice, device.id)"
       >
         <div class="device-name">
           <label
@@ -264,7 +265,7 @@
             ></span>
             <nz-dropdown-menu #moreAction="nzDropdownMenu">
               <ul nz-menu>
-                <li nz-menu-item (click)="onViewDetailPresentation(device.id)">
+                <li nz-menu-item (click)="onViewDetailPresentation(device.identityDevice, device.id)">
                   Thiết lập lịch trình chiếu
                 </li>
                 <li nz-menu-item (click)="moveFile(device)">Di chuyển</li>
