@@ -39,6 +39,7 @@ export declare class ApiUserService {
     sendData(data: string[]): void;
     sendRegion(data: boolean): void;
     sendFolder(data: boolean): void;
+    removeSchedule(data: any): import("rxjs").Observable<Object>;
     static ɵfac: i0.ɵɵFactoryDeclaration<ApiUserService, never>;
     static ɵprov: i0.ɵɵInjectableDeclaration<ApiUserService>;
 }
