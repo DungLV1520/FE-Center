@@ -78,8 +78,8 @@ registerLocaleData(vi);
       >
         <ng-container *ngFor="let item of display">
           <nz-option
-            nzValue="{{ item.id }}"
-            nzLabel="{{ item.name }}"
+            [nzValue]="item.id"
+            [nzLabel]="item.name"
           ></nz-option>
         </ng-container>
       </nz-select>
@@ -111,6 +111,7 @@ export class UploadFileComponent implements OnInit {
       console.info('STATUS', response);
       console.info('ERRORS', this.control.errors, '\n');
     });
+    this.inputData = this.display[0].id;
   }
 
   onReject(files: TuiFileLike | readonly TuiFileLike[]): void {
@@ -129,7 +130,7 @@ export class UploadFileComponent implements OnInit {
     );
   }
 
-  getDataId(): string {
+  getDataId(): number {
     return this.inputData;
   }
 

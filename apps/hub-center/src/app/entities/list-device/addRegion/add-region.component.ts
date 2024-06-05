@@ -29,11 +29,11 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
           nzValue="{{ item.id }}"
           [nzLabel]="'Thiết bị '"
         ></nz-option>
-        <nz-option
+        <!-- <nz-option
           *ngIf="i > 0"
           nzValue="{{ item.id }}"
           [nzLabel]="'Thiết bị / ' + item.name"
-        ></nz-option>
+        ></nz-option> -->
       </ng-container>
     </nz-select>
   `,
