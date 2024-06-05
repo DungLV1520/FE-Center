@@ -153,4 +153,8 @@ export class ApiUserService {
   sendFolder(data: boolean): void {
     this.addFolder.next(data);
   }
+
+  removeSchedule(data: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `schedule/remove`, data);
+  }
 }

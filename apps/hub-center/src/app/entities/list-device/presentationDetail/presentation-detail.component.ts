@@ -94,6 +94,7 @@ export interface ListTime {
 export class PresentationDetailComponent implements OnInit {
   // @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
   deviceId = '';
+  detailId = '';
   regionId = '';
 
   view: CalendarView = CalendarView.Month;
@@ -113,7 +114,32 @@ export class PresentationDetailComponent implements OnInit {
       label: 'Delete',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        alert('Comming soon ...');
+        const data = {
+          deviceId: this.deviceId,
+          scheduleId: [
+            event.id
+          ]
+        }
+        this.loadingService.showLoading();
+
+        this.apiUserService.removeSchedule(data)
+          .pipe(
+            tap((res: any) => {
+              if (res.result.ok === true) {
+                this.notification.success('Thông báo','Xoá lịch trình chiếu thành công!!!')
+                window.location.reload();
+              }
+            }),
+            catchError((err) => {
+              this.loadingService.hideLoading();
+              this.notification.error('Lỗi', err?.error?.result?.message ?? 'Xoá lịch trình chiếu thất bại!!!')
+              return throwError(err?.error?.result?.message);
+            }),
+            finalize(() => {
+              this.loadingService.hideLoading();
+            })
+          )
+          .subscribe();
       },
     },
   ];
@@ -138,6 +164,7 @@ export class PresentationDetailComponent implements OnInit {
       if (param['deviceId']) {
         this.deviceId = param['deviceId'];
         this.regionId = param['regionId'];
+        this.detailId = param['detailId'];
         this.getScheduleDetail(this.deviceId);
       }
     });
@@ -194,6 +221,7 @@ export class PresentationDetailComponent implements OnInit {
                         end
                       )}) ${scheduleInfo.name}`,
                       allDay: true,
+                      id: scheduleInfo.id
                     });
                   } else {
                     // Add events according to listTimes
@@ -227,6 +255,7 @@ export class PresentationDetailComponent implements OnInit {
                           end
                         )}) ${scheduleInfo.name}`,
                         allDay: false,
+                        id: scheduleInfo.id
                       });
                     });
                   }
@@ -248,6 +277,7 @@ export class PresentationDetailComponent implements OnInit {
                       )}) ${scheduleInfo.name}`,
                       allDay: true,
                       actions: this.actions,
+                      id: scheduleInfo.id
                     });
                   } else {
                     // Thêm sự kiện theo listTimes
@@ -282,6 +312,7 @@ export class PresentationDetailComponent implements OnInit {
                         )}) ${scheduleInfo.name}`,
                         allDay: false,
                         actions: this.actions,
+                        id: scheduleInfo.id
                       });
                     });
                   }
@@ -359,10 +390,10 @@ export class PresentationDetailComponent implements OnInit {
     this.activeDayIsOpen = false;
   }
 
-  getInfoDevice(deviceId: string) {
+  getInfoDevice(detailId: string) {
     this.loadingService.showLoading();
     this.apiUserService
-      .getInfoDevice(deviceId)
+      .getInfoDevice(detailId)
       .pipe(
         tap((res: any) => {
           if (res.result.ok === true && res.data) {

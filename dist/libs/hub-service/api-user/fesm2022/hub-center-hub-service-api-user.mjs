@@ -113,6 +113,9 @@ class ApiUserService {
     sendFolder(data) {
         this.addFolder.next(data);
     }
+    removeSchedule(data) {
+        return this.http.post(this.hubBackendApiEndpoint + `schedule/remove`, data);
+    }
     static { this.ɵfac = function ApiUserService_Factory(t) { return new (t || ApiUserService)(i0.ɵɵinject(i1.HttpClient), i0.ɵɵinject(i2.Environment)); }; }
     static { this.ɵprov = /*@__PURE__*/ i0.ɵɵdefineInjectable({ token: ApiUserService, factory: ApiUserService.ɵfac, providedIn: 'root' }); }
 }
