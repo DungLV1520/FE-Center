@@ -1,7 +1,0 @@
-export var LocalStoreEnum;
-(function (LocalStoreEnum) {
-    LocalStoreEnum["CUSTOMER_KEY"] = "customer_key";
-    LocalStoreEnum["ACCESS_TOKEN"] = "access_token";
-    LocalStoreEnum["OFFICE_ID"] = "offer_id";
-})(LocalStoreEnum || (LocalStoreEnum = {}));
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibG9jYWwtc3RvcmUuZW51bS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uLy4uL2xpYnMvaHViLXNlcnZpY2Uvc3RvcmFnZS9zcmMvbGliL2xvY2FsLXN0b3JhZ2UvbG9jYWwtc3RvcmUuZW51bS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxNQUFNLENBQU4sSUFBWSxjQUlYO0FBSkQsV0FBWSxjQUFjO0lBQ3hCLCtDQUE2QixDQUFBO0lBQzdCLCtDQUE2QixDQUFBO0lBQzdCLHdDQUFzQixDQUFBO0FBQ3hCLENBQUMsRUFKVyxjQUFjLEtBQWQsY0FBYyxRQUl6QiIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBlbnVtIExvY2FsU3RvcmVFbnVtIHtcbiAgQ1VTVE9NRVJfS0VZID0gJ2N1c3RvbWVyX2tleScsXG4gIEFDQ0VTU19UT0tFTiA9ICdhY2Nlc3NfdG9rZW4nLFxuICBPRkZJQ0VfSUQgPSAnb2ZmZXJfaWQnLFxufVxuIl19
