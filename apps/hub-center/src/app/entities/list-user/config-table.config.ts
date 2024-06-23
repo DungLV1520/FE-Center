@@ -49,6 +49,13 @@ export const CONFIG_TABLE_COLUMN = [
     filterMultiple: true,
   },
   {
+    title: "Ngày sinh",
+    priority: 7,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
     title: "Ngày cập nhật",
     priority: 7,
     listOfFilter: [],

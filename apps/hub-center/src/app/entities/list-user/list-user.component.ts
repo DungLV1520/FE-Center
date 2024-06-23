@@ -260,12 +260,10 @@ export class ListUserComponent implements OnInit {
           username,
           birthday
         };
-        console.log(params);
-
-        const formData = new FormData();
-        const jsonData = JSON.stringify(params);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        formData.append('userData', blob);
+        // const formData = new FormData();
+        // const jsonData = JSON.stringify(params);
+        // const blob = new Blob([jsonData], { type: 'application/json' });
+        // formData.append('userData', blob);
 
         if (!username || username === '') {
           this.notification.error('Thông báo', 'Username không được bỏ trống', {
@@ -303,7 +301,7 @@ export class ListUserComponent implements OnInit {
         }
 
         this.apiUserService
-          .addUser(formData)
+          .addUser(params)
           .pipe(
             tap((res: any) => {
               if (res?.result?.ok == false) {

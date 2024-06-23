@@ -28,6 +28,8 @@ import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
       nz-input
       placeholder="Nhập mật khẩu"
     />
+    <label class="mt-3">Ngày sinh</label>
+    <nz-date-picker [(ngModel)]="date" class="w-100"></nz-date-picker>
     <label class="mt-3">Role</label>
     <nz-select class="w-100 " nzPlaceHolder="Chọn role" [(ngModel)]="role">
       <ng-container *ngFor="let item of display">
@@ -54,6 +56,7 @@ export class UpdateUserComponent implements OnInit {
   password: any;
   role: any;
   gender: any;
+  date:any
 
   display = [
     {
@@ -83,6 +86,7 @@ export class UpdateUserComponent implements OnInit {
     this.email = data.mail;
     this.role = data.roles;
     this.gender = data.gender;
+    this.date = data.birthday;
   }
 
   getName(): string {

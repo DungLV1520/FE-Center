@@ -107,11 +107,7 @@ export class ApiUserService {
   }
 
   addUser(data: any) {
-    return this.http.post(this.hubBackendApiEndpoint + `user`, data, {
-      headers: new HttpHeaders({
-        Accept: 'application/json',
-      }),
-    });
+    return this.http.post(this.hubBackendApiEndpoint + `user`, data);
   }
 
   moveFile(data: any) {
