@@ -7,6 +7,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { finalize } from 'rxjs';
 import { LoadingService } from '@hub-center/loading';
+import { LocalStoreEnum } from '@hub-center/hub-service/storage';
 
 @Component({
   selector: 'hub-sidebar',
@@ -25,6 +26,7 @@ export class SidebarComponent implements OnInit {
   ROUTE_DEVICE = 'adv/device';
   ROUTE_FOLDER = 'adv/file';
   indexSlideShow = false;
+  indexSlideUser = false;
   indexPer = 0;
   indexRegion = 0;
   subDeviceIndex = 0;
@@ -37,7 +39,9 @@ export class SidebarComponent implements OnInit {
   titleDevice = 'Thiết bị';
   titleFolder = 'Tệp';
   titleSlide = 'Trình chiếu';
+  titleUser = 'Người dùng';
   createSlideTitle = 'Tạo lịch trình chiếu';
+  user: any;
 
   constructor(
     private router: Router,
@@ -60,6 +64,9 @@ export class SidebarComponent implements OnInit {
         this.getListFolder();
       }
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.user = JSON.parse(localStorage.getItem(LocalStoreEnum.CUSTOMER_KEY)!);
   }
 
   navigateOriginalDevice(): void {
@@ -67,6 +74,8 @@ export class SidebarComponent implements OnInit {
       const obj = [this.titleDevice];
       this.apiUserService.sendData(obj);
       this.router.navigate([this.ROUTE_DEVICE]);
+      this.indexSlideShow = false;
+      this.indexSlideUser = false;
     }
   }
 
@@ -75,6 +84,8 @@ export class SidebarComponent implements OnInit {
       const obj = [this.titleDevice];
       this.apiUserService.sendData(obj);
       this.router.navigate([this.ROUTE_FOLDER]);
+      this.indexSlideShow = false;
+      this.indexSlideUser = false;
     }
   }
 
@@ -82,6 +93,7 @@ export class SidebarComponent implements OnInit {
     this.indexRegion = i ?? 0;
     this.indexPer = -1;
     this.indexSlideShow = false;
+    this.indexSlideUser = false;
     this.subFolderIndex = -1;
     if (data?.subs?.length > 0) {
       const obj = [
@@ -107,6 +119,7 @@ export class SidebarComponent implements OnInit {
   navigateFolder(data: any, i?: number, item?: any, index?: number): void {
     this.indexPer = i ?? 0;
     this.indexSlideShow = false;
+    this.indexSlideUser = false;
     this.indexRegion = -1;
     this.subDeviceIndex = -1;
     if (data?.subs?.length > 0) {
@@ -155,6 +168,9 @@ export class SidebarComponent implements OnInit {
             this.checkHiddenNotPresentation();
             const obj = [this.titleSlide, this.createSlideTitle];
             this.apiUserService.sendData(obj);
+          } else if (url.includes('/adv/user')) {
+            this.checkHiddenNotPresentation();
+            this.activeSlideUser();
           }
         }
       });
@@ -216,10 +232,27 @@ export class SidebarComponent implements OnInit {
     this.router.navigate(['adv/presentation-slide']);
   }
 
+  activeSlideUser(): void {
+    this.checkActiveSlideUser();
+    const obj = [this.titleUser];
+    this.apiUserService.sendData(obj);
+    this.router.navigate(['adv/user']);
+  }
+
   checkActiveSlideShow(): void {
     this.subFolderIndex = -1;
     this.subDeviceIndex = -1;
     this.indexSlideShow = true;
+    this.indexSlideUser = false;
+    this.indexPer = -1;
+    this.indexRegion = -1;
+  }
+
+  checkActiveSlideUser(): void {
+    this.subFolderIndex = -1;
+    this.subDeviceIndex = -1;
+    this.indexSlideShow = false;
+    this.indexSlideUser = true;
     this.indexPer = -1;
     this.indexRegion = -1;
   }

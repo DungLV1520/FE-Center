@@ -52,6 +52,14 @@ const routes: Routes = [
           ),
         canActivate: [authGuard],
       },
+      {
+        path: 'user',
+        loadComponent: () =>
+          import('./list-user/list-user.component').then(
+            (m) => m.ListUserComponent
+          ),
+        canActivate: [authGuard],
+      },
     ],
   },
 ];

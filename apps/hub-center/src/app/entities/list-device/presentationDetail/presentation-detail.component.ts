@@ -397,7 +397,6 @@ export class PresentationDetailComponent implements OnInit {
       .pipe(
         tap((res: any) => {
           if (res.result.ok === true && res.data) {
-            console.log(res);
             this.deviceInfo = res.data;
           }
         }),

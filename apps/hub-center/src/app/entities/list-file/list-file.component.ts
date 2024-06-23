@@ -222,7 +222,7 @@ export class ListFileComponent implements OnInit {
   }
 
   showChecked(index: number): void {
-    console.log(index);
+    // console.log(index);
   }
 
   getListFile(obj: any): void {
@@ -518,7 +518,6 @@ export class ListFileComponent implements OnInit {
       nzOnOk: () => {
         const name = modal.getContentComponent().getFolderName();
         const id = modal.getContentComponent().getFolderPositionSave();
-        console.log({ name, id });
 
         if (!name || name === '') {
           this.notification.error(

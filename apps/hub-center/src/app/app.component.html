@@ -1,1 +1,6 @@
-<router-outlet></router-outlet>
+<div [class.loading-navigate]="loadingNavigate">
+  <div class="loader" *ngIf="loadingNavigate">
+    <div class="loaderBar"></div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

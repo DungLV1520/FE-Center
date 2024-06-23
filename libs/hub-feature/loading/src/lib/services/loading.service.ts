@@ -10,7 +10,6 @@ export class LoadingService {
   );
 
   isLoading = this.isLoadingSubject.asObservable();
-
   isShowingLoading = false;
 
   constructor() {
@@ -20,6 +19,10 @@ export class LoadingService {
   }
 
   showLoading() {
+    this.isLoadingSubject.next(true);
+  }
+
+  showLoadingNext() {
     this.isLoadingSubject.next(true);
   }
 

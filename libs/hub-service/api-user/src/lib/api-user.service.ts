@@ -102,6 +102,18 @@ export class ApiUserService {
     );
   }
 
+  updateUser(data: any) {
+    return this.http.put(this.hubBackendApiEndpoint + `user/edit`, data);
+  }
+
+  addUser(data: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `user`, data, {
+      headers: new HttpHeaders({
+        Accept: 'application/json',
+      }),
+    });
+  }
+
   moveFile(data: any) {
     return this.http.put(this.hubBackendApiEndpoint + `document/move`, data);
   }
@@ -156,5 +168,9 @@ export class ApiUserService {
 
   removeSchedule(data: any) {
     return this.http.post(this.hubBackendApiEndpoint + `schedule/remove`, data);
+  }
+
+  getListUser(obj: any) {
+    return this.http.post(this.hubBackendApiEndpoint + `user/search`, obj);
   }
 }

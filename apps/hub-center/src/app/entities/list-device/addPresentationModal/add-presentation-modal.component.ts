@@ -97,11 +97,10 @@ export class AddPresentationModalComponent implements OnInit {
     this.regionId = (this.data as any).regionId!;
     this.deviceId = (this.data as any).deviceId!;
     this.getAllSchedule();
-    // console.log(this.regionId)
   }
 
   onChange(result: Date): void {
-    console.log('onChange: ', result);
+    // console.log('onChange: ', result);
   }
 
   onDayClick(day: TuiDay) {
@@ -138,7 +137,6 @@ export class AddPresentationModalComponent implements OnInit {
           }
         }),
         catchError((err) => {
-          console.log(err);
           this.loadingService.hideLoading();
           return throwError(err?.error?.result?.message);
         }),

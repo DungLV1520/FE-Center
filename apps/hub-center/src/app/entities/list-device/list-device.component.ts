@@ -420,7 +420,6 @@ export class ListDeviceComponent implements OnInit {
       nzOnOk: () => {
         const name = modal.getContentComponent().getRegionName();
         const id = modal.getContentComponent().getRegionPositionSave();
-        console.log({ name, id });
 
         if (!name || name === '') {
           this.notification.error(
