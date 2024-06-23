@@ -101,7 +101,7 @@ export class ListUserComponent implements OnInit {
       const obj = {
         page: 0,
         size: this.pageSize,
-        name: data,
+        keywordSearch: data,
       };
       this.getListUser(obj);
     });
@@ -159,6 +159,7 @@ export class ListUserComponent implements OnInit {
         const email = modal.getContentComponent().getEmail();
         const gender = modal.getContentComponent().getGender();
         const role = modal.getContentComponent().getRole();
+        const birthday = modal.getContentComponent().getBirthday();
         const params: any = {
           id: data.id,
           fullName: name,
@@ -166,6 +167,7 @@ export class ListUserComponent implements OnInit {
           mail: email,
           gender,
           role,
+          birthday,
         };
 
         if (!name || name === '') {
@@ -193,7 +195,7 @@ export class ListUserComponent implements OnInit {
         if (password && password !== '') {
           params.password = password;
         }
-
+        this.loadingService.showLoading();
         this.apiUserService
           .updateUser(params)
           .pipe(
@@ -258,7 +260,7 @@ export class ListUserComponent implements OnInit {
           role,
           password,
           username,
-          birthday
+          birthday,
         };
         // const formData = new FormData();
         // const jsonData = JSON.stringify(params);
@@ -299,7 +301,7 @@ export class ListUserComponent implements OnInit {
           });
           return;
         }
-
+        this.loadingService.showLoading();
         this.apiUserService
           .addUser(params)
           .pipe(

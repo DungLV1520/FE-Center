@@ -1,4 +1,4 @@
-import { DatePipe, NgFor } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -61,7 +61,6 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
       </ng-container>
     </nz-select>
   `,
-   providers: [DatePipe],
 })
 export class AddUserComponent {
   readonly nzModalData: any = inject(NZ_MODAL_DATA);
@@ -95,10 +94,6 @@ export class AddUserComponent {
     },
   ];
 
-  constructor(private datePipe: DatePipe){
-
-  }
-
   getName(): string {
     return this.name;
   }
@@ -121,6 +116,8 @@ export class AddUserComponent {
     return this.username;
   }
   getBirthday(): any {
-    return this.datePipe.transform(this.date, 'dd/MM/yyyy');
+    const dateObject = new Date(this.date);
+    const isoDateString = dateObject.toISOString();
+    return isoDateString;
   }
 }

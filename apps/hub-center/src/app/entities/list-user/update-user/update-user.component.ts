@@ -4,9 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NZ_MODAL_DATA } from 'ng-zorro-antd/modal';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 @Component({
-  imports: [FormsModule, NzInputModule, NzSelectModule, NgFor],
+  imports: [
+    FormsModule,
+    NzInputModule,
+    NzSelectModule,
+    NgFor,
+    NzDatePickerModule,
+  ],
   standalone: true,
   selector: 'adv-update-user-modal',
   template: `
@@ -56,7 +63,7 @@ export class UpdateUserComponent implements OnInit {
   password: any;
   role: any;
   gender: any;
-  date:any
+  date: any;
 
   display = [
     {
@@ -81,7 +88,7 @@ export class UpdateUserComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.nzModalData.data;
-    this.name = data.fullname;
+    this.name = data.fullName;
     this.phoneNumber = data.phoneNumb;
     this.email = data.mail;
     this.role = data.roles;
@@ -106,5 +113,10 @@ export class UpdateUserComponent implements OnInit {
   }
   getGender(): string {
     return this.gender;
+  }
+  getBirthday(): any {
+    const dateObject = new Date(this.date);
+    const isoDateString = dateObject.toISOString();
+    return isoDateString;
   }
 }
