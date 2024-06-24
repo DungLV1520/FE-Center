@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NgFor } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -17,37 +18,51 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
   standalone: true,
   selector: 'adv-update-user-modal',
   template: `
-    <label for="">Tên</label>
+    <label for="" class=" mb-2 required">Tên</label>
     <input type="text" [(ngModel)]="name" nz-input placeholder="Nhập tên" />
-    <label for="" class="mt-3">Số điện thoại</label>
+    <label for="" class="mt-3  mb-2 required">Số điện thoại</label>
     <input
-      type="number"
+      type="text"
       [(ngModel)]="phoneNumber"
       nz-input
       placeholder="Nhập số điện thoại"
     />
-    <label class="mt-3">Email</label>
+    <label class="mt-3  mb-2 required">Email</label>
     <input type="email" [(ngModel)]="email" nz-input placeholder="Nhập email" />
-    <label class="mt-3">Nhập mật khẩu</label>
+    <label class="mt-3  mb-2">Mật khẩu</label>
     <input
       type="text"
       [(ngModel)]="password"
       nz-input
       placeholder="Nhập mật khẩu"
     />
-    <label class="mt-3">Ngày sinh</label>
-    <nz-date-picker [(ngModel)]="date" class="w-100"></nz-date-picker>
-    <label class="mt-3">Role</label>
-    <nz-select class="w-100 " nzPlaceHolder="Chọn role" [(ngModel)]="role">
+    <label class="mt-3  mb-2 required">Ngày sinh</label>
+    <nz-date-picker
+      [(ngModel)]="date"
+      class="w-100"
+      nzPlaceHolder="Chọn ngày sinh"
+    ></nz-date-picker>
+    <label class="mt-3  mb-2 required">Vai trò</label>
+    <nz-select class="w-100 " nzPlaceHolder="Chọn vai trò" [(ngModel)]="role">
       <ng-container *ngFor="let item of display">
         <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
       </ng-container>
     </nz-select>
-    <label class="mt-3">Giới tính</label>
+    <label class="mt-3  mb-2 required">Giới tính</label>
     <nz-select
       class="w-100 "
       nzPlaceHolder="Chọn giới tính"
       [(ngModel)]="gender"
+    >
+      <ng-container *ngFor="let item of listGender">
+        <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+      </ng-container>
+    </nz-select>
+    <label class="mt-3  mb-2 required">Trạng thái</label>
+    <nz-select
+      class="w-100 "
+      nzPlaceHolder="Chọn trang thái"
+      [(ngModel)]="status"
     >
       <ng-container *ngFor="let item of listStatus">
         <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
@@ -64,28 +79,37 @@ export class UpdateUserComponent implements OnInit {
   role: any;
   gender: any;
   date: any;
-
+  status: any;
   display = [
     {
       id: 'ADMIN',
-      name: 'ADMIN',
+      name: 'Admin',
     },
     {
       id: 'USER',
-      name: 'USER',
+      name: 'User',
+    },
+  ];
+  listGender = [
+    {
+      id: 'MALE',
+      name: 'Nam',
+    },
+    {
+      id: 'FEMALE',
+      name: 'Nữ',
     },
   ];
   listStatus = [
     {
-      id: 'MALE',
-      name: 'MALE',
+      id: 'ACTIVE',
+      name: 'Hoạt động',
     },
     {
-      id: 'FEMALE',
-      name: 'FEMALE',
+      id: 'INACTIVE',
+      name: 'Vô hiệu hoá',
     },
   ];
-
   ngOnInit(): void {
     const data = this.nzModalData.data;
     this.name = data.fullName;
@@ -94,8 +118,8 @@ export class UpdateUserComponent implements OnInit {
     this.role = data.roles;
     this.gender = data.gender;
     this.date = data.birthday;
+    this.status = data.status;
   }
-
   getName(): string {
     return this.name;
   }
@@ -115,8 +139,11 @@ export class UpdateUserComponent implements OnInit {
     return this.gender;
   }
   getBirthday(): any {
-    const dateObject = new Date(this.date);
-    const isoDateString = dateObject.toISOString();
-    return isoDateString;
+    if (this.date) {
+      const dateObject = new Date(this.date);
+      const isoDateString = dateObject?.toISOString();
+      return isoDateString;
+    }
+    return '';
   }
 }

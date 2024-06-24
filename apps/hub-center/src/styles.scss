@@ -6,3 +6,7 @@
 tui-input-time {
   border-radius: 4px !important;
 }
+.required::after {
+  content: ' *';
+  color: red;
+}

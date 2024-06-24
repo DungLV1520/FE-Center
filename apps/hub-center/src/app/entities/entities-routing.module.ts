@@ -18,7 +18,6 @@ const routes: Routes = [
           import('./list-device/list-device.component').then(
             (m) => m.ListDeviceComponent
           ),
-        canActivate: [authGuard],
       },
       {
         path: 'presentation-detail',
@@ -26,7 +25,6 @@ const routes: Routes = [
           import(
             './list-device/presentationDetail/presentation-detail.component'
           ).then((m) => m.PresentationDetailComponent),
-        canActivate: [authGuard],
       },
       {
         path: 'file',
@@ -34,7 +32,6 @@ const routes: Routes = [
           import('./list-file/list-file.component').then(
             (m) => m.ListFileComponent
           ),
-        canActivate: [authGuard],
       },
       {
         path: 'presentation-slide',
@@ -42,15 +39,13 @@ const routes: Routes = [
           import('./presentation-slide/presentation-slide.component').then(
             (m) => m.PresentationSlideComponent
           ),
-        canActivate: [authGuard],
       },
       {
         path: 'create-presentation-slide',
         loadComponent: () =>
-          import('./presentation-slide/create-presentation-slide/create-presentation-slide.component').then(
-            (m) => m.CreatePresentationSlideComponent
-          ),
-        canActivate: [authGuard],
+          import(
+            './presentation-slide/create-presentation-slide/create-presentation-slide.component'
+          ).then((m) => m.CreatePresentationSlideComponent),
       },
       {
         path: 'user',
@@ -58,7 +53,6 @@ const routes: Routes = [
           import('./list-user/list-user.component').then(
             (m) => m.ListUserComponent
           ),
-        canActivate: [authGuard],
       },
     ],
   },

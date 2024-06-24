@@ -251,7 +251,7 @@ export class ListUserComponent implements OnInit {
         const gender = modal.getContentComponent().getGender();
         const role = modal.getContentComponent().getRole();
         const username = modal.getContentComponent().getUsername();
-        const birthday = modal.getContentComponent().getBirthday();
+        const birthday = modal.getContentComponent()?.getBirthday();
         const params: any = {
           fullName: name,
           phoneNumb,
@@ -297,6 +297,18 @@ export class ListUserComponent implements OnInit {
         }
         if (!password || password === '') {
           this.notification.error('Thông báo', 'Mật khẩu không được bỏ trống', {
+            nzDuration: 2000,
+          });
+          return;
+        }
+        if (!gender || gender === '') {
+          this.notification.error('Thông báo', 'Giới tính chưa được chọn', {
+            nzDuration: 2000,
+          });
+          return;
+        }
+        if (!role || role === '') {
+          this.notification.error('Thông báo', 'Vai trò chưa được chọn', {
             nzDuration: 2000,
           });
           return;
