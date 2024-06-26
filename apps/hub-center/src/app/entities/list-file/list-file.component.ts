@@ -111,6 +111,7 @@ export class ListFileComponent implements OnInit {
   devices: any;
   file: any;
   fileOriginal: any;
+  
 
   constructor(
     private apiUserService: ApiUserService,

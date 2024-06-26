@@ -106,7 +106,7 @@ export class UpdateUserComponent implements OnInit {
       name: 'Hoạt động',
     },
     {
-      id: 'INACTIVE',
+      id: 'DEACTIVE',
       name: 'Vô hiệu hoá',
     },
   ];
