@@ -310,10 +310,10 @@ export class CreatePresentationSlideComponent implements OnInit {
             data.type === 'png'
           ) {
             const img = new Image();
-            img.src = `http://167.71.198.237:8080${data.path}`;
+            img.src = `https://cms.advtv.vn${data.path}`;
           } else if (data.type === 'mp4') {
             const video = document.createElement('video') as HTMLVideoElement;
-            video.src = `http://167.71.198.237:8080${data.path}`;
+            video.src = `https://cms.advtv.vn${data.path}`;
             video.preload = 'auto';
           }
         });

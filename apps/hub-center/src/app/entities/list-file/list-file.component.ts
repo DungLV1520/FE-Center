@@ -111,7 +111,7 @@ export class ListFileComponent implements OnInit {
   devices: any;
   file: any;
   fileOriginal: any;
-  
+
 
   constructor(
     private apiUserService: ApiUserService,
@@ -195,7 +195,7 @@ export class ListFileComponent implements OnInit {
 
   show(data: any): void {
     this.itemPreview = data;
-    this.path = 'http://167.71.198.237:8080' + data.path;
+    this.path = 'https://cms.advtv.vn' + data.path;
 
     this.previewService.open(this.preview || '').subscribe({
       complete: () => {
