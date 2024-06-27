@@ -17,15 +17,15 @@
       </div>
       <div class="btn-action-group">
         <button
-        (click)="addFolder()"
-        nz-button
-        nzType="default"
-        class="create-team"
-        nzSize="large"
-      >
-        <span nz-icon nzType="plus" nzTheme="outline"></span>
-        <span>Thêm thư mục</span>
-      </button>
+          (click)="addFolder()"
+          nz-button
+          nzType="default"
+          class="create-team"
+          nzSize="large"
+        >
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          <span>Thêm thư mục</span>
+        </button>
         <button
           nz-button
           nzType="default"
@@ -184,13 +184,14 @@
             <div class="device-status">
               <div class="w-100 h-100" (click)="show(data)">
                 <img
+                  loading="lazy"
                   *ngIf="
                     data.type === 'jpg' ||
                     data.type === 'jpeg' ||
                     data.type === 'png'
                   "
                   class="w-100 h-100 file-image"
-                  src="http://167.71.198.237:8080{{ data.path }}"
+                  src="https://cms.advtv.vn{{ data.path }}"
                   alt=""
                 />
                 <video
@@ -199,7 +200,7 @@
                   *ngIf="data.type === 'mp4'"
                 >
                   <source
-                    src="http://167.71.198.237:8080{{ data.path }}"
+                    src="https://cms.advtv.vn{{ data.path }}"
                     type="video/mp4"
                   />
                   Your browser does not support the video tag.
