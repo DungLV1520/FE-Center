@@ -171,68 +171,83 @@ export class ListUserComponent implements OnInit {
         };
 
         if (!name || name === '') {
-          this.notification.error('Thông báo', 'Tên không được bỏ trống', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Tên không được bỏ trống', {
+              nzDuration: 2000,
+            });
+            reject();
           });
-          return;
         }
         if (!email || email === '') {
-          this.notification.error('Thông báo', 'Email không được bỏ trống', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Email không được bỏ trống', {
+              nzDuration: 2000,
+            });
+            reject();
           });
-          return;
         }
         if (!phoneNumb || phoneNumb === '') {
-          this.notification.error(
-            'Thông báo',
-            'Số điện thoại không được bỏ trống',
-            {
-              nzDuration: 2000,
-            }
-          );
-          return;
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Số điện thoại không được bỏ trống',
+              {
+                nzDuration: 2000,
+              }
+            );
+            reject();
+          });
         }
+
         if (password && password !== '') {
           params.password = password;
         }
-        this.loadingService.showLoading();
-        this.apiUserService
-          .updateUser(params)
-          .pipe(
-            tap((res: any) => {
-              if (res?.result?.ok == false) {
+
+        return new Promise((resolve, reject) => {
+          this.loadingService.showLoading();
+          this.apiUserService
+            .updateUser(params)
+            .pipe(
+              tap((res: any) => {
+                if (res?.result?.ok == false) {
+                  this.notification.error(
+                    'Thông báo',
+                    res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                    {
+                      nzDuration: 2000,
+                    }
+                  );
+                } else {
+                  this.notification.success(
+                    'Thông báo',
+                    'Cập nhật thành công',
+                    {
+                      nzDuration: 2000,
+                    }
+                  );
+                }
+              }),
+              catchError((err) => {
                 this.notification.error(
                   'Thông báo',
-                  res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                  err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
                   {
                     nzDuration: 2000,
                   }
                 );
-              } else {
-                this.notification.success('Thông báo', 'Cập nhật thành công', {
-                  nzDuration: 2000,
-                });
-              }
-            }),
-            catchError((err) => {
-              this.notification.error(
-                'Thông báo',
-                err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
-                {
-                  nzDuration: 2000,
-                }
-              );
-              return throwError(err?.error?.result?.message);
-            }),
-            finalize(() => {
-              const obj = {
-                page: 0,
-                size: this.pageSize,
-              };
-              this.getListUser(obj);
-            })
-          )
-          .subscribe();
+                return throwError(err?.error?.result?.message);
+              }),
+              finalize(() => {
+                const obj = {
+                  page: 0,
+                  size: this.pageSize,
+                };
+                this.getListUser(obj);
+                resolve();
+              })
+            )
+            .subscribe();
+        });
       },
     });
   }
@@ -268,89 +283,115 @@ export class ListUserComponent implements OnInit {
         // formData.append('userData', blob);
 
         if (!username || username === '') {
-          this.notification.error('Thông báo', 'Username không được bỏ trống', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Username không được bỏ trống',
+              {
+                nzDuration: 2000,
+              }
+            );
+            reject();
           });
-          return;
         }
         if (!name || name === '') {
-          this.notification.error('Thông báo', 'Tên không được bỏ trống', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Tên không được bỏ trống', {
+              nzDuration: 2000,
+            });
+            reject();
           });
-          return;
         }
         if (!email || email === '') {
-          this.notification.error('Thông báo', 'Email không được bỏ trống', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Email không được bỏ trống', {
+              nzDuration: 2000,
+            });
+            reject();
           });
-          return;
         }
         if (!phoneNumb || phoneNumb === '') {
-          this.notification.error(
-            'Thông báo',
-            'Số điện thoại không được bỏ trống',
-            {
-              nzDuration: 2000,
-            }
-          );
-          return;
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Số điện thoại không được bỏ trống',
+              {
+                nzDuration: 2000,
+              }
+            );
+            reject();
+          });
         }
         if (!password || password === '') {
-          this.notification.error('Thông báo', 'Mật khẩu không được bỏ trống', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Mật khẩu không được bỏ trống',
+              {
+                nzDuration: 2000,
+              }
+            );
+            reject();
           });
-          return;
         }
         if (!gender || gender === '') {
-          this.notification.error('Thông báo', 'Giới tính chưa được chọn', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Giới tính chưa được chọn', {
+              nzDuration: 2000,
+            });
+            reject();
           });
-          return;
         }
         if (!role || role === '') {
-          this.notification.error('Thông báo', 'Vai trò chưa được chọn', {
-            nzDuration: 2000,
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Vai trò chưa được chọn', {
+              nzDuration: 2000,
+            });
+            reject();
           });
-          return;
         }
-        this.loadingService.showLoading();
-        this.apiUserService
-          .addUser(params)
-          .pipe(
-            tap((res: any) => {
-              if (res?.result?.ok == false) {
+
+        return new Promise((resolve, reject) => {
+          this.loadingService.showLoading();
+          this.apiUserService
+            .addUser(params)
+            .pipe(
+              tap((res: any) => {
+                if (res?.result?.ok == false) {
+                  this.notification.error(
+                    'Thông báo',
+                    res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                    {
+                      nzDuration: 2000,
+                    }
+                  );
+                } else {
+                  this.notification.success('Thông báo', 'Tạo thành công', {
+                    nzDuration: 2000,
+                  });
+                }
+              }),
+              catchError((err) => {
                 this.notification.error(
                   'Thông báo',
-                  res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                  err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
                   {
                     nzDuration: 2000,
                   }
                 );
-              } else {
-                this.notification.success('Thông báo', 'Tạo thành công', {
-                  nzDuration: 2000,
-                });
-              }
-            }),
-            catchError((err) => {
-              this.notification.error(
-                'Thông báo',
-                err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
-                {
-                  nzDuration: 2000,
-                }
-              );
-              return throwError(err?.error?.result?.message);
-            }),
-            finalize(() => {
-              const obj = {
-                page: 0,
-                size: this.pageSize,
-              };
-              this.getListUser(obj);
-            })
-          )
-          .subscribe();
+                return throwError(err?.error?.result?.message);
+              }),
+              finalize(() => {
+                const obj = {
+                  page: 0,
+                  size: this.pageSize,
+                };
+                this.getListUser(obj);
+                resolve();
+              })
+            )
+            .subscribe();
+        });
       },
     });
   }

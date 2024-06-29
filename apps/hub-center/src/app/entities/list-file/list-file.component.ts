@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Component,
   Inject,
@@ -111,7 +112,6 @@ export class ListFileComponent implements OnInit {
   devices: any;
   file: any;
   fileOriginal: any;
-
 
   constructor(
     private apiUserService: ApiUserService,
@@ -259,53 +259,63 @@ export class ListFileComponent implements OnInit {
         };
 
         if (!name || name === '') {
-          this.notification.error('Thông báo', 'Tên tệp không được bỏ trống', {
-            nzDuration: 2000,
-          });
-          return;
-        }
-        this.apiUserService
-          .renameFile(data.id, params)
-          .pipe(
-            tap((res: any) => {
-              if (res?.result?.ok == false) {
-                this.notification.error(
-                  'Thông báo',
-                  res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
-                  {
-                    nzDuration: 2000,
-                  }
-                );
-              } else {
-                this.notification.success(
-                  'Thông báo',
-                  'Đổi tên tệp thành công',
-                  {
-                    nzDuration: 2000,
-                  }
-                );
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Tên tệp không được bỏ trống',
+              {
+                nzDuration: 2000,
               }
-            }),
-            catchError((err) => {
-              this.notification.error(
-                'Thông báo',
-                err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
-                {
-                  nzDuration: 2000,
-                }
-              );
-              return throwError(err?.error?.result?.message);
-            }),
-            finalize(() => {
-              const obj = {
-                folderId: this.folderId,
-                page: 0,
-                size: this.pageSize,
-              };
-              this.getListFile(obj);
-            })
-          )
-          .subscribe();
+            );
+            reject();
+          });
+        } else {
+          return new Promise((resolve, reject) => {
+            this.apiUserService
+              .renameFile(data.id, params)
+              .pipe(
+                tap((res: any) => {
+                  if (res?.result?.ok == false) {
+                    this.notification.error(
+                      'Thông báo',
+                      res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                      {
+                        nzDuration: 2000,
+                      }
+                    );
+                  } else {
+                    this.notification.success(
+                      'Thông báo',
+                      'Đổi tên tệp thành công',
+                      {
+                        nzDuration: 2000,
+                      }
+                    );
+                  }
+                }),
+                catchError((err) => {
+                  this.notification.error(
+                    'Thông báo',
+                    err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                    {
+                      nzDuration: 2000,
+                    }
+                  );
+                  return throwError(err?.error?.result?.message);
+                }),
+                finalize(() => {
+                  const obj = {
+                    folderId: this.folderId,
+                    page: 0,
+                    size: this.pageSize,
+                  };
+                  this.getListFile(obj);
+                  resolve();
+                })
+              )
+              .subscribe();
+          });
+        }
       },
     });
   }
@@ -319,49 +329,67 @@ export class ListFileComponent implements OnInit {
       nzWidth: 500,
       nzOnOk: () => {
         const idFolder = modal.getContentComponent().getData();
-        let obj = [] as any;
-        if (this.isModeViewTable) {
-          obj = [
-            {
-              docId: data.id,
-              oldFolderId: this.folderId,
-              newFolderId: idFolder,
-            },
-          ];
-        } else {
-          obj = [];
-          this.checkedId?.forEach((id) => {
-            obj.push({
-              docId: id,
-              oldFolderId: this.folderId,
-              newFolderId: idFolder,
+        if (!idFolder || idFolder === '') {
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Chưa chọn thư mục!!!', {
+              nzDuration: 2000,
             });
+            reject();
           });
-        }
-
-        this.apiUserService.moveFile(obj).subscribe({
-          next: (res: any) => {
-            if (res.result.ok) {
-              this.notification.success(
-                'Thông báo',
-                'Di chuyển tệp thành công!!!',
+        } else {
+          return new Promise((resolve, reject) => {
+            let obj = [] as any;
+            if (this.isModeViewTable) {
+              obj = [
                 {
-                  nzDuration: 2000,
-                }
-              );
-              const obj = {
-                folderId: this.folderId,
-                page: 0,
-                size: this.pageSize,
-              };
-              this.getListFile(obj);
+                  docId: data.id,
+                  oldFolderId: this.folderId,
+                  newFolderId: idFolder,
+                },
+              ];
             } else {
-              this.notification.error('Thông báo', res.result.message, {
-                nzDuration: 2000,
+              obj = [];
+              this.checkedId?.forEach((id) => {
+                obj.push({
+                  docId: id,
+                  oldFolderId: this.folderId,
+                  newFolderId: idFolder,
+                });
               });
             }
-          },
-        });
+
+            this.apiUserService
+              .moveFile(obj)
+              .pipe(
+                finalize(() => {
+                  resolve();
+                })
+              )
+              .subscribe({
+                next: (res: any) => {
+                  if (res.result.ok) {
+                    this.notification.success(
+                      'Thông báo',
+                      'Di chuyển tệp thành công!!!',
+                      {
+                        nzDuration: 2000,
+                      }
+                    );
+                    const obj = {
+                      folderId: this.folderId,
+                      page: 0,
+                      size: this.pageSize,
+                    };
+                    this.getListFile(obj);
+                  } else {
+                    this.notification.error('Thông báo', res.result.message, {
+                      nzDuration: 2000,
+                    });
+                  }
+                },
+              });
+          });
+        }
       },
     });
   }
@@ -441,43 +469,65 @@ export class ListFileComponent implements OnInit {
       nzOnOk: () => {
         const files = modal.getContentComponent().getData();
         const displayType = modal.getContentComponent().getDataId();
-
-        const obj = {
-          folderId: this.folderId,
-          displayType: displayType,
-        };
-        const formData = new FormData();
-        files?.forEach((file) => {
-          formData.append('files', file);
-        });
-        const jsonData = JSON.stringify(obj);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        formData.append('data', blob);
-
-        this.apiUserService.uploadFile(formData).subscribe({
-          next: (res) => {
-            if (res.result.ok) {
-              this.notification.success('Thông báo', 'Tải tệp lên thành công', {
-                nzDuration: 2000,
-              });
-              const obj = {
-                folderId: this.folderId,
-                page: 0,
-                size: this.pageSize,
-              };
-              this.getListFile(obj);
-            } else {
-              this.notification.error('Thông báo', res.result.message, {
-                nzDuration: 2000,
-              });
-            }
-          },
-          error: () => {
-            this.notification.error('Thông báo', 'Tải tệp thất bại', {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        if (files?.length! <= 0) {
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Chưa chọn tệp', {
               nzDuration: 2000,
             });
-          },
-        });
+            reject();
+          });
+        } else {
+          return new Promise((resolve, reject) => {
+            const obj = {
+              folderId: this.folderId,
+              displayType: displayType,
+            };
+            const formData = new FormData();
+            files?.forEach((file) => {
+              formData.append('files', file);
+            });
+            const jsonData = JSON.stringify(obj);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            formData.append('data', blob);
+
+            this.apiUserService
+              .uploadFile(formData)
+              .pipe(
+                finalize(() => {
+                  resolve();
+                })
+              )
+              .subscribe({
+                next: (res) => {
+                  if (res.result.ok) {
+                    this.notification.success(
+                      'Thông báo',
+                      'Tải tệp lên thành công',
+                      {
+                        nzDuration: 2000,
+                      }
+                    );
+                    const obj = {
+                      folderId: this.folderId,
+                      page: 0,
+                      size: this.pageSize,
+                    };
+                    this.getListFile(obj);
+                  } else {
+                    this.notification.error('Thông báo', res.result.message, {
+                      nzDuration: 2000,
+                    });
+                  }
+                },
+                error: () => {
+                  this.notification.error('Thông báo', 'Tải tệp thất bại', {
+                    nzDuration: 2000,
+                  });
+                },
+              });
+          });
+        }
       },
     });
   }

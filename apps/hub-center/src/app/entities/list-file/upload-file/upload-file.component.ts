@@ -141,7 +141,7 @@ export class UploadFileComponent implements OnInit {
 
 export function maxFilesLength(maxLength: number): ValidatorFn {
   return ({ value }: AbstractControl) =>
-    value.length > maxLength
+    value.length >= maxLength
       ? {
           maxLength: new TuiValidationError('Lỗi: Tải lên tối đa 5 tệp'),
         }

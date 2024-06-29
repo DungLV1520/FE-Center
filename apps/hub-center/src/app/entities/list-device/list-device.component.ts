@@ -137,7 +137,7 @@ export class ListDeviceComponent implements OnInit {
         this.allDevices = ((res as any)?.data?.content as IDevice[]) ?? [];
         this.totalDevicesCount = this.allDevices.length; // Tính tổng số lượng thiết bị
         this.totalDevicesOnlineCount = this.allDevices.filter(
-          (item: any) => item.status === 'ACTIVE'
+          (item: any) => item.available
         ).length;
         this.totalDevicesOfflineCount =
           this.totalDevicesCount - this.totalDevicesOnlineCount;
@@ -257,48 +257,61 @@ export class ListDeviceComponent implements OnInit {
       nzCancelText: 'Đóng',
       nzOkText: 'OK',
       nzOnOk: () => {
-        this.loadingService.showLoading();
-        const params = {
-          deviceId: id,
-          name: modal.getContentComponent().getData(),
-        };
-        this.apiUserService
-          .renameDevice(params)
-          .pipe(
-            tap((res: any) => {
-              if (res?.result?.ok == false) {
-                this.notification.success(
-                  'Thông báo',
-                  res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
-                  {
-                    nzDuration: 2000,
+        const name = modal.getContentComponent().getData();
+        if (!name || name === '') {
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Tên không được bỏ trống', {
+              nzDuration: 2000,
+            });
+            reject();
+          });
+        } else {
+          this.loadingService.showLoading();
+          const params = {
+            deviceId: id,
+            name: modal.getContentComponent().getData(),
+          };
+          return new Promise((resolve, reject) => {
+            this.apiUserService
+              .renameDevice(params)
+              .pipe(
+                tap((res: any) => {
+                  if (res?.result?.ok == false) {
+                    this.notification.success(
+                      'Thông báo',
+                      res?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                      {
+                        nzDuration: 2000,
+                      }
+                    );
+                  } else {
+                    this.notification.success(
+                      'Thông báo',
+                      'Đổi tên thiết bị thành công',
+                      {
+                        nzDuration: 2000,
+                      }
+                    );
                   }
-                );
-              } else {
-                this.notification.success(
-                  'Thông báo',
-                  'Đổi tên thiết bị thành công',
-                  {
-                    nzDuration: 2000,
-                  }
-                );
-              }
-            }),
-            catchError((err) => {
-              this.notification.success(
-                'Thông báo',
-                err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
-                {
-                  nzDuration: 2000,
-                }
-              );
-              return throwError(err?.error?.result?.message);
-            }),
-            finalize(() => {
-              this.loadDevices();
-            })
-          )
-          .subscribe();
+                }),
+                catchError((err) => {
+                  this.notification.success(
+                    'Thông báo',
+                    err?.result?.message ?? 'Đã có lỗi, vui lòng thử lại',
+                    {
+                      nzDuration: 2000,
+                    }
+                  );
+                  return throwError(err?.error?.result?.message);
+                }),
+                finalize(() => {
+                  this.loadDevices();
+                  resolve();
+                })
+              )
+              .subscribe();
+          });
+        }
       },
     });
   }
@@ -322,45 +335,68 @@ export class ListDeviceComponent implements OnInit {
       nzWidth: 500,
       nzOnOk: () => {
         const idRegion = modal.getContentComponent().getData();
-        let obj = [] as any;
-        if (this.isModeViewTable) {
-          obj = [
-            {
-              deviceId: data.id,
-              oldRegionId: this.regionId,
-              newRegionId: idRegion,
-            },
-          ];
-        } else {
-          // obj = [];
-          // this.checkedId?.forEach((id) => {
-          //   obj.push({
-          //     docId: id,
-          //     oldFolderId: this.folderId,
-          //     newFolderId: idFolder,
-          //   });
-          // });
-        }
-        this.apiUserService.moveDevice(obj).subscribe({
-          next: (res: any) => {
-            if (res.result.ok) {
-              this.notification.success(
-                'Thông báo',
-                'Di chuyển thiết bị thành công!!!',
-                {
-                  nzDuration: 2000,
-                }
-              );
-
-              this.loadingService.showLoading();
-              this.loadDevices();
-            } else {
-              this.notification.error('Thông báo', res.result.message, {
+        if (!idRegion || idRegion === '') {
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Chưa chọn khu vực di chuyển!!!',
+              {
                 nzDuration: 2000,
+              }
+            );
+            reject(new Error());
+          });
+        } else {
+          return new Promise((resolve) => {
+            let obj = [] as any;
+            if (this.isModeViewTable) {
+              obj = [
+                {
+                  deviceId: data.id,
+                  oldRegionId: this.regionId,
+                  newRegionId: idRegion,
+                },
+              ];
+            } else {
+              obj = [];
+              this.checkedId?.forEach((id) => {
+                obj.push({
+                  deviceId: id,
+                  oldRegionId: this.regionId,
+                  newRegionId: idRegion,
+                });
               });
             }
-          },
-        });
+
+            this.apiUserService
+              .moveDevice(obj)
+              .pipe(
+                finalize(() => {
+                  resolve();
+                })
+              )
+              .subscribe({
+                next: (res: any) => {
+                  if (res.result.ok) {
+                    this.notification.success(
+                      'Thông báo',
+                      'Di chuyển thiết bị thành công!!!',
+                      {
+                        nzDuration: 2000,
+                      }
+                    );
+
+                    this.loadingService.showLoading();
+                    this.loadDevices();
+                  } else {
+                    this.notification.error('Thông báo', res.result.message, {
+                      nzDuration: 2000,
+                    });
+                  }
+                },
+              });
+          });
+        }
       },
     });
   }
@@ -407,7 +443,11 @@ export class ListDeviceComponent implements OnInit {
 
   onViewDetailPresentation(deviceId: string, detailId: string) {
     this.router.navigate(['adv/presentation-detail'], {
-      queryParams: { regionId: this.regionId, deviceId: deviceId, detailId: detailId },
+      queryParams: {
+        regionId: this.regionId,
+        deviceId: deviceId,
+        detailId: detailId,
+      },
     });
   }
 
@@ -422,26 +462,38 @@ export class ListDeviceComponent implements OnInit {
         const id = modal.getContentComponent().getRegionPositionSave();
 
         if (!name || name === '') {
-          this.notification.error(
-            'Thông báo',
-            'Tên khu vực không được bỏ trống',
-            {
-              nzDuration: 2000,
-            }
-          );
-          return;
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Tên khu vực không được bỏ trống',
+              {
+                nzDuration: 2000,
+              }
+            );
+            reject();
+          });
+        } else {
+          return new Promise((resolve, reject) => {
+            const obj = {
+              name,
+              description: name,
+              parentId: id,
+            };
+            this.loadingService.showLoading();
+            this.apiUserService
+              .createRegion(obj)
+              .pipe(
+                finalize(() => {
+                  resolve();
+                })
+              )
+              .subscribe((res: any) => {
+                if (res.result.ok) {
+                  this.apiUserService.sendRegion(true);
+                }
+              });
+          });
         }
-        const obj = {
-          name,
-          description: name,
-          parentId: id,
-        };
-        this.loadingService.showLoading();
-        this.apiUserService.createRegion(obj).subscribe((res: any) => {
-          if (res.result.ok) {
-            this.apiUserService.sendRegion(true);
-          }
-        });
       },
     });
   }

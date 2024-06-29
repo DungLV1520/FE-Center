@@ -135,6 +135,7 @@ export class ApiUserService {
   getScheduleDetail(deviceId: string) {
     return this.http.post(this.hubBackendApiEndpoint + `schedule/detail`, {
       deviceId,
+      web:true
     });
   }
 
