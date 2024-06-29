@@ -359,13 +359,21 @@ export class ListDeviceComponent implements OnInit {
               ];
             } else {
               obj = [];
-              this.checkedId?.forEach((id) => {
+              if (data?.id) {
                 obj.push({
-                  deviceId: id,
+                  deviceId: data.id,
                   oldRegionId: this.regionId,
                   newRegionId: idRegion,
                 });
-              });
+              } else {
+                this.checkedId?.forEach((id) => {
+                  obj.push({
+                    deviceId: id,
+                    oldRegionId: this.regionId,
+                    newRegionId: idRegion,
+                  });
+                });
+              }
             }
 
             this.apiUserService
