@@ -116,23 +116,29 @@ export class PresentationDetailComponent implements OnInit {
       onClick: ({ event }: { event: CalendarEvent }): void => {
         const data = {
           deviceId: this.deviceId,
-          scheduleId: [
-            event.id
-          ]
-        }
+          scheduleId: [event.id],
+        };
         this.loadingService.showLoading();
 
-        this.apiUserService.removeSchedule(data)
+        this.apiUserService
+          .removeSchedule(data)
           .pipe(
             tap((res: any) => {
               if (res.result.ok === true) {
-                this.notification.success('Thông báo','Xoá lịch trình chiếu thành công!!!')
+                this.notification.success(
+                  'Thông báo',
+                  'Xoá lịch trình chiếu thành công!!!'
+                );
                 window.location.reload();
               }
             }),
             catchError((err) => {
               this.loadingService.hideLoading();
-              this.notification.error('Lỗi', err?.error?.result?.message ?? 'Xoá lịch trình chiếu thất bại!!!')
+              this.notification.error(
+                'Lỗi',
+                err?.error?.result?.message ??
+                  'Xoá lịch trình chiếu thất bại!!!'
+              );
               return throwError(err?.error?.result?.message);
             }),
             finalize(() => {
@@ -221,7 +227,8 @@ export class PresentationDetailComponent implements OnInit {
                         end
                       )}) ${scheduleInfo.name}`,
                       allDay: true,
-                      id: scheduleInfo.id
+                      id: scheduleInfo.id,
+                      actions: this.actions,
                     });
                   } else {
                     // Add events according to listTimes
@@ -255,7 +262,8 @@ export class PresentationDetailComponent implements OnInit {
                           end
                         )}) ${scheduleInfo.name}`,
                         allDay: false,
-                        id: scheduleInfo.id
+                        id: scheduleInfo.id,
+                        actions: this.actions,
                       });
                     });
                   }
@@ -277,7 +285,7 @@ export class PresentationDetailComponent implements OnInit {
                       )}) ${scheduleInfo.name}`,
                       allDay: true,
                       actions: this.actions,
-                      id: scheduleInfo.id
+                      id: scheduleInfo.id,
                     });
                   } else {
                     // Thêm sự kiện theo listTimes
@@ -312,7 +320,7 @@ export class PresentationDetailComponent implements OnInit {
                         )}) ${scheduleInfo.name}`,
                         allDay: false,
                         actions: this.actions,
-                        id: scheduleInfo.id
+                        id: scheduleInfo.id,
                       });
                     });
                   }
