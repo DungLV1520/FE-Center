@@ -66,7 +66,10 @@ export class ApiUserService {
   }
 
   viewDetailSlidePresentation(obj: any) {
-    return this.http.post(this.hubBackendApiEndpoint + `schedule/detail`, obj);
+    return this.http.post(this.hubBackendApiEndpoint + `schedule/detail`, {
+      ...obj,
+      web: true,
+    });
   }
 
   getAllFiles() {
@@ -135,7 +138,7 @@ export class ApiUserService {
   getScheduleDetail(deviceId: string) {
     return this.http.post(this.hubBackendApiEndpoint + `schedule/detail`, {
       deviceId,
-      web:true
+      web: true,
     });
   }
 
