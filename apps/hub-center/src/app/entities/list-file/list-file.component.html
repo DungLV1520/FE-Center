@@ -64,7 +64,7 @@
         <nz-tag
           ><span>Đã chọn {{ checkedId?.length! }}</span>
           <div
-          *ngIf="checkedId?.length!>0"
+            *ngIf="checkedId?.length! > 0"
             style="display: inline-flex; margin-left: 5px; cursor: pointer"
             (click)="resetCheck()"
           >
@@ -343,14 +343,11 @@
         type="button"
         (click)="preview.complete()"
       ></button>
-      <iframe
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        frameborder="0"
+      <img
         [src]="path | safe : 'resourceUrl'"
-        title="Youtube"
-        class="content"
-      ></iframe>
+        alt=""
+        style="border-radius: 4px"
+      />
     </tui-preview>
   </ng-template>
 </tui-root>

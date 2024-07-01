@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Component,
+  ElementRef,
   Inject,
   NO_ERRORS_SCHEMA,
   OnInit,
@@ -88,7 +89,7 @@ import { AddFolderComponent } from './addFolder/add-folder.component';
 })
 export class ListFileComponent implements OnInit {
   @ViewChild('preview')
-  preview?: TemplateRef<TuiDialogContext>;
+  preview?: any;
   @ViewChild('contentSample')
   contentSample?: TemplateRef<Record<string, unknown>>;
   size: NzSelectSizeType = 'large';
@@ -202,17 +203,6 @@ export class ListFileComponent implements OnInit {
         console.info('complete');
       },
     });
-    setTimeout(() => {
-      const a = document.querySelector('iframe html') as HTMLElement;
-      if (a) {
-        const b = a.querySelector('img') as HTMLElement;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-        a.style.width = '100%';
-        a.style.height = '100%';
-      }
-      console.log(a);
-
-    }, 2000);
   }
 
   download(): void {
