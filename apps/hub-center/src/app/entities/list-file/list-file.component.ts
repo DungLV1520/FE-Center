@@ -202,6 +202,17 @@ export class ListFileComponent implements OnInit {
         console.info('complete');
       },
     });
+    setTimeout(() => {
+      const a = document.querySelector('iframe html') as HTMLElement;
+      if (a) {
+        const b = a.querySelector('img') as HTMLElement;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        a.style.width = '100%';
+        a.style.height = '100%';
+      }
+      console.log(a);
+
+    }, 2000);
   }
 
   download(): void {
@@ -349,13 +360,21 @@ export class ListFileComponent implements OnInit {
               ];
             } else {
               obj = [];
-              this.checkedId?.forEach((id) => {
+              if (data?.id) {
                 obj.push({
-                  docId: id,
+                  docId: data.id,
                   oldFolderId: this.folderId,
                   newFolderId: idFolder,
                 });
-              });
+              } else {
+                this.checkedId?.forEach((id) => {
+                  obj.push({
+                    docId: id,
+                    oldFolderId: this.folderId,
+                    newFolderId: idFolder,
+                  });
+                });
+              }
             }
 
             this.apiUserService
@@ -473,6 +492,14 @@ export class ListFileComponent implements OnInit {
         if (files?.length! <= 0) {
           return new Promise((resolve, reject) => {
             this.notification.error('Thông báo', 'Chưa chọn tệp', {
+              nzDuration: 2000,
+            });
+            reject();
+          });
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        } else if (files?.length! > 5) {
+          return new Promise((resolve, reject) => {
+            this.notification.error('Thông báo', 'Chi cho phép tải 5 tệp', {
               nzDuration: 2000,
             });
             reject();

@@ -1,9 +1,6 @@
-@import "node_modules/ng-zorro-antd/ng-zorro-antd.min.css";
+@import 'node_modules/ng-zorro-antd/ng-zorro-antd.min.css';
 @import '@taiga-ui/core/styles/taiga-ui-local.scss';
-
-
-
-
-
-
-
+img {
+  height: 100% !important;
+  width: 100% !important;
+}
