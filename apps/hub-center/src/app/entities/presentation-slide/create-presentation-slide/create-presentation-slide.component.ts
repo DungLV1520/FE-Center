@@ -185,10 +185,10 @@ export class CreatePresentationSlideComponent implements OnInit {
     this.sortForm.valueChanges.subscribe((value: any) => {
       this.showSettingSortRunning = value.sortRunning.name;
       if (this.showSettingSortRunning === this.ORDER_TYPE.RANDOM) {
-        this.timeChange.setValue(this.timeChange.value ?? 0);
-        this.totalMiddle = this.timeChange.value ?? 0;
+        this.timeChange.setValue(this.timeChange.value ?? 5);
+        this.totalMiddle = this.timeChange.value ?? 5;
       } else {
-        this.timeChange.setValue(0);
+        this.timeChange.setValue(5);
       }
     });
     this.getListFile()
@@ -490,7 +490,7 @@ export class CreatePresentationSlideComponent implements OnInit {
         middleInputFields: [
           this.showSettingSortRunning === ORDER_TYPE.RANDOM
             ? this.timeChange.value
-            : 0,
+            : 5,
         ],
         content:
           this.sortList?.length > 0 ? this.sortList[i] : this.filteredItems[i],
@@ -546,8 +546,8 @@ export class CreatePresentationSlideComponent implements OnInit {
         loopNumber: item.inputFields || 0,
         duration:
           this.showSettingSortRunning === ORDER_TYPE.RANDOM
-            ? this.timeChange.value || 0
-            : item.middleInputFields || 0,
+            ? this.timeChange.value || 5
+            : item.middleInputFields || 5,
         documentId: item.content.id,
       };
     });

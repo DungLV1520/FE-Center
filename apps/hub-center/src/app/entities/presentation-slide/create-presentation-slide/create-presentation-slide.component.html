@@ -153,7 +153,10 @@
             </tui-radio-labeled>
           </form>
         </div>
-        <div class="row align-items-center w-50">
+        <div
+          class="row align-items-center w-50"
+          *ngIf="showSettingSortRunning === ORDER_TYPE.RANDOM"
+        >
           <div class="col-4"><b>Thời gian chiếu tệp</b></div>
           <div class="col-8 d-flex justify-content-start" style="gap: 20px">
             <nz-input-group nzSize="large">
@@ -161,10 +164,8 @@
                 type="number"
                 nz-input
                 placeholder="Nhập thời gian chiếu tệp"
-                [readOnly]="
-                  showSettingSortRunning === ORDER_TYPE.FLEXIBLE_ORDER
-                "
                 [formControl]="timeChange"
+                [disabled]="true"
               />
             </nz-input-group>
             <div class="d-flex align-items-center">(giây)</div>
@@ -229,9 +230,7 @@
                       loading="lazy"
                       class="w-100 h-100 file-image"
                       loading="lazy"
-                      src="https://cms.advtv.vn{{
-                        data.value.content.path
-                      }}"
+                      src="https://cms.advtv.vn{{ data.value.content.path }}"
                       alt=""
                     />
                     <video
@@ -241,9 +240,7 @@
                       *ngIf="data.value.content.type === 'mp4'"
                     >
                       <source
-                        src="https://cms.advtv.vn{{
-                          data.value.content.path
-                        }}"
+                        src="https://cms.advtv.vn{{ data.value.content.path }}"
                         type="video/mp4"
                       />
                       Your browser does not support the video tag.

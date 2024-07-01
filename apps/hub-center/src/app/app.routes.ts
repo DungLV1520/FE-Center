@@ -12,4 +12,8 @@ export const appRoutes: Route[] = [
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
     canActivate: [authGuard],
   },
+  {
+    path: '**',
+    redirectTo: '/adv/presentation-slide',
+  },
 ];
