@@ -486,7 +486,7 @@ export class CreatePresentationSlideComponent implements OnInit {
     const numberOfImages = data?.length;
     for (let i = 0; i < numberOfImages; i++) {
       const imageFormGroup = this.formBuilder.group({
-        inputFields: [0],
+        inputFields: [1],
         middleInputFields: [
           this.showSettingSortRunning === ORDER_TYPE.RANDOM
             ? this.timeChange.value
@@ -538,12 +538,12 @@ export class CreatePresentationSlideComponent implements OnInit {
       name: this.scheduleName.value,
       runTimeType: this.showSettingTimeRunning,
       orderType: this.showSettingSortRunning,
-      timeToTransfer: this.timeChange.value ?? 0,
+      timeToTransfer: this.timeChange.value ?? 1,
     };
     const scheduleId = this.type === 'edit' ? this.scheduleId : null;
     const imageForm = this.imageForm?.value?.imagesArray?.map((item: any) => {
       return {
-        loopNumber: item.inputFields || 0,
+        loopNumber: item.inputFields || 1,
         duration:
           this.showSettingSortRunning === ORDER_TYPE.RANDOM
             ? this.timeChange.value || 5
