@@ -138,6 +138,9 @@ export class UpdateUserComponent implements OnInit {
   getGender(): string {
     return this.gender;
   }
+  getStatus(): string {
+    return this.status;
+  }
   getBirthday(): any {
     if (this.date) {
       const dateObject = new Date(this.date);

@@ -42,28 +42,18 @@ registerLocaleData(vi);
   template: `
     <tui-root>
       <tui-input-files
-        accept="image/*, video/mp4"
+        accept="video/*, image/*"
         [formControl]="control"
         [multiple]="true"
         (ngModelChange)="control.markAsTouched()"
         (reject)="onReject($event)"
+        [maxFileSize]="1024000000"
       ></tui-input-files>
 
       <tui-files class="tui-space_top-1">
-        <tui-file
-          *ngFor="let file of control.valueChanges | async"
-          [file]="file"
-          [showDelete]="control.enabled"
-          (removed)="removeFile(file)"
-        ></tui-file>
-
-        <tui-file
-          *ngFor="let file of rejectedFiles"
-          state="error"
-          [file]="file"
-          [showDelete]="control.enabled"
-          (removed)="clearRejected(file)"
-        ></tui-file>
+        <ng-container *ngFor="let file of control.valueChanges | async">
+          <tui-file [file]="file" (removed)="removeFile(file)"></tui-file
+        ></ng-container>
       </tui-files>
 
       <tui-error
@@ -77,10 +67,7 @@ registerLocaleData(vi);
         [(ngModel)]="inputData"
       >
         <ng-container *ngFor="let item of display">
-          <nz-option
-            [nzValue]="item.id"
-            [nzLabel]="item.name"
-          ></nz-option>
+          <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
         </ng-container>
       </nz-select>
     </tui-root>
@@ -107,10 +94,20 @@ export class UploadFileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.control.statusChanges.subscribe((response) => {
-      console.info('STATUS', response);
-      console.info('ERRORS', this.control.errors, '\n');
-    });
+    // this.control.valueChanges.subscribe((response: any) => {
+    //   console.info('STATUS', response);
+    //   if (response?.length > 5) {
+    //     this.control.setValue(
+    //       this.control.value?.filter(
+    //         (current: File) =>
+    //           current.name !== response[response.length - 1]?.name
+    //       ) ?? [],
+    //       {
+    //         emitEvent: false,
+    //       }
+    //     );
+    //   }
+    // });
     this.inputData = this.display[0].id;
   }
 
@@ -141,7 +138,7 @@ export class UploadFileComponent implements OnInit {
 
 export function maxFilesLength(maxLength: number): ValidatorFn {
   return ({ value }: AbstractControl) =>
-    value.length >= maxLength
+    value.length > maxLength
       ? {
           maxLength: new TuiValidationError('Lỗi: Tải lên tối đa 5 tệp'),
         }

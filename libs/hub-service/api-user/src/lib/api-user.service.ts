@@ -10,6 +10,7 @@ import { LocalStoreEnum } from '@hub-center/hub-service/storage';
 })
 export class ApiUserService {
   hubBackendApiEndpoint: string;
+  hubBackendApiEndpointOrigin: string;
   breadCrumb = new Subject<string[]>();
   breadCrumb$ = this.breadCrumb.asObservable();
   addRegion = new Subject<boolean>();
@@ -19,6 +20,7 @@ export class ApiUserService {
 
   constructor(private http: HttpClient, private environment: Environment) {
     this.hubBackendApiEndpoint = this.environment.hubBackendApiEndpoint;
+    this.hubBackendApiEndpointOrigin = this.environment.hubBackendApiEndpointOrigin;
   }
 
   login(user: ILoginReq) {
@@ -172,5 +174,11 @@ export class ApiUserService {
 
   getListUser(obj: any) {
     return this.http.post(this.hubBackendApiEndpoint + `user/search`, obj);
+  }
+
+  removeAllFile(id: string) {
+    return this.http.delete(
+      this.hubBackendApiEndpoint + `document/delete-all-by-folderId/${id}`
+    );
   }
 }

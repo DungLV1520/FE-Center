@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Component,
-  ElementRef,
   Inject,
   NO_ERRORS_SCHEMA,
   OnInit,
@@ -35,11 +34,7 @@ import {
   TuiPreviewModule,
 } from '@taiga-ui/addon-preview';
 import { tuiClamp } from '@taiga-ui/cdk';
-import {
-  TuiDialogContext,
-  TuiAlertService,
-  TuiButtonModule,
-} from '@taiga-ui/core';
+import { TuiAlertService, TuiButtonModule } from '@taiga-ui/core';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
@@ -221,10 +216,6 @@ export class ListFileComponent implements OnInit {
     if (swipe.direction === 'right') {
       this.index = tuiClamp(this.index - 1, 0, this.length - 1);
     }
-  }
-
-  showChecked(index: number): void {
-    // console.log(index);
   }
 
   getListFile(obj: any): void {
@@ -610,5 +601,24 @@ export class ListFileComponent implements OnInit {
         });
       },
     });
+  }
+
+  removeAllFile(): void {
+    this.loadingService.showLoading();
+    this.apiUserService
+      .removeAllFile(this.folderId)
+      .pipe(finalize(() => this.loadingService.hideLoading()))
+      .subscribe((data: any) => {
+        console.log(data);
+        if (data.result.ok) {
+          this.notification.success('Thông báo', 'Xoá tất cả tệp thành công', {
+            nzDuration: 2000,
+          });
+        } else {
+          this.notification.error('Thông báo', data.result.message, {
+            nzDuration: 2000,
+          });
+        }
+      });
   }
 }

@@ -21,7 +21,6 @@ import { CONFIG_TABLE_COLUMN } from './config-table.config';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import {
-  TuiPreviewDialogService,
   TuiPreviewModule,
 } from '@taiga-ui/addon-preview';
 import { TuiButtonModule } from '@taiga-ui/core';
@@ -160,6 +159,7 @@ export class ListUserComponent implements OnInit {
         const gender = modal.getContentComponent().getGender();
         const role = modal.getContentComponent().getRole();
         const birthday = modal.getContentComponent().getBirthday();
+        const status = modal.getContentComponent().getStatus();
         const params: any = {
           id: data.id,
           fullName: name,
@@ -168,6 +168,7 @@ export class ListUserComponent implements OnInit {
           gender,
           role,
           birthday,
+          status
         };
 
         if (!name || name === '') {

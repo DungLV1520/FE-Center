@@ -105,6 +105,16 @@
         >
           <span>Di chuyển</span>
         </button>
+        <button
+          class="mx-2"
+          nz-button
+          nzType="default"
+          nzSize="small"
+          [disabled]="totalElements <= 0"
+          (click)="removeAllFile()"
+        >
+          <span>Xoá tất cả</span>
+        </button>
       </div>
     </div>
     <div *ngIf="isModeViewTable" class="table-body" style="overflow: auto">
