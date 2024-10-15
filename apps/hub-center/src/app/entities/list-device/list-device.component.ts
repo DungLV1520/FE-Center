@@ -30,12 +30,18 @@ import {
   catchError,
   throwError,
   debounceTime,
+  forkJoin,
 } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RenameModalComponent } from './renameModal/rename-modal.component';
 import { IDevice } from '@hub-center/hub-model';
 import { MoveDeviceComponent } from './moveDevice/move-device.component';
 import { AddRegionComponent } from './addRegion/add-region.component';
+import { TuiBadgeModule } from '@taiga-ui/kit';
+import {
+  Daum,
+  ScheduleInfo,
+} from './presentationDetail/presentation-detail.component';
 
 @Component({
   selector: 'adv-list-device',
@@ -61,6 +67,7 @@ import { AddRegionComponent } from './addRegion/add-region.component';
     NzTagModule,
     NzDatePickerModule,
     NzPopoverModule,
+    TuiBadgeModule,
   ],
   providers: [NzNotificationService, DatePipe],
   templateUrl: './list-device.component.html',
@@ -141,8 +148,64 @@ export class ListDeviceComponent implements OnInit {
         ).length;
         this.totalDevicesOfflineCount =
           this.totalDevicesCount - this.totalDevicesOnlineCount;
-        this.updateDisplayedDevices();
         this.checked = new Array(this.allDevices.length).fill(false);
+
+        const deviceDetailRequests = this.allDevices.map((device) =>
+          this.apiUserService.getScheduleDetail(device.identityDevice)
+        );
+
+        forkJoin(deviceDetailRequests).subscribe(
+          (details: any[]) => {
+            const today = new Date().toISOString().split('T')[0]; // Ngày hiện tại theo định dạng yyyy-MM-dd
+
+            this.allDevices = this.allDevices.map((device, index) => {
+              const detailList = details[index]?.data; // Lấy toàn bộ dữ liệu trong `data`
+              const scheduleNames: string[] = [];
+
+              detailList?.forEach(
+                (detail: {
+                  scheduleInfo: {
+                    name: any;
+                    runningDateRange: any;
+                    activeDate: any;
+                  };
+                }) => {
+                  if (detail.scheduleInfo) {
+                    const { name, runningDateRange, activeDate } =
+                      detail.scheduleInfo;
+                    const convertedActiveDate = activeDate ? this.convertDateFormat(activeDate) : '';
+
+                    console.log(convertedActiveDate);
+                    console.log(today);
+                    if (convertedActiveDate === today) {
+                      scheduleNames.push(name);
+                    } else if (runningDateRange) {
+                      const [startDate, endDate] = runningDateRange.split('-');
+                      const convertedStartDate = this.convertDateFormat(startDate);
+                      const convertedEndDate = this.convertDateFormat(endDate);
+
+                      // Kiểm tra xem ngày hôm nay có nằm trong khoảng ngày chạy của lịch không
+                      if (convertedStartDate <= today && today <= convertedEndDate) {
+                        scheduleNames.push(name);
+                      }
+                    }
+                  }
+                }
+              );
+
+              // Cập nhật scheduleInfo với mảng tên các lịch đang được trình chiếu hôm nay
+              return { ...device, scheduleInfo: scheduleNames };
+            });
+            this.updateDisplayedDevices();
+            console.log(
+              'Cập nhật danh sách allDevices với các lịch ngày hôm nay:',
+              this.allDevices
+            );
+          },
+          (error) => {
+            console.error('Có lỗi xảy ra khi lấy chi tiết thiết bị:', error);
+          }
+        );
       });
   }
 
@@ -505,4 +568,17 @@ export class ListDeviceComponent implements OnInit {
       },
     });
   }
+
+  convertDateFormat(dateStr: string): string {
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      // Đảm bảo có ba phần (ngày, tháng, năm)
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+      return `${year}-${month}-${day}`; // Trả về định dạng yyyy-MM-dd
+    }
+    return ''; // Trả về chuỗi rỗng nếu định dạng không hợp lệ
+  }
+
 }

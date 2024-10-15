@@ -1,3 +1,7 @@
+import {
+  ScheduleInfo
+} from '../../../../apps/hub-center/src/app/entities/list-device/presentationDetail/presentation-detail.component';
+
 export interface ILoginReq {
   username: string;
   password: string;
@@ -28,4 +32,5 @@ export interface IDevice {
   model?: string;
   isPresenting?: boolean;
   lastDisconnectedTime?: string;
+  scheduleInfo?: string[]
 }

@@ -68,7 +68,7 @@
       <nz-tag *ngIf="allDevices.length > 0"
         ><span>Đã chọn {{ checkedId?.length! }}</span>
         <div
-        *ngIf="checkedId?.length!>0"
+          *ngIf="checkedId?.length! > 0"
           style="display: inline-flex; margin-left: 5px; cursor: pointer"
           (click)="resetCheck()"
         >
@@ -147,9 +147,46 @@
               }}</nz-tag>
             </td>
             <td>
-              <nz-tag [nzColor]="data.isPresenting ? 'green' : 'red'">{{
-                data?.isPresenting ? 'Đang trình chiếu' : 'Không trình chiếu'
-              }}</nz-tag>
+              <nz-tag
+                nz-popover
+                [nzPopoverContent]="
+                  data.scheduleInfo &&
+                  data.scheduleInfo.length > 0 &&
+                  data.isPresenting
+                    ? contentTemplate
+                    : undefined
+                "
+                nzPopoverTrigger="hover"
+                [nzColor]="data.isPresenting ? 'green' : 'red'"
+                >{{
+                  data?.isPresenting ? 'Đang trình chiếu' : 'Không trình chiếu'
+                }}</nz-tag
+              >
+              <ng-template #contentTemplate>
+                <div style="max-width: 400px">
+                  <div
+                    *ngIf="
+                      data.scheduleInfo &&
+                      data.scheduleInfo.length > 0 &&
+                      data.isPresenting
+                    "
+                  >
+                    <span style="display: block">Đang trình chiếu:</span>
+                    <ng-container *ngFor="let schedule of data.scheduleInfo">
+                      <tui-badge
+                        style="
+                          max-width: 350px;
+                          margin-bottom: 8px;
+                          margin-right: 4px;
+                        "
+                        status="success"
+                        [value]="schedule"
+                        class="tui-space_right-2 tui-space_bottom-2"
+                      ></tui-badge>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-template>
             </td>
             <td>{{ data.isPresenting ? data.isPresenting : '--' }}</td>
             <td>
@@ -181,7 +218,12 @@
               ></span>
               <nz-dropdown-menu #moreAction="nzDropdownMenu">
                 <ul nz-menu>
-                  <li nz-menu-item (click)="onViewDetailPresentation(data.identityDevice, data.id)">
+                  <li
+                    nz-menu-item
+                    (click)="
+                      onViewDetailPresentation(data.identityDevice, data.id)
+                    "
+                  >
                     Thiết lập lịch trình chiếu
                   </li>
                   <li nz-menu-item (click)="moveFile(data)">Di chuyển</li>
@@ -266,7 +308,12 @@
             ></span>
             <nz-dropdown-menu #moreAction="nzDropdownMenu">
               <ul nz-menu>
-                <li nz-menu-item (click)="onViewDetailPresentation(device.identityDevice, device.id)">
+                <li
+                  nz-menu-item
+                  (click)="
+                    onViewDetailPresentation(device.identityDevice, device.id)
+                  "
+                >
                   Thiết lập lịch trình chiếu
                 </li>
                 <li nz-menu-item (click)="moveFile(device)">Di chuyển</li>
@@ -285,13 +332,34 @@
           </div>
         </div>
         <ng-template #contentTemplate>
-          <div>
+          <div style="max-width: 400px">
             <div>Model máy: {{ device.model }}</div>
             <div>Số seri: {{ device.serialNumber }}</div>
             <div>Hãng sản xuất: {{ device.manufacturer }}</div>
             <div>Phiên bản app: {{ device.appVersion }}</div>
             <div>Phiên bản hệ điều hành: {{ device.osVersion }}</div>
             <div>Vị trí: {{ device.location }}</div>
+            <div
+              *ngIf="
+                device.scheduleInfo &&
+                device.scheduleInfo.length > 0 &&
+                device.isPresenting
+              "
+            >
+              <span style="display: block">Đang trình chiếu:</span>
+              <ng-container *ngFor="let schedule of device.scheduleInfo">
+                <tui-badge
+                  style="
+                    max-width: 350px;
+                    margin-bottom: 8px;
+                    margin-right: 4px;
+                  "
+                  status="success"
+                  [value]="schedule"
+                  class="tui-space_right-2 tui-space_bottom-2"
+                ></tui-badge>
+              </ng-container>
+            </div>
           </div>
         </ng-template>
       </div>
