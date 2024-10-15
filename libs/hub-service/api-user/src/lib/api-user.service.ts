@@ -20,7 +20,8 @@ export class ApiUserService {
 
   constructor(private http: HttpClient, private environment: Environment) {
     this.hubBackendApiEndpoint = this.environment.hubBackendApiEndpoint;
-    this.hubBackendApiEndpointOrigin = this.environment.hubBackendApiEndpointOrigin;
+    this.hubBackendApiEndpointOrigin =
+      this.environment.hubBackendApiEndpointOrigin;
   }
 
   login(user: ILoginReq) {
@@ -179,6 +180,12 @@ export class ApiUserService {
   removeAllFile(id: string) {
     return this.http.delete(
       this.hubBackendApiEndpoint + `document/delete-all-by-folderId/${id}`
+    );
+  }
+
+  getTotalUsage() {
+    return this.http.get(
+      this.hubBackendApiEndpoint + `document/get-total-usage`
     );
   }
 }
