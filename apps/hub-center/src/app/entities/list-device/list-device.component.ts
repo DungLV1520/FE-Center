@@ -38,10 +38,6 @@ import { IDevice } from '@hub-center/hub-model';
 import { MoveDeviceComponent } from './moveDevice/move-device.component';
 import { AddRegionComponent } from './addRegion/add-region.component';
 import { TuiBadgeModule } from '@taiga-ui/kit';
-import {
-  Daum,
-  ScheduleInfo,
-} from './presentationDetail/presentation-detail.component';
 
 @Component({
   selector: 'adv-list-device',
@@ -117,8 +113,10 @@ export class ListDeviceComponent implements OnInit {
     }, 60000);
 
     this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((data) => {
-      this.loadingService.showLoading();
-      this.loadDevices(data);
+      if (this.regionId) {
+        this.loadingService.showLoading();
+        this.loadDevices(data);
+      }
     });
   }
 
@@ -173,7 +171,9 @@ export class ListDeviceComponent implements OnInit {
                   if (detail.scheduleInfo) {
                     const { name, runningDateRange, activeDate } =
                       detail.scheduleInfo;
-                    const convertedActiveDate = activeDate ? this.convertDateFormat(activeDate) : '';
+                    const convertedActiveDate = activeDate
+                      ? this.convertDateFormat(activeDate)
+                      : '';
 
                     console.log(convertedActiveDate);
                     console.log(today);
@@ -181,11 +181,15 @@ export class ListDeviceComponent implements OnInit {
                       scheduleNames.push(name);
                     } else if (runningDateRange) {
                       const [startDate, endDate] = runningDateRange.split('-');
-                      const convertedStartDate = this.convertDateFormat(startDate);
+                      const convertedStartDate =
+                        this.convertDateFormat(startDate);
                       const convertedEndDate = this.convertDateFormat(endDate);
 
                       // Kiểm tra xem ngày hôm nay có nằm trong khoảng ngày chạy của lịch không
-                      if (convertedStartDate <= today && today <= convertedEndDate) {
+                      if (
+                        convertedStartDate <= today &&
+                        today <= convertedEndDate
+                      ) {
                         scheduleNames.push(name);
                       }
                     }
@@ -580,5 +584,4 @@ export class ListDeviceComponent implements OnInit {
     }
     return ''; // Trả về chuỗi rỗng nếu định dạng không hợp lệ
   }
-
 }

@@ -158,8 +158,9 @@ export class ListUserComponent implements OnInit {
         const email = modal.getContentComponent().getEmail();
         const gender = modal.getContentComponent().getGender();
         const role = modal.getContentComponent().getRole();
-        const birthday = modal.getContentComponent().getBirthday();
+        const expiryDate = modal.getContentComponent().getExpiryDate();
         const status = modal.getContentComponent().getStatus();
+        const limitGB = modal.getContentComponent()?.getLimitGB();
         const params: any = {
           id: data.id,
           fullName: name,
@@ -167,8 +168,9 @@ export class ListUserComponent implements OnInit {
           mail: email,
           gender,
           role,
-          birthday,
-          status
+          expiryDate,
+          status,
+          limitGB
         };
 
         if (!name || name === '') {
@@ -267,7 +269,8 @@ export class ListUserComponent implements OnInit {
         const gender = modal.getContentComponent().getGender();
         const role = modal.getContentComponent().getRole();
         const username = modal.getContentComponent().getUsername();
-        const birthday = modal.getContentComponent()?.getBirthday();
+        const expiryDate = modal.getContentComponent()?.getExpiryDate();
+        const limitGB = modal.getContentComponent()?.getLimitGB();
         const params: any = {
           fullName: name,
           phoneNumb,
@@ -276,7 +279,8 @@ export class ListUserComponent implements OnInit {
           role,
           password,
           username,
-          birthday,
+          expiryDate,
+          limitGB
         };
         // const formData = new FormData();
         // const jsonData = JSON.stringify(params);

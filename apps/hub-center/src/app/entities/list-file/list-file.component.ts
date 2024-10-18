@@ -123,6 +123,7 @@ export class ListFileComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
+      this.folderId = params['folderId'];
       if (params['folderId']) {
         this.folderId = params['folderId'];
         const obj = {
@@ -136,6 +137,9 @@ export class ListFileComponent implements OnInit {
     });
 
     this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((data) => {
+      if (!this.folderId) {
+        return;
+      }
       const obj = {
         folderId: this.folderId,
         page: 0,

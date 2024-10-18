@@ -7,7 +7,7 @@
           <input
             type="text"
             nz-input
-            placeholder="Tìm kiếm theo tên người dùng"
+            placeholder="Tìm kiếm"
             [formControl]="searchForm"
           />
         </nz-input-group>
@@ -61,7 +61,7 @@
             <td>{{ data.username }}</td>
             <td>{{ data.roles }}</td>
             <td>{{ data.status }}</td>
-            <td>{{ data.birthday |date:'dd/MM/yyyy' }}</td>
+            <td>{{ data.expiryDate |date:'dd/MM/yyyy' }}</td>
             <td>{{ data.insDatetime |date:'HH:ss dd/MM/yyyy' }}</td>
             <td class="text-center" style="cursor: pointer;">
               <span

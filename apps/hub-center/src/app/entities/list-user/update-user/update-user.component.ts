@@ -36,11 +36,11 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
       nz-input
       placeholder="Nhập mật khẩu"
     />
-    <label class="mt-3  mb-2 required">Ngày sinh</label>
+    <label class="mt-3  mb-2 required">Ngày hết hạn</label>
     <nz-date-picker
       [(ngModel)]="date"
       class="w-100"
-      nzPlaceHolder="Chọn ngày sinh"
+      nzPlaceHolder="Chọn ngày hết hạn"
     ></nz-date-picker>
     <label class="mt-3  mb-2 required">Vai trò</label>
     <nz-select class="w-100 " nzPlaceHolder="Chọn vai trò" [(ngModel)]="role">
@@ -68,6 +68,13 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
         <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
       </ng-container>
     </nz-select>
+    <label class="mt-3  mb-1 required">Dung lượng</label>
+    <input
+      type="number"
+      [(ngModel)]="limitGB"
+      nz-input
+      placeholder="Nhập dung lương"
+    />
   `,
 })
 export class UpdateUserComponent implements OnInit {
@@ -80,6 +87,7 @@ export class UpdateUserComponent implements OnInit {
   gender: any;
   date: any;
   status: any;
+  limitGB: any;
   display = [
     {
       id: 'ADMIN',
@@ -141,7 +149,10 @@ export class UpdateUserComponent implements OnInit {
   getStatus(): string {
     return this.status;
   }
-  getBirthday(): any {
+  getLimitGB(): string {
+    return this.limitGB;
+  }
+  getExpiryDate(): any {
     if (this.date) {
       const dateObject = new Date(this.date);
       const isoDateString = dateObject?.toISOString();
