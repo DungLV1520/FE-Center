@@ -68,7 +68,51 @@
             </td>
             <td>{{ data.totalDoc }}</td>
             <td>{{ data.totalDuration }}</td>
-            <td>{{ data.totalDeviceApply }}</td>
+            <td
+              nz-popover
+              [nzPopoverContent]="
+                data?.lisDevice && (data?.lisDevice)!.length > 0
+                  ? contentTemplate
+                  : undefined
+              "
+              nzPopoverTrigger="hover"
+            >
+              {{ data.totalDeviceApply }}
+            </td>
+            <ng-template #noDevices>
+              <p>Không áp dụng cho thiết bị nào.</p>
+            </ng-template>
+            <ng-template #contentTemplate>
+              <div style="max-width: 300px">
+                <div style="display: flex; flex-direction: column">
+                  <span style="display: block">Thiết bị:</span>
+                  <ng-container
+                    *ngFor="let device of data.lisDevice | slice : 0 : 5"
+                  >
+                    <tui-badge
+                      style="
+                        max-width: 350px;
+                        margin-bottom: 8px;
+                        margin-right: 4px;
+                      "
+                      status="success"
+                      [value]="device?.name!"
+                      class="tui-space_right-2 tui-space_bottom-2"
+                    ></tui-badge>
+                  </ng-container>
+                  <span
+                    style="
+                      text-decoration: underline;
+                      color: blue;
+                      cursor: pointer;
+                    "
+                    *ngIf="(data?.lisDevice)!.length < 5"
+                    (click)="onViewFullDeviceApply(data.name, data.lisDevice)"
+                    >Xem danh sách đầy đủ</span
+                  >
+                </div>
+              </div>
+            </ng-template>
             <td class="text-center">
               <span
                 nz-icon

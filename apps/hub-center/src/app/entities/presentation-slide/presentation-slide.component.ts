@@ -1,9 +1,4 @@
-import {
-  Component,
-  Inject,
-  NO_ERRORS_SCHEMA,
-  OnInit,
-} from '@angular/core';
+import { Component, Inject, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -36,6 +31,42 @@ import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, debounceTime, finalize, tap, throwError } from 'rxjs';
 import { SafePipe } from './safe.pipe';
+import { TuiBadgeModule } from '@taiga-ui/kit';
+import { ViewFullDeviceApplyComponent } from './view-full-device-apply/view-full-device-apply.component';
+
+export interface IPresentationSlide {
+  id: string;
+  name: string;
+  runTimeType: string;
+  totalDoc: string;
+  totalDuration: string;
+  totalDeviceApply: string;
+  lisDevice: LisDevice[] | null;
+}
+
+export interface LisDevice {
+  id: string;
+  name: string;
+  description: string;
+  available: boolean;
+  location: string;
+  timeOffAgo: number;
+  model: string;
+  identityDevice: string;
+  userId: string;
+  token: string;
+  isPresenting: any;
+  isPresentingSchedule: any;
+  osVersion: string;
+  appVersion: string;
+  serialNumber: string;
+  manufacturer: string;
+  lastActiveTime: any;
+  lastDisconnectedTime: any;
+  insDatetime: string;
+  updDatetime: string;
+  isDeleted: boolean;
+}
 
 @Component({
   selector: 'adv-list-file',
@@ -67,6 +98,7 @@ import { SafePipe } from './safe.pipe';
     TuiTooltipModule,
     TuiHintModule,
     SafePipe,
+    TuiBadgeModule,
   ],
   providers: [NzNotificationService],
   templateUrl: './presentation-slide.component.html',
@@ -81,7 +113,7 @@ export class PresentationSlideComponent implements OnInit {
   pageSize = 10;
   index = 0;
   length = 2;
-  presentationSlide: any;
+  presentationSlide: IPresentationSlide[] = [];
   presentationSlideOrigin: any;
   totalElements: any;
   pageNumber: any;
@@ -188,6 +220,16 @@ export class PresentationSlideComponent implements OnInit {
           },
         });
       },
+    });
+  }
+
+  onViewFullDeviceApply(name: string, listDevice: LisDevice[] | null) {
+    this.modal.info({
+      nzTitle: `Danh sách thiết bị áp dụng cho lịch <b>${name}</b>`,
+      nzContent: ViewFullDeviceApplyComponent,
+      nzOkText: 'Đóng',
+      nzWidth: '700px',
+      nzData: { listDevice },
     });
   }
 

@@ -133,7 +133,7 @@ export class AddPresentationModalComponent implements OnInit {
       .pipe(
         tap((res: any) => {
           if (res.result.ok === true) {
-            this.listSchedule = res.data.content;
+            this.listSchedule = res?.data?.lsSchedule;
           }
         }),
         catchError((err) => {
