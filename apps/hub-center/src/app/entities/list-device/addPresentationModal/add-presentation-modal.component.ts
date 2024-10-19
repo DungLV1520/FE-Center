@@ -99,10 +99,6 @@ export class AddPresentationModalComponent implements OnInit {
     this.getAllSchedule();
   }
 
-  onChange(result: Date): void {
-    // console.log('onChange: ', result);
-  }
-
   onDayClick(day: TuiDay) {
     this.selectedMultiDate = this.selectedMultiDate.find((item) =>
       item.daySame(day)

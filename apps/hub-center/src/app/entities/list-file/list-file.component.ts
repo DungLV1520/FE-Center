@@ -613,7 +613,6 @@ export class ListFileComponent implements OnInit {
       .removeAllFile(this.folderId)
       .pipe(finalize(() => this.loadingService.hideLoading()))
       .subscribe((data: any) => {
-        console.log(data);
         if (data.result.ok) {
           this.notification.success('Thông báo', 'Xoá tất cả tệp thành công', {
             nzDuration: 2000,

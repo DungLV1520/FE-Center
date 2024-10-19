@@ -39,6 +39,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     <label class="mt-3  mb-2 required">Ngày hết hạn</label>
     <nz-date-picker
       [(ngModel)]="date"
+      nzFormat="dd/MM/yyyy"
       class="w-100"
       nzPlaceHolder="Chọn ngày hết hạn"
     ></nz-date-picker>
@@ -73,7 +74,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
       type="number"
       [(ngModel)]="limitGB"
       nz-input
-      placeholder="Nhập dung lương"
+      placeholder="Nhập dung lượng"
     />
   `,
 })
@@ -125,8 +126,9 @@ export class UpdateUserComponent implements OnInit {
     this.email = data.mail;
     this.role = data.roles;
     this.gender = data.gender;
-    this.date = data.birthday;
+    this.date = data.expiryDate;
     this.status = data.status;
+    this.limitGB = data.limitGB ?? 1;
   }
   getName(): string {
     return this.name;

@@ -1,4 +1,4 @@
-<hub-loading ></hub-loading>
+<hub-loading></hub-loading>
 <tui-root>
   <div class="user-list-wrapper">
     <div class="filter-header">
@@ -16,7 +16,13 @@
         </ng-template>
       </div>
       <div class="btn-action-group">
-        <button nz-button nzType="default" (click)="createUser()" class="create-team" nzSize="large">
+        <button
+          nz-button
+          nzType="default"
+          (click)="createUser()"
+          class="create-team"
+          nzSize="large"
+        >
           <span nz-icon nzType="calendar" nzTheme="outline"></span>
           <span>Thêm người dùng</span>
         </button>
@@ -50,31 +56,31 @@
           <tr *ngFor="let data of presentationSlide; let i = index">
             <td nz>{{ i + 1 }}</td>
             <td style="cursor: pointer">
-              {{ data?.fullName??"---" }}
+              {{ data?.fullName ?? '---' }}
             </td>
             <td>
-              {{
-                data.mail
-              }}
+              {{ data.mail }}
             </td>
             <td>{{ data.phoneNumb }}</td>
             <td>{{ data.username }}</td>
             <td>{{ data.roles }}</td>
             <td>{{ data.status }}</td>
-            <td>{{ data.expiryDate |date:'dd/MM/yyyy' }}</td>
-            <td>{{ data.insDatetime |date:'HH:ss dd/MM/yyyy' }}</td>
-            <td class="text-center" style="cursor: pointer;">
+            <td>{{ data.limitGB ?? 1 }}GB</td>
+            <td>{{ data.insDatetime | date : 'HH:ss dd/MM/yyyy' }}</td>
+            <td>{{ data.expiryDate | date : 'HH:ss dd/MM/yyyy' }}</td>
+            <td class="text-center" style="cursor: pointer">
               <span
                 nz-icon
                 nzType="ellipsis"
-                nz-dropdown
                 [nzDropdownMenu]="menu2"
+                nz-dropdown
                 nzPlacement="bottomRight"
                 style="transform: rotate(90deg)"
               ></span>
               <nz-dropdown-menu #menu2="nzDropdownMenu">
                 <ul nz-menu>
                   <li (click)="updateUser(data)" nz-menu-item>Chỉnh sửa</li>
+                  <li nz-menu-item>Xoá</li>
                 </ul>
               </nz-dropdown-menu>
             </td>

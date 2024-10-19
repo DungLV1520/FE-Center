@@ -49,7 +49,7 @@ export const CONFIG_TABLE_COLUMN = [
     filterMultiple: true,
   },
   {
-    title: "Ngày hết hạn",
+    title: "Dung lượng",
     priority: 7,
     listOfFilter: [],
     filterFn: null,
@@ -57,6 +57,13 @@ export const CONFIG_TABLE_COLUMN = [
   },
   {
     title: "Ngày tạo",
+    priority: 7,
+    listOfFilter: [],
+    filterFn: null,
+    filterMultiple: true,
+  },
+  {
+    title: "Ngày hết hạn",
     priority: 7,
     listOfFilter: [],
     filterFn: null,
