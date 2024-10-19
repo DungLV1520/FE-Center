@@ -3,7 +3,6 @@ import {
   Inject,
   NO_ERRORS_SCHEMA,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -80,7 +79,6 @@ export class PresentationSlideComponent implements OnInit {
   totalItems = 0;
   pageIndex = 0;
   pageSize = 10;
-  @ViewChild('preview')
   index = 0;
   length = 2;
   presentationSlide: any;
@@ -126,10 +124,9 @@ export class PresentationSlideComponent implements OnInit {
         })
       )
       .subscribe((res: any) => {
-        this.presentationSlide = res?.data?.content;
-        this.presentationSlideOrigin = res?.data?.content;
-        this.totalElements = res?.data?.totalElements ?? 0;
-        this.pageIndex = res?.data?.pageable?.pageNumber ?? 0;
+        this.presentationSlide = res?.data?.lsSchedule;
+        this.presentationSlideOrigin = res?.data?.lsSchedule;
+        this.totalElements = res?.data?.totalRecord ?? 0;
       });
   }
 
