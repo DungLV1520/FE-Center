@@ -36,7 +36,6 @@
         [nzDisabledDate]="disabledDate"
         *ngIf="radioValue === 'day'"
         [(ngModel)]="date"
-        (ngModelChange)="onChange($event)"
       ></nz-date-picker>
       <tui-calendar
         *ngIf="radioValue === 'custom'"

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NgFor } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -46,6 +46,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     <label class="mt-3  mb-1 required">Ngày hết hạn</label>
     <nz-date-picker
       [(ngModel)]="date"
+      nzFormat="dd/MM/yyyy"
       class="w-100"
       nzPlaceHolder="Chọn ngày hết hạn"
     ></nz-date-picker>
@@ -70,11 +71,11 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
       type="number"
       [(ngModel)]="limitGB"
       nz-input
-      placeholder="Nhập dung lương"
+      placeholder="Nhập dung lượng"
     />
   `,
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
   readonly nzModalData: any = inject(NZ_MODAL_DATA);
   name: any;
   phoneNumber: any;
@@ -105,6 +106,11 @@ export class AddUserComponent {
       name: 'Nữ',
     },
   ];
+  ngOnInit(): void {
+    const currentDate = new Date();
+    this.date = new Date(currentDate.setDate(currentDate.getDate() + 30));
+    this.limitGB = 1;
+  }
   getName(): string {
     return this.name;
   }
