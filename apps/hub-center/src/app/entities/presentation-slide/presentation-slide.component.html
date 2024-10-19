@@ -106,7 +106,7 @@
                       color: blue;
                       cursor: pointer;
                     "
-                    *ngIf="(data?.lisDevice)!.length < 5"
+                    *ngIf="(data?.lisDevice)!.length > 5"
                     (click)="onViewFullDeviceApply(data.name, data.lisDevice)"
                     >Xem danh sách đầy đủ</span
                   >
