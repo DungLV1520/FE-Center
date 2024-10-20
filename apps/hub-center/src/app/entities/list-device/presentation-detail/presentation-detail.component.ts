@@ -11,25 +11,15 @@ import {
 } from 'angular-calendar';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormsModule } from '@angular/forms';
-import {
-  addHours,
-  isSameDay,
-  isSameMonth,
-  endOfMonth,
-  subDays,
-  startOfDay,
-  addDays,
-} from 'date-fns';
+import { isSameDay, isSameMonth } from 'date-fns';
 import { catchError, finalize, Subject, tap, throwError } from 'rxjs';
 import { NgSwitch, NgSwitchCase } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ApiUserService } from '@hub-center/hub-service/api-user';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-import { AddPresentationModalComponent } from '../addPresentationModal/add-presentation-modal.component';
-import { EventColor } from 'calendar-utils';
+import { AddPresentationModalComponent } from '../add-presentation/add-presentation.component';
 import { IDevice } from '@hub-center/hub-model';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { MoveDeviceComponent } from '../moveDevice/move-device.component';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 export interface Daum {

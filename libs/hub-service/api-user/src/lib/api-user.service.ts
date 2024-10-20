@@ -150,8 +150,16 @@ export class ApiUserService {
     return this.http.post(this.hubBackendApiEndpoint + `region/create`, data);
   }
 
+  removeRegion(id: string) {
+    return this.http.delete(this.hubBackendApiEndpoint + `region/${id}`);
+  }
+
   createFolder(data: any) {
     return this.http.post(this.hubBackendApiEndpoint + `folder/create`, data);
+  }
+
+  removeFolder(id: string) {
+    return this.http.delete(this.hubBackendApiEndpoint + `folder/${id}`);
   }
 
   sendData(data: string[]): void {

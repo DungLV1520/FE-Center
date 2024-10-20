@@ -23,7 +23,7 @@ const routes: Routes = [
         path: 'presentation-detail',
         loadComponent: () =>
           import(
-            './list-device/presentationDetail/presentation-detail.component'
+            './list-device/presentation-detail/presentation-detail.component'
           ).then((m) => m.PresentationDetailComponent),
       },
       {

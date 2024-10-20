@@ -33,11 +33,12 @@ import {
   forkJoin,
 } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RenameModalComponent } from './renameModal/rename-modal.component';
+import { RenameModalComponent } from './rename-modal/rename-modal.component';
 import { IDevice } from '@hub-center/hub-model';
-import { MoveDeviceComponent } from './moveDevice/move-device.component';
-import { AddRegionComponent } from './addRegion/add-region.component';
+import { MoveDeviceComponent } from './move-device/move-device.component';
+import { AddRegionComponent } from './add-region/add-region.component';
 import { TuiBadgeModule } from '@taiga-ui/kit';
+import { RemoveRegionComponent } from './remove-region/remove-region.component';
 
 @Component({
   selector: 'adv-list-device',
@@ -175,8 +176,6 @@ export class ListDeviceComponent implements OnInit {
                       ? this.convertDateFormat(activeDate)
                       : '';
 
-                    console.log(convertedActiveDate);
-                    console.log(today);
                     if (convertedActiveDate === today) {
                       scheduleNames.push(name);
                     } else if (runningDateRange) {
@@ -557,6 +556,46 @@ export class ListDeviceComponent implements OnInit {
             this.loadingService.showLoading();
             this.apiUserService
               .createRegion(obj)
+              .pipe(
+                finalize(() => {
+                  resolve();
+                })
+              )
+              .subscribe((res: any) => {
+                if (res.result.ok) {
+                  this.apiUserService.sendRegion(true);
+                }
+              });
+          });
+        }
+      },
+    });
+  }
+
+  removeRegion() {
+    const modal = this.modal.create({
+      nzTitle: `Xoá khu vực`,
+      nzContent: RemoveRegionComponent,
+      nzCancelText: 'Đóng',
+      nzOkText: 'OK',
+      nzOnOk: () => {
+        const id = modal.getContentComponent().getId();
+        if (!id ) {
+          return new Promise((resolve, reject) => {
+            this.notification.error(
+              'Thông báo',
+              'Chưa chọn khu vực xoá',
+              {
+                nzDuration: 2000,
+              }
+            );
+            reject();
+          });
+        } else {
+          return new Promise((resolve, reject) => {
+            this.loadingService.showLoading();
+            this.apiUserService
+              .removeRegion(id)
               .pipe(
                 finalize(() => {
                   resolve();

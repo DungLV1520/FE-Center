@@ -18,7 +18,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 export class RenameModalComponent {
   inputData = '';
 
-  // Phương thức để truy xuất dữ liệu, nếu cần
   getData(): string {
     return this.inputData;
   }

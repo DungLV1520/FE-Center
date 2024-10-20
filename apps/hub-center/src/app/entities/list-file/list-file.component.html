@@ -27,6 +27,16 @@
           <span>Thêm thư mục</span>
         </button>
         <button
+          (click)="removeFolder()"
+          nz-button
+          nzType="default"
+          class="create-team"
+          nzSize="large"
+        >
+          <span nz-icon nzType="minus-circle" nzTheme="outline"></span>
+          <span>Xoá thư mục</span>
+        </button>
+        <button
           nz-button
           nzType="default"
           class="create-team"
@@ -61,10 +71,9 @@
         <nz-tag>Video: {{ totalVideo }} tệp</nz-tag>
       </div>
       <div *ngIf="!isModeViewTable">
-        <nz-tag
+        <nz-tag *ngIf="checkedId?.length! > 0"
           ><span>Đã chọn {{ checkedId?.length! }}</span>
           <div
-            *ngIf="checkedId?.length! > 0"
             style="display: inline-flex; margin-left: 5px; cursor: pointer"
             (click)="resetCheck()"
           >
@@ -93,7 +102,7 @@
           nzSize="small"
           class="mx-2"
         >
-          <span>Chọn tất cả</span>
+          <span>Chọn tất cả </span>
         </button>
 
         <button
@@ -113,7 +122,7 @@
           [disabled]="totalElements <= 0"
           (click)="removeAllFile()"
         >
-          <span>Xoá tất cả</span>
+          <span>Xoá tất cả ({{totalElements}})</span>
         </button>
       </div>
     </div>

@@ -26,6 +26,16 @@
         <span>Thêm khu vực</span>
       </button>
       <button
+        (click)="removeRegion()"
+        nz-button
+        nzType="default"
+        class="create-team"
+        nzSize="large"
+      >
+        <span nz-icon nzType="minus-circle" nzTheme="outline"></span>
+        <span>Xoá khu vực</span>
+      </button>
+      <button
         nz-button
         nzType="default"
         class="create-team"
@@ -65,7 +75,7 @@
     </div>
 
     <div *ngIf="!isModeViewTable">
-      <nz-tag *ngIf="allDevices.length > 0"
+      <nz-tag *ngIf="allDevices.length > 0 && checkedId?.length! > 0"
         ><span>Đã chọn {{ checkedId?.length! }}</span>
         <div
           *ngIf="checkedId?.length! > 0"

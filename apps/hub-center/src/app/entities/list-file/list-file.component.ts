@@ -40,11 +40,12 @@ import { TuiRootModule } from '@taiga-ui/core';
 import { TuiTooltipModule, TuiHintModule } from '@taiga-ui/core';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, debounceTime, finalize, tap, throwError } from 'rxjs';
-import { RenameModalComponent } from './renameModal/rename-modal.component';
+import { RenameModalComponent } from './rename-modal/rename-modal.component';
 import { SafePipe } from './safe.pipe';
 import { UploadFileComponent } from './upload-file/upload-file.component';
-import { MoveFileComponent } from './moveFile/move-file.component';
-import { AddFolderComponent } from './addFolder/add-folder.component';
+import { MoveFileComponent } from './move-file/move-file.component';
+import { AddFolderComponent } from './add-folder/add-folder.component';
+import { RemoveFolderComponent } from './remove-folder/remove-folder.component';
 
 @Component({
   selector: 'adv-list-file',
@@ -599,6 +600,32 @@ export class ListFileComponent implements OnInit {
         };
         this.loadingService.showLoading();
         this.apiUserService.createFolder(obj).subscribe((res: any) => {
+          if (res.result.ok) {
+            this.apiUserService.sendFolder(true);
+          }
+        });
+      },
+    });
+  }
+
+  removeFolder() {
+    const modal = this.modal.create({
+      nzTitle: `Xoá thư mục`,
+      nzContent: RemoveFolderComponent,
+      nzCancelText: 'Đóng',
+      nzOkText: 'OK',
+      nzOnOk: () => {
+        const id = modal.getContentComponent().getIdFolder();
+
+        if (!id) {
+          this.notification.error('Thông báo', 'Chưa chọn thư mục xoá', {
+            nzDuration: 2000,
+          });
+          return;
+        }
+
+        this.loadingService.showLoading();
+        this.apiUserService.removeFolder(id).subscribe((res: any) => {
           if (res.result.ok) {
             this.apiUserService.sendFolder(true);
           }

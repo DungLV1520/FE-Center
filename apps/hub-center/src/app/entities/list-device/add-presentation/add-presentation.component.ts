@@ -26,14 +26,15 @@ import { catchError, finalize, tap, throwError } from 'rxjs';
 import { LoadingService } from '@hub-center/loading';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { addDays, startOfDay, subDays } from 'date-fns';
+import { addDays, startOfDay } from 'date-fns';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   standalone: true,
-  selector: 'adv-add-presentation-modal',
-  templateUrl: './add-presentation-modal.component.html',
+  selector: 'adv-add-presentation',
+  templateUrl: './add-presentation.component.html',
+  styleUrls: ['./add-presentation.component.scss'],
   imports: [
     FormsModule,
     NzInputModule,
@@ -52,7 +53,6 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
     NzToolTipModule,
   ],
   providers: [DatePipe],
-  styleUrls: ['./add-presentation-modal.component.scss'],
 })
 export class AddPresentationModalComponent implements OnInit {
   readonly searchForm = new FormControl();
