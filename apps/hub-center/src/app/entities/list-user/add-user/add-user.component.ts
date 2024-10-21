@@ -25,8 +25,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
       nz-input
       placeholder="Nhập username"
     />
-    <label for="" class="mt-3  mb-1 required ">Tên</label>
-    <input type="text" [(ngModel)]="name" nz-input placeholder="Nhập tên" />
+    <label for="" class="mt-3  mb-1 required ">Họ và tên</label>
+    <input type="text" [(ngModel)]="name" nz-input placeholder="Nhập họ và tên" />
     <label for="" class="mt-3  mb-1 required">Số điện thoại</label>
     <input
       type="text"
@@ -56,22 +56,12 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
         <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
       </ng-container>
     </nz-select>
-    <label class="mt-3  mb-1 required">Giới tính</label>
-    <nz-select
-      class="w-100 "
-      nzPlaceHolder="Chọn giới tính"
-      [(ngModel)]="gender"
-    >
-      <ng-container *ngFor="let item of listStatus">
-        <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
-      </ng-container>
-    </nz-select>
-    <label class="mt-3  mb-1 required">Dung lượng</label>
+    <label class="mt-3  mb-1 required">Hạn mức dung lượng(GB)</label>
     <input
       type="number"
       [(ngModel)]="limitGB"
       nz-input
-      placeholder="Nhập dung lượng"
+      placeholder="Nhập hạn mức dung lượng"
     />
   `,
 })
@@ -110,6 +100,7 @@ export class AddUserComponent implements OnInit {
     const currentDate = new Date();
     this.date = new Date(currentDate.setDate(currentDate.getDate() + 30));
     this.limitGB = 1;
+    this.role = 'USER'
   }
   getName(): string {
     return this.name;
@@ -127,7 +118,7 @@ export class AddUserComponent implements OnInit {
     return this.role;
   }
   getGender(): string {
-    return this.gender;
+    return this.gender?? 'MALE';
   }
   getUsername(): string {
     return this.username;

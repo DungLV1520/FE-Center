@@ -18,8 +18,13 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
   standalone: true,
   selector: 'adv-update-user-modal',
   template: `
-    <label for="" class=" mb-2 required">Tên</label>
-    <input type="text" [(ngModel)]="name" nz-input placeholder="Nhập tên" />
+    <label for="" class=" mb-2 required">Họ và tên</label>
+    <input
+      type="text"
+      [(ngModel)]="name"
+      nz-input
+      placeholder="Nhập họ và tên"
+    />
     <label for="" class="mt-3  mb-2 required">Số điện thoại</label>
     <input
       type="text"
@@ -49,16 +54,6 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
         <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
       </ng-container>
     </nz-select>
-    <label class="mt-3  mb-2 required">Giới tính</label>
-    <nz-select
-      class="w-100 "
-      nzPlaceHolder="Chọn giới tính"
-      [(ngModel)]="gender"
-    >
-      <ng-container *ngFor="let item of listGender">
-        <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
-      </ng-container>
-    </nz-select>
     <label class="mt-3  mb-2 required">Trạng thái</label>
     <nz-select
       class="w-100 "
@@ -69,12 +64,12 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
         <nz-option [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
       </ng-container>
     </nz-select>
-    <label class="mt-3  mb-1 required">Dung lượng</label>
+    <label class="mt-3  mb-1 required">Hạn mức dung lượng(GB)</label>
     <input
       type="number"
       [(ngModel)]="limitGB"
       nz-input
-      placeholder="Nhập dung lượng"
+      placeholder="Nhập hạn mức dung lượng"
     />
   `,
 })

@@ -2,6 +2,9 @@
 
 :host {
   background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   nz-sider {
     display: block;
     .title-sidebar {
@@ -32,6 +35,11 @@
         line-height: 24px;
       }
     }
+  }
+  .version {
+    font-weight: 600;
+    text-align: center;
+    font-size: 14px;
   }
 }
 ::ng-deep {

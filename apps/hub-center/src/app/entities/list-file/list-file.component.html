@@ -37,6 +37,7 @@
           <span>Xoá thư mục</span>
         </button>
         <button
+          [disabled]="folder.length <= 0"
           nz-button
           nzType="default"
           class="create-team"
@@ -101,6 +102,7 @@
           nzType="default"
           nzSize="small"
           class="mx-2"
+          [disabled]="totalElements <= 0"
         >
           <span>Chọn tất cả </span>
         </button>
@@ -122,7 +124,7 @@
           [disabled]="totalElements <= 0"
           (click)="removeAllFile()"
         >
-          <span>Xoá tất cả ({{totalElements}})</span>
+          <span>Xoá tất cả ({{ totalElements }})</span>
         </button>
       </div>
     </div>
@@ -300,7 +302,6 @@
         </div>
       </ng-template>
     </ng-container>
-
     <div class="pagination-footer mt-4">
       <nz-pagination
         [nzPageIndex]="pageIndex + 1"

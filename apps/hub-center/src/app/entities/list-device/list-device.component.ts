@@ -228,6 +228,9 @@ export class ListDeviceComponent implements OnInit {
   }
 
   reloadPage() {
+    if(!this.regionId) {
+      return
+    }
     this.loadingService.showLoading();
     this.currentPage$.next(1);
     this.loadDevices();

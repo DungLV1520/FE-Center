@@ -58,7 +58,9 @@ export class SidebarComponent implements OnInit {
       if (data) {
         this.getListRegion();
       }
+      
     });
+    
     this.apiUserService.addFolder$.subscribe((data) => {
       if (data) {
         this.getListFolder();
@@ -81,7 +83,7 @@ export class SidebarComponent implements OnInit {
 
   navigateOriginalFile(): void {
     if (this.folder?.length <= 0) {
-      const obj = [this.titleDevice];
+      const obj = [this.titleFolder];
       this.apiUserService.sendData(obj);
       this.router.navigate([this.ROUTE_FOLDER]);
       this.indexSlideShow = false;

@@ -97,11 +97,12 @@ export class ListFileComponent implements OnInit {
   index = 0;
   length = 2;
   checked?: boolean[] = new Array(8).fill(false);
-  totalElements!: number;
+  totalElements = 0;
   totalImage!: number;
   totalVideo!: number;
   pageNumber!: number;
   folderId!: string;
+  folder!: string;
   path!: string;
   checkedId?: Array<string> = [];
   readonly searchForm = new FormControl();
@@ -109,6 +110,7 @@ export class ListFileComponent implements OnInit {
   devices: any;
   file: any;
   fileOriginal: any;
+  isFirstFolder = false;
 
   constructor(
     private apiUserService: ApiUserService,
@@ -149,6 +151,8 @@ export class ListFileComponent implements OnInit {
       };
       this.getListFile(obj);
     });
+
+    this.getListFolder();
   }
 
   chooseFile(data: any): void {
@@ -602,6 +606,10 @@ export class ListFileComponent implements OnInit {
         this.apiUserService.createFolder(obj).subscribe((res: any) => {
           if (res.result.ok) {
             this.apiUserService.sendFolder(true);
+            if (!this.isFirstFolder) {
+              this.getListFolder();
+              this.isFirstFolder = true;
+            }
           }
         });
       },
@@ -628,6 +636,7 @@ export class ListFileComponent implements OnInit {
         this.apiUserService.removeFolder(id).subscribe((res: any) => {
           if (res.result.ok) {
             this.apiUserService.sendFolder(true);
+            this.getListFolder();
           }
         });
       },
@@ -644,11 +653,24 @@ export class ListFileComponent implements OnInit {
           this.notification.success('Thông báo', 'Xoá tất cả tệp thành công', {
             nzDuration: 2000,
           });
+
+          const obj = {
+            folderId: this.folderId,
+            page: 0,
+            size: this.pageSize,
+          };
+          this.getListFile(obj);
         } else {
           this.notification.error('Thông báo', data.result.message, {
             nzDuration: 2000,
           });
         }
       });
+  }
+
+  getListFolder(): void {
+    this.apiUserService.getListFolder().subscribe((res: any) => {
+      this.folder = res.data;
+    });
   }
 }
