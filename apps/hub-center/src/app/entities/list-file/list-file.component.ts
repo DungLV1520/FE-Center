@@ -111,6 +111,7 @@ export class ListFileComponent implements OnInit {
   file: any;
   fileOriginal: any;
   isFirstFolder = false;
+  totalUsage:any
 
   constructor(
     private apiUserService: ApiUserService,
@@ -153,6 +154,7 @@ export class ListFileComponent implements OnInit {
     });
 
     this.getListFolder();
+    this.getTotalUsage()
   }
 
   chooseFile(data: any): void {
@@ -610,6 +612,10 @@ export class ListFileComponent implements OnInit {
               this.getListFolder();
               this.isFirstFolder = true;
             }
+          } else {
+            this.notification.error('Thông báo', res.result.message, {
+              nzDuration: 2000,
+            });
           }
         });
       },
@@ -637,6 +643,10 @@ export class ListFileComponent implements OnInit {
           if (res.result.ok) {
             this.apiUserService.sendFolder(true);
             this.getListFolder();
+          }else{
+            this.notification.error('Thông báo', res.result.message, {
+              nzDuration: 2000,
+            });
           }
         });
       },
@@ -671,6 +681,12 @@ export class ListFileComponent implements OnInit {
   getListFolder(): void {
     this.apiUserService.getListFolder().subscribe((res: any) => {
       this.folder = res.data;
+    });
+  }
+
+  getTotalUsage(): void {
+    this.apiUserService.getTotalUsage().subscribe((res: any) => {
+      this.totalUsage = res.data;
     });
   }
 }

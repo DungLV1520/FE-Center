@@ -70,6 +70,11 @@
         <nz-tag>Tổng: {{ totalElements }} tệp</nz-tag>
         <nz-tag>Ảnh: {{ totalImage }} tệp</nz-tag>
         <nz-tag>Video: {{ totalVideo }} tệp</nz-tag>
+        <nz-tag
+          >Dung lượng đã sử dụng: {{ totalUsage.totalUsage }}GB/{{
+            totalUsage.limitGB
+          }}GB</nz-tag
+        >
       </div>
       <div *ngIf="!isModeViewTable">
         <nz-tag *ngIf="checkedId?.length! > 0"
